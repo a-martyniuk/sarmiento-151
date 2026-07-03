@@ -4,85 +4,128 @@ import re
 import ssl
 from datetime import datetime
 
-def query_edesur_cuts():
-    url = "https://www.enre.gov.ar/web/cortes/cortes-edesur.html"
+OUTPUT_PATH = "servicios_status.json"
+
+def _make_request(url, timeout=8):
+    """Realiza una request HTTP con múltiples estrategias SSL para compatibilidad entre Windows y Linux."""
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36'}
+    req = urllib.request.Request(url, headers=headers)
+
+    # Estrategia 1: contexto SSL permisivo (funciona en Windows)
     try:
-        context = ssl._create_unverified_context()
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
-        with urllib.request.urlopen(req, context=context, timeout=8) as response:
-            html = response.read().decode('utf-8')
-            
-        matches = re.findall(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE)
-        if len(matches) > 0:
+        ctx = ssl._create_unverified_context()
+        with urllib.request.urlopen(req, context=ctx, timeout=timeout) as r:
+            return r.read().decode('utf-8', errors='ignore')
+    except Exception:
+        pass
+
+    # Estrategia 2: contexto SSL predeterminado del sistema (funciona en Linux/Ubuntu)
+    try:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        with urllib.request.urlopen(req, context=ctx, timeout=timeout) as r:
+            return r.read().decode('utf-8', errors='ignore')
+    except Exception:
+        pass
+
+    return None
+
+
+def query_edesur_cuts():
+    urls = [
+        "https://www.enre.gov.ar/web/cortes/cortes-edesur.html",
+        "https://www.edesur.com.ar/cortes-programados/",
+    ]
+    for url in urls:
+        html = _make_request(url)
+        if html is None:
+            continue
+        if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
             return {
                 "status": "Alerta",
                 "message": "Cortes preventivos de Edesur activos en Lomas de Zamora."
             }
-    except Exception as e:
-        print(f"Error consultando ENRE/Edesur: {e}")
         return {
-            "status": "Alerta",
-            "message": "Trabajos en la subestación Temperley."
+            "status": "Normal",
+            "message": "Servicio eléctrico operando normalmente."
         }
-        
+    # Si no se pudo consultar ninguna fuente
     return {
-        "status": "Normal",
-        "message": "Servicio eléctrico operando normalmente."
+        "status": "Desconocido",
+        "message": "No se pudo verificar el estado del servicio eléctrico. Revisar manualmente."
     }
+
 
 def query_aysa_cuts():
-    url = "https://www.aysa.com.ar/usuarios/Cortes-de-agua"
-    try:
-        context = ssl._create_unverified_context()
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
-        with urllib.request.urlopen(req, context=context, timeout=8) as response:
-            html = response.read().decode('utf-8')
-            
-        matches = re.findall(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE)
-        if len(matches) > 0:
+    urls = [
+        "https://www.aysa.com.ar/usuarios/cortes-de-agua",
+        "https://www.aysa.com.ar/usuarios/Cortes-de-agua",
+        "https://www.aysa.com.ar/cortes",
+    ]
+    for url in urls:
+        html = _make_request(url)
+        if html is None:
+            continue
+        if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
             return {
                 "status": "Alerta",
-                "message": "Obras programadas en la red de Lomas de Zamora."
+                "message": "Obras programadas en la red de AySA en Lomas de Zamora."
             }
-    except Exception as e:
-        print(f"Error consultando AySA: {e}")
         return {
-            "status": "Alerta",
-            "message": "Renovación de cañerías en la zona céntrica."
+            "status": "Normal",
+            "message": "Suministro de agua operando normalmente."
         }
-        
     return {
-        "status": "Normal",
-        "message": "Suministro de agua operando normalmente."
+        "status": "Desconocido",
+        "message": "No se pudo verificar el estado del suministro de agua. Revisar manualmente."
     }
 
+
 def query_metrogas_status():
-    # Retorna el estado general de distribución de gas para la zona sur (Metrogas)
-    # Por defecto normal, con reporte preventivo en caso de auditoría
+    urls = [
+        "https://www.metrogas.com.ar/cortes",
+        "https://www.metrogas.com.ar/clientes/cortes-programados",
+    ]
+    for url in urls:
+        html = _make_request(url)
+        if html is None:
+            continue
+        if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
+            return {
+                "status": "Alerta",
+                "message": "Cortes de gas de Metrogas activos en Lomas de Zamora."
+            }
+        return {
+            "status": "Normal",
+            "message": "Suministro de gas de Metrogas operando normalmente."
+        }
     return {
-        "status": "Normal",
-        "message": "Suministro de gas de Metrogas operando normalmente."
+        "status": "Desconocido",
+        "message": "No se pudo verificar el estado del suministro de gas. Revisar manualmente."
     }
+
 
 def main():
     print("Iniciando auditoría de estado de suministros...")
-    
-    edesur_status = query_edesur_cuts()
-    aysa_status = query_aysa_cuts()
+
+    edesur_status   = query_edesur_cuts()
+    aysa_status     = query_aysa_cuts()
     metrogas_status = query_metrogas_status()
-    
+
     status_data = {
         "actualizado": datetime.now().strftime("%d/%m/%Y %H:%M"),
-        "edesur": edesur_status,
-        "aysa": aysa_status,
+        "edesur":   edesur_status,
+        "aysa":     aysa_status,
         "metrogas": metrogas_status
     }
-    
-    output_path = "D:/Projects/Administracion_Sarmiento151/servicios_status.json"
-    with open(output_path, "w", encoding="utf-8") as f:
+
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(status_data, f, indent=4, ensure_ascii=False)
-        
-    print(f"Auditoría finalizada. Resultados exportados a: {output_path}")
+
+    print(f"Auditoría finalizada. Edesur: {edesur_status['status']} | AySA: {aysa_status['status']} | Metrogas: {metrogas_status['status']}")
+    print(f"Resultados exportados a: {OUTPUT_PATH}")
+
 
 if __name__ == "__main__":
     main()

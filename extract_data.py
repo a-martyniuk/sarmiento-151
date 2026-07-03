@@ -3,8 +3,8 @@ import re
 import json
 import pdfplumber
 
-LIQUIDACIONES_DIR = r"D:\Projects\Administracion_Sarmiento151\liquidaciones"
-OUTPUT_JSON = r"D:\Projects\Administracion_Sarmiento151\gastos.json"
+LIQUIDACIONES_DIR = "liquidaciones"
+OUTPUT_JSON = "gastos.json"
 
 CATEGORIAS_REALES = [
     "Sueldos y Cargas Sociales",

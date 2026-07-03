@@ -6,7 +6,7 @@ from email.message import Message
 from concurrent.futures import ThreadPoolExecutor
 
 # Directorio de descargas local
-DOWNLOAD_DIR = r"D:\Projects\Administracion_Sarmiento151\liquidaciones"
+DOWNLOAD_DIR = "liquidaciones"
 
 # Usamos un email dummy en Base64 para cumplir con el requisito obligatorio de la API sin requerir accesos reales
 DUMMY_EMAIL_B64 = base64.b64encode(b"dummy@administracionglobal.com").decode('utf-8')

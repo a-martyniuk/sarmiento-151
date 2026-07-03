@@ -1,15 +1,15 @@
 {
-    "actualizado": "03/07/2026 17:23",
+    "actualizado": "03/07/2026 21:46",
     "edesur": {
-        "status": "Alerta",
-        "message": "Trabajos en la subestación Temperley."
+        "status": "Normal",
+        "message": "Servicio eléctrico operando normalmente."
     },
     "aysa": {
-        "status": "Alerta",
-        "message": "Renovación de cañerías en la zona céntrica."
+        "status": "Desconocido",
+        "message": "No se pudo verificar el estado del suministro de agua. Revisar manualmente."
     },
     "metrogas": {
-        "status": "Normal",
-        "message": "Suministro de gas de Metrogas operando normalmente."
+        "status": "Desconocido",
+        "message": "No se pudo verificar el estado del suministro de gas. Revisar manualmente."
     }
 }
