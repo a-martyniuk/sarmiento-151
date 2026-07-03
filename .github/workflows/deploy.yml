@@ -68,9 +68,6 @@ jobs:
             echo "No changes in utility status or PDF database."
           fi
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: .
-          branch: gh-pages
-          clean: true
+      # Deploy: Vercel auto-despliega desde la rama main al detectar el push.
+      # Configuración del dominio en: vercel.com → sarmiento-151 → Settings → Domains
+      # Dominio personalizado: alexismartyniuk.com.ar con prefijo de ruta /sarmiento-151
