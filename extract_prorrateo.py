@@ -3,8 +3,8 @@ import re
 import json
 import pdfplumber
 
-LIQUIDACIONES_DIR = r"D:\Projects\Administracion_Sarmiento151\liquidaciones"
-OUTPUT_JSON = r"D:\Projects\Administracion_Sarmiento151\prorrateo.json"
+LIQUIDACIONES_DIR = "liquidaciones"
+OUTPUT_JSON = "prorrateo.json"
 
 def clean_amount(val_str):
     if not val_str:
