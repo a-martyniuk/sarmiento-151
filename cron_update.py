@@ -28,7 +28,9 @@ def main():
 
     # Siempre ejecutar la verificación de servicios (Luz, Agua y Gas)
     print("Ejecutando monitoreo de servicios locales...")
-    subprocess.run([sys.executable, "check_servicios.py"], check=True)
+    result = subprocess.run([sys.executable, "check_servicios.py"])
+    if result.returncode != 0:
+        print("⚠️  check_servicios.py finalizó con errores. El estado de los servicios no fue actualizado, pero el pipeline continúa.")
 
     if mode == "--all":
         # Determinar el período esperado (mes anterior al corriente)
