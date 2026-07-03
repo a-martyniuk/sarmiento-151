@@ -58,12 +58,31 @@ Para ejecutar el proyecto localmente sin instalar dependencias:
 
 ---
 
-## 🔄 Integración Continua y Despliegue (GitHub Actions)
+## 🔄 Integración Continua, Calendarización e Ingesta (GitHub Actions)
 
-El proyecto cuenta con un workflow de despliegue automático en la subruta del dominio personalizado:
+El proyecto cuenta con un workflow de automatización y despliegue configurado en **[.github/workflows/deploy.yml](file:///.github/workflows/deploy.yml)**.
 
-* **Pipeline (.github/workflows/deploy.yml):** Se dispara de forma automática ante cada `git push` a la rama `main`.
-* **Proceso de Despliegue:**
-  1. Descarga el repositorio mediante `actions/checkout`.
-  2. Sube y despliega de forma nativa todo el contenido del directorio en la rama `gh-pages`.
-  3. GitHub Pages lo sirve de forma directa en el subdirectorio de producción.
+### 📅 Cron Jobs Programados (Hora de Argentina / UTC)
+El pipeline en la nube ejecuta tareas programadas utilizando la zona horaria UTC:
+
+1. **Monitoreo de Suministros (Luz, Agua y Gas):**
+   * **Horarios Locales (Arg):** Todos los días a las **06:00, 12:00, 18:00 y 21:00 hs**.
+   * **Calendarización Cron:** `0 0,9,15,21 * * *` (UTC).
+   * **Modo:** `--services-only` (actualiza únicamente los estados del widget).
+2. **Descarga y Extracción de Expensas:**
+   * **Horarios Locales (Arg):** Del **día 1 al 5 de cada mes a las 18:00 hs**.
+   * **Calendarización Cron:** `0 21 1-5 * *` (UTC).
+   * **Modo:** `--all` (ejecuta el barrido predictivo de PDFs y regenera la base de datos).
+
+### 🤖 Coordinador de Actualización (`cron_update.py`)
+El script centralizador de actualización controla de forma inteligente la descarga de expensas:
+* Calcula automáticamente cuál es el período vencido esperado (ej: en Julio busca la expensa de Junio / `2026-06`).
+* Comprueba en `gastos.json` si el período esperado ya tiene registros.
+  * **Si ya tiene datos:** Detiene el flujo de descarga de forma inmediata para evitar consumos redundantes del portal de la administración.
+  * **Si no tiene datos:** Ejecuta `download_historico.py` para descargar el nuevo PDF, y luego corre `extract_data.py` y `extract_prorrateo.py` para procesarlo.
+
+### 💾 Persistencia Automática de Cambios
+Si tras la ejecución del cron se detecta que cambió el estado de los servicios locales o se integró una nueva expensa:
+1. El workflow de GitHub Actions realiza un commit automático de vuelta a la rama `main` para guardar la información histórica en Git.
+2. Despliega la versión actualizada del sitio estático en la rama `gh-pages`.
+3. Vercel sirve de forma directa el contenido actualizado en la subruta de producción.
