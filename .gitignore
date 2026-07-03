@@ -1,0 +1,19 @@
+# Gemini / Agent data
+.gemini/
+.agents/
+.system_generated/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+env/
+
+# OS-specific
+.DS_Store
+Thumbs.db

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alexismartyniuk.com.ar/sarmiento-151/sitemap.xml
