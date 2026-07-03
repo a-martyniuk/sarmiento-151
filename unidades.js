@@ -20,7 +20,7 @@ const fmtFull = (n) => new Intl.NumberFormat('es-AR', {
 
 // ── BOOTSTRAP ──────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("prorrateo.json")
+    fetch(new URL("prorrateo.json", document.baseURI).href)
         .then(r => r.json())
         .then(data => {
             const allProrrateo = data.prorrateo || [];

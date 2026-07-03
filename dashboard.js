@@ -118,7 +118,7 @@ const matchConcept = (c1, c2) => {
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchIPC();
 
-    fetch("gastos.json")
+    fetch(new URL("gastos.json", document.baseURI).href)
         .then(r => r.json())
         .then(data => {
             const allExpenses = data.gastos.filter(e => e.monto > 0);
@@ -1184,7 +1184,7 @@ const loadServicesStatus = () => {
     const container = document.getElementById("servicesStatusWidget");
     if (!container) return;
 
-    fetch("servicios_status.json")
+    fetch(new URL("servicios_status.json", document.baseURI).href)
         .then(r => r.json())
         .then(data => {
             const edesur = data.edesur || { status: "Normal", message: "Sin alertas" };
