@@ -206,7 +206,7 @@ const applyFilter = () => {
     const statusSel  = document.getElementById("statusFilter");
 
     const period = periodSel.value;
-    const query  = searchInp.value.toLowerCase().trim();
+    const query  = searchInp ? searchInp.value.toLowerCase().trim() : "";
     const status = statusSel.value;
 
     filteredExpenses = rawExpenses.filter(e => {
@@ -233,7 +233,7 @@ const setupEventListeners = () => {
     const pageSizeSel= document.getElementById("pageSizeSelect");
 
     periodSel.addEventListener("change", applyFilter);
-    searchInp.addEventListener("input",  applyFilter);
+    if (searchInp) searchInp.addEventListener("input",  applyFilter);
     statusSel.addEventListener("change", applyFilter);
     chartTyp.addEventListener("change",  () => renderHistoricalChart());
     pageSizeSel.addEventListener("change", () => {
