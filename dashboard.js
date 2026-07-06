@@ -713,6 +713,7 @@ const renderComparisonChart = () => {
         plotOptions: { bar: { horizontal: false, columnWidth: '60%', borderRadius: 3 } },
         xaxis: {
             type: 'category',
+            tickPlacement: 'on',
             categories: allPeriods,
             min: minIndex,
             max: maxIndex,
@@ -724,7 +725,10 @@ const renderComparisonChart = () => {
                 formatter: v => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : v >= 1000 ? `$${Math.round(v/1000)}k` : `$${v}`
             }
         },
-        grid: { borderColor: 'rgba(255,255,255,0.05)' },
+        grid: {
+            borderColor: 'rgba(255,255,255,0.05)',
+            padding: { left: 15, right: 15 }
+        },
         legend: { position: 'bottom', labels: { colors: '#94a3b8' }, fontSize: '11px' },
         fill: { opacity: 0.9 },
         dataLabels: { enabled: false },
@@ -800,6 +804,7 @@ const createDrillChart = (selectorId, categoryName, currentInstance) => {
         plotOptions: { bar: { horizontal: false, columnWidth: '65%', borderRadius: 2 } },
         xaxis: {
             type: 'category',
+            tickPlacement: 'on',
             categories: allPeriods,
             min: minIndex,
             max: maxIndex,
@@ -811,7 +816,10 @@ const createDrillChart = (selectorId, categoryName, currentInstance) => {
                 formatter: v => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : v >= 1000 ? `$${Math.round(v/1000)}k` : `$${v}`
             }
         },
-        grid: { borderColor: 'rgba(255,255,255,0.03)' },
+        grid: {
+            borderColor: 'rgba(255,255,255,0.03)',
+            padding: { left: 15, right: 15 }
+        },
         legend: { position: 'bottom', labels: { colors: '#94a3b8' }, fontSize: '10px', height: 45 },
         fill: { opacity: 0.95 },
         dataLabels: { enabled: false },
@@ -887,6 +895,7 @@ const renderEmployeeChart = () => {
         plotOptions: { bar: { horizontal: false, columnWidth: '65%', borderRadius: 3 } },
         xaxis: {
             type: 'category',
+            tickPlacement: 'on',
             categories: periods,
             min: minIndex,
             max: maxIndex,
@@ -899,7 +908,10 @@ const renderEmployeeChart = () => {
                              : v >= 1000 ? '$' + Math.round(v/1000) + 'k' : '$' + v
             }
         },
-        grid: { borderColor: 'rgba(255,255,255,0.05)' },
+        grid: {
+            borderColor: 'rgba(255,255,255,0.05)',
+            padding: { left: 15, right: 15 }
+        },
         legend: { position: 'bottom', labels: { colors: '#94a3b8' }, fontSize: '11px' },
         fill: { opacity: 0.9 },
         dataLabels: { enabled: false },
