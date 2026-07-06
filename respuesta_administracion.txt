@@ -21,7 +21,7 @@ Agradezco su correo y los comprobantes enviados. Tras analizarlos en detalle y c
 
 Le agradeceré que me envíe la documentación respaldatoria y aclaratoria correspondiente a cada uno de los puntos detallados.
 
-Por último, le comento que he desarrollado un panel digital (dashboard) de control de gestión y visualización de expensas del edificio, al cual tendrán acceso libre todos los copropietarios del consorcio para transparentar la evolución de los gastos y abonos. Como esta herramienta se alimenta directamente de las liquidaciones mensuales, es de suma importancia que la carga de conceptos y comprobantes esté perfectamente organizada y sea lo más prolija posible de aquí en adelante.
+Por último, le comento que he desarrollado un panel digital (dashboard) de control de gestión y visualización de expensas del edificio (al cual puede acceder en: https://alexismartyniuk.com.ar/sarmiento-151/), al cual tendrán acceso libre todos los copropietarios del consorcio para transparentar la evolución de los gastos y abonos. Como esta herramienta se alimenta directamente de lo que se formalice en las liquidaciones de expensas, es de suma importancia que la carga de conceptos y comprobantes esté perfectamente organizada y sea lo más prolija posible de aquí en adelante.
 
 Quedo a la espera de su respuesta.
 
