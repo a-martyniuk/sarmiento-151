@@ -230,16 +230,12 @@ const setupEventListeners = () => {
     const searchInp  = document.getElementById("searchInput");
     const statusSel  = document.getElementById("statusFilter");
     const chartTyp   = document.getElementById("chartTypeFilter");
-    const chartTime  = document.getElementById("chartTimeRangeFilter");
     const pageSizeSel= document.getElementById("pageSizeSelect");
 
     periodSel.addEventListener("change", applyFilter);
     searchInp.addEventListener("input",  applyFilter);
     statusSel.addEventListener("change", applyFilter);
     chartTyp.addEventListener("change",  () => renderHistoricalChart());
-    if (chartTime) {
-        chartTime.addEventListener("change", () => renderHistoricalChart());
-    }
     pageSizeSel.addEventListener("change", () => {
         pageSize = parseInt(pageSizeSel.value);
         currentPage = 1;
@@ -462,16 +458,8 @@ const renderAnomalySection = (period) => {
 // ── HISTORICAL LINE CHART ───────────────────────────────────────
 const renderHistoricalChart = () => {
     const chartType = document.getElementById("chartTypeFilter").value;
-    const timeRangeEl = document.getElementById("chartTimeRangeFilter");
-    const timeRange = timeRangeEl ? timeRangeEl.value : "6";
     const cleanExpenses = rawExpenses.filter(e => e.estado !== "Pendiente");
-    let periods = [...new Set(cleanExpenses.map(e => e.periodo))].sort();
-
-    if (timeRange === "6") {
-        periods = periods.slice(-6);
-    } else if (timeRange === "12") {
-        periods = periods.slice(-12);
-    }
+    const periods = [...new Set(cleanExpenses.map(e => e.periodo))].sort();
 
     const sumBy = (rubro) => periods.map(p =>
         Math.round(cleanExpenses.filter(e => e.periodo === p && e.rubro === rubro)
@@ -493,13 +481,43 @@ const renderHistoricalChart = () => {
         colors = [(CAT_CONFIG[chartType] || { dot: '#06b6d4' }).dot];
     }
 
+    const totalPeriods = periods.length;
+    const minIndex = Math.max(0, totalPeriods - 12);
+    const maxIndex = totalPeriods - 1;
+
     const opts = {
         series,
-        chart: { type: 'line', height: 230, foreColor: '#94a3b8', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
+        chart: {
+            type: 'line',
+            height: 230,
+            foreColor: '#94a3b8',
+            toolbar: {
+                show: true,
+                tools: {
+                    download: false,
+                    selection: false,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                    reset: true
+                }
+            },
+            zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true
+            },
+            background: 'transparent',
+            fontFamily: 'Inter, sans-serif'
+        },
         stroke: { curve: 'smooth', width: chartType === "todos" ? 2 : 3 },
         colors,
         xaxis: {
+            type: 'category',
             categories: periods,
+            min: minIndex,
+            max: maxIndex,
             axisBorder: { show: false },
             axisTicks: { show: false },
             labels: { rotate: -30, style: { fontSize: '10px' } }
