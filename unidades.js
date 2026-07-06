@@ -67,7 +67,7 @@ const populatePeriodFilter = () => {
 
     const sidebarBadge = document.getElementById("sidebarPeriods");
     if (sidebarBadge && periods.length > 0) {
-        sidebarBadge.textContent = `${periods[periods.length - 1]} a ${periods[0]}`;
+        sidebarBadge.textContent = `${periods.length} meses (${periods[periods.length - 1]} a ${periods[0]})`;
     }
 };
 

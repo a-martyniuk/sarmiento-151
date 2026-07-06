@@ -196,7 +196,7 @@ const populatePeriodFilter = () => {
     }
 
     // Update sidebar badge
-    document.getElementById("sidebarPeriods").textContent = `${periods.length} meses consolidados`;
+    document.getElementById("sidebarPeriods").textContent = `${periods.length} meses (${periods[periods.length - 1]} a ${periods[0]})`;
 };
 
 // ── Apply filter ────────────────────────────────────────────────
