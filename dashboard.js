@@ -1298,7 +1298,7 @@ const auditProviders = (period) => {
     if (!tbody) return;
 
     if (period === "todos") {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:1.5rem;">Seleccione un mes específico para auditar tarifas contra el año anterior.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-3);padding:1.5rem;">Seleccione un mes específico para auditar tarifas contra el año anterior.</td></tr>`;
         return;
     }
 
@@ -1307,8 +1307,10 @@ const auditProviders = (period) => {
 
     // Proveedores y sus palabras clave
     const targetProviders = [
+        { name: "💼 Honorarios Administración", key: "honorarios", rubro: "Honorarios Admin" },
         { name: "🛗 Guillemi (Ascensores)", key: "guillemi", rubro: "Abono Ascensores" },
         { name: "🏊 FB Saneamiento (Piscina)", key: "saneamiento", rubro: "Abono Piscina" },
+        { name: "🐜 Control de Plagas (Fumigación)", key: "fumigación", rubro: "Abono Desinsectación" },
         { name: "⚡ Atila (Grupo Electrógeno)", key: "atila", rubro: "Mantenimiento GE" },
         { name: "🌐 Telecentro (Internet)", key: "telecentro", rubro: "Servicio Conectividad" },
         { name: "🛡️ Allianz (Seguros)", key: "allianz", rubro: "Seguro Consorcio" }
@@ -1371,7 +1373,7 @@ const auditProviders = (period) => {
     });
 
     if (rowsHtml === "") {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:1.5rem;">No se encontraron facturas comparativas de abonos fijos para este período.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-3);padding:1.5rem;">No se encontraron facturas comparativas de abonos fijos para este período.</td></tr>`;
     } else {
         tbody.innerHTML = rowsHtml;
     }
