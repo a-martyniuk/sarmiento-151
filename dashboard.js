@@ -529,7 +529,7 @@ const renderHistoricalChart = () => {
         },
         grid: { borderColor: 'rgba(255,255,255,0.05)' },
         dataLabels: { enabled: false },
-        legend: { position: 'top', labels: { colors: '#94a3b8' } },
+        legend: { position: 'bottom', labels: { colors: '#94a3b8' }, fontSize: '11px' },
         tooltip: {
             theme: 'dark',
             y: {
