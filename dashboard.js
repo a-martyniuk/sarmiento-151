@@ -271,7 +271,12 @@ const detectMissingInvoices = () => {
 
     const missing = [];
     checkPeriods.forEach(p => {
+        const month = p.split("-")[1];
         recurrents.forEach(rec => {
+            // El seguro de consorcio se abona en 10 cuotas al año (sin vencimientos en los meses de descanso de marzo y abril)
+            if (rec.name === "Seguro Consorcio" && (month === "03" || month === "04")) {
+                return;
+            }
             const hasGasto = rawExpenses.some(e => e.periodo === p && rec.test(e));
             if (!hasGasto) {
                 missing.push({ periodo: p, service: rec.name });
