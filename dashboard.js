@@ -941,6 +941,15 @@ const renderEmployeeChart = () => {
 
 // ── EMPLOYEE KPI CARDS ───────────────────────────────────────────
 const renderEmployeeKPIs = (period) => {
+    const subtitleEl = document.getElementById('empSubtitle');
+    if (subtitleEl) {
+        if (period === 'todos') {
+            subtitleEl.innerHTML = `Montos acumulados de <strong>todos los períodos</strong>. <em style="color:var(--purple)">Yamil Reparaciones</em> es una empresa contratista separada del sueldo de encargado.`;
+        } else {
+            subtitleEl.innerHTML = `Montos del período seleccionado <strong>(${period})</strong>. <em style="color:var(--purple)">Yamil Reparaciones</em> es una empresa contratista separada del sueldo de encargado.`;
+        }
+    }
+
     const sumEmp = (nombre) => {
         const src = period === 'todos'
             ? rawExpenses.filter(e => e.empleado === nombre)
