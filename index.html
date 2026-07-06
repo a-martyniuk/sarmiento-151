@@ -889,6 +889,76 @@
             transform: scale(1);
         }
 
+        /* ── TOOLTIPS HACIA ABAJO A LA DERECHA (Para evitar recortes en bordes izquierdos) ── */
+        [data-tooltip-left] {
+            position: relative;
+            cursor: help;
+        }
+        [data-tooltip-left]::after {
+            content: attr(data-tooltip-left);
+            position: absolute;
+            top: 120%;
+            left: 0;
+            transform: scale(0.95);
+            transform-origin: top left;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            line-height: 1.35;
+            white-space: normal;
+            width: 220px;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            text-align: left;
+        }
+        [data-tooltip-left]:hover::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ── TOOLTIPS HACIA ABAJO A LA IZQUIERDA (Para evitar recortes en bordes derechos) ── */
+        [data-tooltip-right] {
+            position: relative;
+            cursor: help;
+        }
+        [data-tooltip-right]::after {
+            content: attr(data-tooltip-right);
+            position: absolute;
+            top: 120%;
+            right: 0;
+            transform: scale(0.95);
+            transform-origin: top right;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            line-height: 1.35;
+            white-space: normal;
+            width: 220px;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            text-align: left;
+        }
+        [data-tooltip-right]:hover::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
         /* ── RESPONSIVIDAD MOBILE (PANTALLAS <= 768px) ── */
         @media (max-width: 768px) {
             body {
@@ -1197,10 +1267,10 @@
                             <th style="text-align: left;">Rubro</th>
                             <th style="text-align: right;">Monto Reciente</th>
                             <th style="text-align: right;">Monto Año Anterior</th>
-                            <th style="text-align: right;" data-tooltip="Porcentaje que aumentó la tarifa de este proveedor con respecto al mismo mes del año anterior." style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);">Variación</th>
-                            <th style="text-align: right;" data-tooltip="Inflación oficial acumulada del INDEC en los últimos 12 meses. Sirve como referencia de comparación." style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);">IPC Acum.</th>
-                            <th style="text-align: right;" data-tooltip="Monto en pesos pagado de más (rojo) o de menos (verde) en comparación con lo que hubiese costado ajustado puramente por la inflación del período." style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);">Desvío vs. IPC</th>
-                            <th style="text-align: center;" data-tooltip="Semáforo de alerta. Naranja/Rojo: Aumento superior a la inflación (IPC). Verde: Aumento por debajo del IPC." style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);">Alerta</th>
+                            <th style="text-align: right; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.2);" data-tooltip-right="Porcentaje que aumentó la tarifa de este proveedor con respecto al mismo mes del año anterior.">Variación</th>
+                            <th style="text-align: right; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.2);" data-tooltip-right="Inflación oficial acumulada del INDEC en los últimos 12 meses. Sirve como referencia de comparación.">IPC Acum.</th>
+                            <th style="text-align: right; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.2);" data-tooltip-right="Monto en pesos pagado de más (rojo) o de menos (verde) en comparación con lo que hubiese costado ajustado puramente por la inflación del período.">Desvío vs. IPC</th>
+                            <th style="text-align: center; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.2);" data-tooltip-right="Semáforo de alerta. Naranja/Rojo: Aumento superior a la inflación (IPC). Verde: Aumento por debajo del IPC.">Alerta</th>
                         </tr>
                     </thead>
                     <tbody id="providerAuditBody">
