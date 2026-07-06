@@ -666,7 +666,7 @@ const getSubcategoria = (e) => {
 
 const renderComparisonChart = () => {
     const cleanExpenses = rawExpenses.filter(e => e.estado !== "Pendiente");
-    const allPeriods = [...new Set(cleanExpenses.map(e => e.periodo))].sort().slice(-12);
+    const allPeriods = [...new Set(cleanExpenses.map(e => e.periodo))].sort();
     const cats = Object.keys(CAT_CONFIG);
     const colors = cats.map(c => CAT_CONFIG[c].dot);
 
@@ -678,13 +678,44 @@ const renderComparisonChart = () => {
         )
     }));
 
+    const totalPeriods = allPeriods.length;
+    const minIndex = Math.max(0, totalPeriods - 12);
+    const maxIndex = totalPeriods - 1;
+
     const opts = {
         series,
-        chart: { type: 'bar', height: 320, stacked: true, foreColor: '#94a3b8', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
+        chart: {
+            type: 'bar',
+            height: 320,
+            stacked: true,
+            foreColor: '#94a3b8',
+            toolbar: {
+                show: true,
+                tools: {
+                    download: false,
+                    selection: false,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                    reset: true
+                }
+            },
+            zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true
+            },
+            background: 'transparent',
+            fontFamily: 'Inter, sans-serif'
+        },
         colors,
         plotOptions: { bar: { horizontal: false, columnWidth: '60%', borderRadius: 3 } },
         xaxis: {
+            type: 'category',
             categories: allPeriods,
+            min: minIndex,
+            max: maxIndex,
             axisBorder: { show: false }, axisTicks: { show: false },
             labels: { rotate: -30, style: { fontSize: '10px' } }
         },
@@ -716,7 +747,7 @@ let chartDrillVarios = null;
 
 const createDrillChart = (selectorId, categoryName, currentInstance) => {
     const cleanExpenses = rawExpenses.filter(e => e.estado !== "Pendiente");
-    const allPeriods = [...new Set(cleanExpenses.map(e => e.periodo))].sort().slice(-12);
+    const allPeriods = [...new Set(cleanExpenses.map(e => e.periodo))].sort();
     const catExpenses = cleanExpenses.filter(e => e.rubro === categoryName);
     
     // Si no hay datos, retornamos null
@@ -734,13 +765,44 @@ const createDrillChart = (selectorId, categoryName, currentInstance) => {
         )
     }));
 
+    const totalPeriods = allPeriods.length;
+    const minIndex = Math.max(0, totalPeriods - 12);
+    const maxIndex = totalPeriods - 1;
+
     const opts = {
         series,
-        chart: { type: 'bar', height: 260, stacked: true, foreColor: '#94a3b8', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
+        chart: {
+            type: 'bar',
+            height: 260,
+            stacked: true,
+            foreColor: '#94a3b8',
+            toolbar: {
+                show: true,
+                tools: {
+                    download: false,
+                    selection: false,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                    reset: true
+                }
+            },
+            zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true
+            },
+            background: 'transparent',
+            fontFamily: 'Inter, sans-serif'
+        },
         colors,
         plotOptions: { bar: { horizontal: false, columnWidth: '65%', borderRadius: 2 } },
         xaxis: {
+            type: 'category',
             categories: allPeriods,
+            min: minIndex,
+            max: maxIndex,
             axisBorder: { show: false }, axisTicks: { show: false },
             labels: { rotate: -40, style: { fontSize: '9px' } }
         },
@@ -778,7 +840,7 @@ const renderDrilldownCharts = () => {
 // ── EMPLOYEE BREAKDOWN CHART ─────────────────────────────────────
 let chartEmployee = null;
 const renderEmployeeChart = () => {
-    const periods = [...new Set(rawExpenses.map(e => e.periodo))].sort().slice(-16);
+    const periods = [...new Set(rawExpenses.map(e => e.periodo))].sort();
 
     const sumBy = (nombre) => periods.map(p =>
         Math.round(rawExpenses
@@ -793,17 +855,41 @@ const renderEmployeeChart = () => {
         { name: 'Yamil Reparaciones',      data: sumBy('Yamil Reparaciones') },
     ];
 
+    const totalPeriods = periods.length;
+    const minIndex = Math.max(0, totalPeriods - 12);
+    const maxIndex = totalPeriods - 1;
+
     const opts = {
         series,
         chart: {
             type: 'bar', height: 300, stacked: false,
-            foreColor: '#94a3b8', toolbar: { show: false },
+            foreColor: '#94a3b8',
+            toolbar: {
+                show: true,
+                tools: {
+                    download: false,
+                    selection: false,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                    reset: true
+                }
+            },
+            zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true
+            },
             background: 'transparent', fontFamily: 'Inter, sans-serif'
         },
         colors: ['#06b6d4', '#f472b6', '#fbbf24', '#a78bfa'],
         plotOptions: { bar: { horizontal: false, columnWidth: '65%', borderRadius: 3 } },
         xaxis: {
+            type: 'category',
             categories: periods,
+            min: minIndex,
+            max: maxIndex,
             axisBorder: { show: false }, axisTicks: { show: false },
             labels: { rotate: -30, style: { fontSize: '10px' } }
         },
@@ -1106,6 +1192,10 @@ const renderPatrimonialChart = () => {
     const patrimonio = cleanBalances.map(b => b.patrimonio_neto);
     const disponibilidades = cleanBalances.map(b => b.saldo_disponibilidades || b.saldo_banco);
 
+    const totalPeriods = categories.length;
+    const minIndex = Math.max(0, totalPeriods - 12);
+    const maxIndex = totalPeriods - 1;
+
     const opts = {
         series: [
             { name: 'Patrimonio Neto', data: patrimonio },
@@ -1115,14 +1205,35 @@ const renderPatrimonialChart = () => {
             type: 'line',
             height: 280,
             foreColor: '#94a3b8',
-            toolbar: { show: false },
+            toolbar: {
+                show: true,
+                tools: {
+                    download: false,
+                    selection: false,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                    reset: true
+                }
+            },
+            zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true
+            },
             background: 'transparent',
             fontFamily: 'Inter, sans-serif'
         },
         colors: ['#0ea5e9', '#10b981'],
         stroke: { curve: 'smooth', width: 3 },
         markers: { size: 4 },
-        xaxis: { categories: categories },
+        xaxis: {
+            type: 'category',
+            categories: categories,
+            min: minIndex,
+            max: maxIndex
+        },
         yaxis: {
             labels: {
                 formatter: v => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : v >= 1000 ? `$${Math.round(v/1000)}k` : `$${v}`

@@ -402,12 +402,38 @@ const openModal = (ufNum) => {
     const seriesData = ufRecords.map(e => Math.round(e.total));
     const categories = ufRecords.map(e => e.periodo);
 
+    const totalPeriods = categories.length;
+    const minIndex = Math.max(0, totalPeriods - 12);
+    const maxIndex = totalPeriods - 1;
+
     const opts = {
         series: [{
             name: 'Expensas Facturadas',
             data: seriesData
         }],
-        chart: { type: 'area', height: 230, foreColor: '#94a3b8', toolbar: { show: false }, background: 'transparent' },
+        chart: {
+            type: 'area',
+            height: 230,
+            foreColor: '#94a3b8',
+            toolbar: {
+                show: true,
+                tools: {
+                    download: false,
+                    selection: false,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                    reset: true
+                }
+            },
+            zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true
+            },
+            background: 'transparent'
+        },
         stroke: { curve: 'smooth', width: 2 },
         colors: ['#06b6d4'],
         fill: {
@@ -415,7 +441,12 @@ const openModal = (ufNum) => {
             gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.05 }
         },
         dataLabels: { enabled: false },
-        xaxis: { categories: categories },
+        xaxis: {
+            type: 'category',
+            categories: categories,
+            min: minIndex,
+            max: maxIndex
+        },
         yaxis: { labels: { formatter: v => fmt(v) } },
         grid: { borderColor: 'rgba(255,255,255,0.05)' },
         tooltip: { theme: 'dark', y: { formatter: v => fmtFull(v) } }
