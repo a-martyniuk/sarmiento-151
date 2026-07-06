@@ -56,6 +56,14 @@ const populatePeriodFilter = () => {
         sel.appendChild(opt);
     });
 
+    if (periods.length > 0) {
+        if (periods[0] === "2026-07" && periods.length > 1) {
+            sel.value = periods[1];
+        } else {
+            sel.value = periods[0];
+        }
+    }
+
     const sidebarBadge = document.getElementById("sidebarPeriods");
     if (sidebarBadge && periods.length > 0) {
         sidebarBadge.textContent = `${periods[periods.length - 1]} a ${periods[0]}`;

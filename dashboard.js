@@ -187,8 +187,11 @@ const populatePeriodFilter = () => {
         sel.appendChild(opt);
     });
 
-    // Seleccionar por defecto el período consolidado más reciente en lugar de "todos"
-    if (periods.length > 0) {
+    // Seleccionar por defecto el período consolidado más reciente con gastos pagados
+    const paidPeriods = [...new Set(rawExpenses.filter(e => e.estado === "Pagado").map(e => e.periodo))].sort().reverse();
+    if (paidPeriods.length > 0) {
+        sel.value = paidPeriods[0];
+    } else if (periods.length > 0) {
         sel.value = periods[0];
     }
 
