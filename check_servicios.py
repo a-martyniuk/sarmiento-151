@@ -46,7 +46,7 @@ def query_edesur_cuts():
         if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
             return {
                 "status": "Alerta",
-                "message": "Cortes preventivos de Edesur activos en Lomas de Zamora."
+                "message": "Cortes preventivos de Edesur activos en la zona."
             }
     if checked_any:
         return {
@@ -74,7 +74,7 @@ def query_aysa_cuts():
         if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
             return {
                 "status": "Alerta",
-                "message": "Obras programadas en la red de AySA en Lomas de Zamora."
+                "message": "Obras programadas en la red de AySA en la zona."
             }
     if checked_any:
         return {
@@ -101,7 +101,7 @@ def query_metrogas_status():
         if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
             return {
                 "status": "Alerta",
-                "message": "Cortes de gas de Metrogas activos en Lomas de Zamora."
+                "message": "Cortes de gas de Metrogas activos en la zona."
             }
     if checked_any:
         return {
