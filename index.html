@@ -569,6 +569,9 @@
         .badge-normal   { color: var(--text-3); font-size: 0.65rem; }
         .badge-pendiente { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
         .badge-pagado    { background: rgba(16,185,129,0.15); color: #34d399; }
+        .badge-success   { background: rgba(16,185,129,0.15); color: #34d399; }
+        .badge-warning   { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+        .badge-danger    { background: rgba(244,63,94,0.15);  color: #f43f5e; border: 1px solid rgba(244,63,94,0.2); }
 
         /* Concepto column */
         .concepto-cell {
@@ -1192,6 +1195,7 @@
                             <th style="text-align: right;">Monto Año Anterior</th>
                             <th style="text-align: right;" data-tooltip="Porcentaje que aumentó la tarifa de este proveedor con respecto al mismo mes del año anterior." style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);">Variación</th>
                             <th style="text-align: right;" data-tooltip="Inflación oficial acumulada del INDEC en los últimos 12 meses. Sirve como referencia de comparación." style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);">IPC Acum.</th>
+                            <th style="text-align: right;" data-tooltip="Monto en pesos pagado de más (rojo) o de menos (verde) en comparación con lo que hubiese costado ajustado puramente por la inflación del período." style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);">Desvío vs. IPC</th>
                             <th style="text-align: center;" data-tooltip="Semáforo de alerta. Naranja/Rojo: Aumento superior a la inflación (IPC). Verde: Aumento por debajo del IPC." style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);">Alerta</th>
                         </tr>
                     </thead>

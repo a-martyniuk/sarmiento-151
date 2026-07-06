@@ -1307,11 +1307,11 @@ const auditProviders = (period) => {
 
     // Proveedores y sus palabras clave
     const targetProviders = [
-        { name: "Guillemi (Ascensores)", key: "guillemi", rubro: "Abono Ascensores" },
-        { name: "FB Saneamiento (Piscina)", key: "saneamiento", rubro: "Abono Piscina" },
-        { name: "Atila (Grupo Electrógeno)", key: "atila", rubro: "Mantenimiento GE" },
-        { name: "Telecentro (Internet)", key: "telecentro", rubro: "Servicio Conectividad" },
-        { name: "Allianz (Seguros)", key: "allianz", rubro: "Seguro Consorcio" }
+        { name: "🛗 Guillemi (Ascensores)", key: "guillemi", rubro: "Abono Ascensores" },
+        { name: "🏊 FB Saneamiento (Piscina)", key: "saneamiento", rubro: "Abono Piscina" },
+        { name: "⚡ Atila (Grupo Electrógeno)", key: "atila", rubro: "Mantenimiento GE" },
+        { name: "🌐 Telecentro (Internet)", key: "telecentro", rubro: "Servicio Conectividad" },
+        { name: "🛡️ Allianz (Seguros)", key: "allianz", rubro: "Seguro Consorcio" }
     ];
 
     let rowsHtml = "";
@@ -1331,24 +1331,40 @@ const auditProviders = (period) => {
         if (actualExpense && prevExpense) {
             const varPct = ((actualExpense.monto - prevExpense.monto) / prevExpense.monto) * 100;
             
-            let badge = `<span class="badge badge-success">Estable</span>`;
+            let badge = `<span class="badge badge-success">🟢 Estable</span>`;
             if (ipcAcum !== null) {
                 if (varPct > ipcAcum + 25) {
-                    badge = `<span class="badge badge-danger">Alerta Excesivo (> IPC + 25%)</span>`;
+                    badge = `<span class="badge badge-danger">🔴 Excesivo (> IPC + 25%)</span>`;
                 } else if (varPct > ipcAcum + 5) {
-                    badge = `<span class="badge badge-warning">Aumento Alto (> IPC)</span>`;
+                    badge = `<span class="badge badge-warning">🟡 Alto (> IPC)</span>`;
+                }
+            }
+
+            // Calcular el desvío en pesos
+            let diffHtml = `<td style="padding: 0.75rem 0.5rem; text-align: right; color: var(--text-3); font-size: 0.85rem;">N/D</td>`;
+            if (ipcAcum !== null) {
+                const expected = prevExpense.monto * (1 + (ipcAcum / 100));
+                const diffValue = actualExpense.monto - expected;
+                const diffFmt = fmt(Math.abs(diffValue));
+                if (diffValue > 50) { // Tolerancia para diferencias mínimas de redondeo
+                    diffHtml = `<td style="padding: 0.75rem 0.5rem; text-align: right; color: #f43f5e; font-weight: 700; font-size: 0.85rem;">+${diffFmt}</td>`;
+                } else if (diffValue < -50) {
+                    diffHtml = `<td style="padding: 0.75rem 0.5rem; text-align: right; color: #10b981; font-weight: 700; font-size: 0.85rem;">-${diffFmt}</td>`;
+                } else {
+                    diffHtml = `<td style="padding: 0.75rem 0.5rem; text-align: right; color: var(--text-3); font-size: 0.85rem;">$0</td>`;
                 }
             }
 
             rowsHtml += `
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <td style="padding: 0.75rem 0.5rem; text-align: left; font-weight: 500; color: var(--text-2);">${p.name}</td>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                    <td style="padding: 0.75rem 0.5rem; text-align: left; font-weight: 600; color: var(--text-2);">${p.name}</td>
                     <td style="padding: 0.75rem 0.5rem; text-align: left; color: var(--text-3); font-size: 0.8rem;">${p.rubro}</td>
-                    <td style="padding: 0.75rem 0.5rem; text-align: right; font-weight: 600; color: var(--text-1);">${fmt(actualExpense.monto)}</td>
+                    <td style="padding: 0.75rem 0.5rem; text-align: right; font-weight: 700; color: var(--text-1);">${fmt(actualExpense.monto)}</td>
                     <td style="padding: 0.75rem 0.5rem; text-align: right; color: var(--text-3);">${fmt(prevExpense.monto)}</td>
-                    <td style="padding: 0.75rem 0.5rem; text-align: right; font-weight: 600; color: ${varPct > 0 ? '#f43f5e' : '#10b981'};">${varPct.toFixed(1)}%</td>
+                    <td style="padding: 0.75rem 0.5rem; text-align: right; font-weight: 700; color: ${ipcAcum !== null && varPct > ipcAcum ? '#f43f5e' : '#10b981'};">${varPct.toFixed(1)}%</td>
                     <td style="padding: 0.75rem 0.5rem; text-align: right; color: var(--text-2); font-weight: 500;">${ipcText}</td>
-                    <td style="padding: 0.75rem 0.5rem; text-align: center;">${badge}</td>
+                    ${diffHtml}
+                    <td style="padding: 0.75rem 0.5rem; text-align: center; vertical-align: middle;">${badge}</td>
                 </tr>
             `;
         }
