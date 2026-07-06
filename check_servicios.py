@@ -37,20 +37,22 @@ def query_edesur_cuts():
         "https://www.enre.gov.ar/web/cortes/cortes-edesur.html",
         "https://www.edesur.com.ar/cortes-programados/",
     ]
+    checked_any = False
     for url in urls:
         html = _make_request(url)
         if html is None:
             continue
+        checked_any = True
         if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
             return {
                 "status": "Alerta",
                 "message": "Cortes preventivos de Edesur activos en Lomas de Zamora."
             }
+    if checked_any:
         return {
             "status": "Normal",
             "message": "Servicio eléctrico operando normalmente."
         }
-    # Si no se pudo consultar ninguna fuente
     return {
         "status": "Desconocido",
         "message": "No se pudo verificar el estado del servicio eléctrico. Revisar manualmente."
@@ -63,15 +65,18 @@ def query_aysa_cuts():
         "https://www.aysa.com.ar/usuarios/Cortes-de-agua",
         "https://www.aysa.com.ar/cortes",
     ]
+    checked_any = False
     for url in urls:
         html = _make_request(url)
         if html is None:
             continue
+        checked_any = True
         if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
             return {
                 "status": "Alerta",
                 "message": "Obras programadas en la red de AySA en Lomas de Zamora."
             }
+    if checked_any:
         return {
             "status": "Normal",
             "message": "Suministro de agua operando normalmente."
@@ -87,15 +92,18 @@ def query_metrogas_status():
         "https://www.metrogas.com.ar/cortes",
         "https://www.metrogas.com.ar/clientes/cortes-programados",
     ]
+    checked_any = False
     for url in urls:
         html = _make_request(url)
         if html is None:
             continue
+        checked_any = True
         if re.search(r'Lomas\s+de\s+Zamora', html, re.IGNORECASE):
             return {
                 "status": "Alerta",
                 "message": "Cortes de gas de Metrogas activos en Lomas de Zamora."
             }
+    if checked_any:
         return {
             "status": "Normal",
             "message": "Suministro de gas de Metrogas operando normalmente."
