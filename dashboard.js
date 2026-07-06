@@ -869,8 +869,8 @@ const renderEmployeeChart = () => {
     );
 
     const series = [
-        { name: 'Ibrahim Yamil',           data: sumBy('Ibrahim Yamil') },
-        { name: 'Lourdes Zaracho',         data: sumBy('Lourdes Zaracho') },
+        { name: 'Encargado Permanente',    data: sumBy('Encargado Permanente') },
+        { name: 'Ayudante / Suplente',      data: sumBy('Ayudante / Suplente') },
         { name: 'Cargas Sociales / ART',   data: sumBy('Cargas Sociales / Sindicato') },
         { name: 'Yamil Reparaciones',      data: sumBy('Yamil Reparaciones') },
     ];
@@ -957,13 +957,13 @@ const renderEmployeeKPIs = (period) => {
         return src.reduce((a, e) => a + e.monto, 0);
     };
 
-    const ibTotal  = sumEmp('Ibrahim Yamil');
-    const loTotal  = sumEmp('Lourdes Zaracho');
+    const ibTotal  = sumEmp('Encargado Permanente');
+    const loTotal  = sumEmp('Ayudante / Suplente');
     const crTotal  = sumEmp('Cargas Sociales / Sindicato');
     const yrTotal  = sumEmp('Yamil Reparaciones');
 
-    const ibHist = rawExpenses.filter(e => e.empleado === 'Ibrahim Yamil').reduce((a,e) => a+e.monto, 0);
-    const loHist = rawExpenses.filter(e => e.empleado === 'Lourdes Zaracho').reduce((a,e) => a+e.monto, 0);
+    const ibHist = rawExpenses.filter(e => e.empleado === 'Encargado Permanente').reduce((a,e) => a+e.monto, 0);
+    const loHist = rawExpenses.filter(e => e.empleado === 'Ayudante / Suplente').reduce((a,e) => a+e.monto, 0);
 
     document.getElementById('empIbrahimMonto').textContent  = ibTotal > 0 ? fmt(ibTotal) : '—';
     document.getElementById('empLourdesMonto').textContent  = loTotal > 0 ? fmt(loTotal) : '—';
