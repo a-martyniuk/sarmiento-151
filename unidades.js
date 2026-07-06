@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const allProrrateo = data.prorrateo || [];
             if (allProrrateo.length > 0) {
                 rawProrrateo = allProrrateo;
+                rawProrrateo.sort((a, b) => a.periodo.localeCompare(b.periodo));
             } else {
                 rawProrrateo = [];
             }
