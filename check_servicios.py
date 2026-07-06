@@ -2,7 +2,7 @@ import json
 import urllib.request
 import re
 import ssl
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 OUTPUT_PATH = "servicios_status.json"
 
@@ -113,8 +113,9 @@ def main():
     aysa_status     = query_aysa_cuts()
     metrogas_status = query_metrogas_status()
 
+    tz_arg = timezone(timedelta(hours=-3))
     status_data = {
-        "actualizado": datetime.now().strftime("%d/%m/%Y %H:%M"),
+        "actualizado": datetime.now(tz_arg).strftime("%d/%m/%Y %H:%M"),
         "edesur":   edesur_status,
         "aysa":     aysa_status,
         "metrogas": metrogas_status
