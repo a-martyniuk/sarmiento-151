@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartelera - Control de Expensas Sarmiento 151</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0f172a;
+            --teal: #0d9488;
+            --teal-light: #f0fdfa;
+            --text-main: #334155;
+            --text-dark: #0f172a;
+            --gray-light: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background-color: #fff;
+            line-height: 1.5;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* A4 Page Container (Optimized for Printing) */
+        .page {
+            width: 210mm;
+            height: 297mm;
+            padding: 20mm;
+            margin: 0 auto;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* Decorative Header Bar */
+        .header-decor {
+            height: 8px;
+            background: linear-gradient(90deg, var(--navy) 0%, var(--teal) 100%);
+            border-radius: 4px;
+            margin-bottom: 2rem;
+        }
+
+        /* Title Area */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 2.3rem;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--teal);
+            font-weight: 600;
+            margin-top: 0.5rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Intro Box */
+        .intro-box {
+            background-color: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            text-align: justify;
+        }
+
+        /* Main Features Grid */
+        .features-container {
+            margin-bottom: 2.5rem;
+        }
+
+        .features-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            background-color: var(--gray-light);
+            padding: 1.25rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .card-icon {
+            font-size: 1.75rem;
+            line-height: 1;
+        }
+
+        .card-content h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .card-content p {
+            font-size: 0.88rem;
+            color: var(--text-main);
+            text-align: left;
+        }
+
+        /* Call to Action and QR Code Area */
+        .cta-section {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            background: var(--gray-light);
+            border: 1.5px dashed var(--teal);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .cta-text h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-text p {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .cta-instructions {
+            list-style: none;
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .cta-instructions li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qr-box {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-image {
+            width: 170px;
+            height: 170px;
+            margin-bottom: 0.75rem;
+        }
+
+        .qr-url {
+            font-family: monospace;
+            font-weight: 700;
+            color: var(--teal);
+            font-size: 0.85rem;
+            background: var(--teal-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            border: 1px solid rgba(13, 148, 136, 0.2);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-tag {
+            background-color: var(--navy);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        /* Print Specific CSS */
+        @media print {
+            body {
+                background: white;
+            }
+            .page {
+                width: 210mm;
+                height: 297mm;
+                padding: 15mm;
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+            /* Hide URL printing from browser headers/footers */
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <div>
+            <!-- Decorative colored line -->
+            <div class="header-decor"></div>
+
+            <!-- Header -->
+            <div class="header">
+                <div class="logo">📊</div>
+                <h1 class="title">Control de Expensas</h1>
+                <div class="subtitle">Consorcio Sarmiento 151</div>
+            </div>
+
+            <!-- Intro text -->
+            <div class="intro-box">
+                ¡Hola, vecinos! Con el objetivo de fomentar la transparencia en la administración de nuestro edificio, he desarrollado un panel digital (dashboard) interactivo de acceso libre para todos los copropietarios del consorcio. A partir de ahora, podremos auditar en qué se gasta cada peso de las expensas mensuales de forma visual y clara.
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-container">
+                <h2 class="features-title">🔍 ¿Qué podemos controlar en el panel?</h2>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-icon">💼</div>
+                        <div class="card-content">
+                            <h3>Auditoría de Proveedores</h3>
+                            <p>Evolución de los honorarios de administración y abonos (ascensores, piscina, seguro, fumigación) comparados mes a mes con la inflación oficial del INDEC.</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">💰</div>
+                        <div class="card-content">
+                            <h3>Estado de Caja y Deudas</h3>
+                            <p>Visualización en tiempo real de los fondos recaudados, los egresos efectivos liquidados y el nivel de morosidad global del edificio.</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">👤</div>
+                        <div class="card-content">
+                            <h3>Sueldos y Cargas Sociales</h3>
+                            <p>Desglose claro de los costos de personal (encargados y adicionales) sin revelar datos personales de los empleados.</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📈</div>
+                        <div class="card-content">
+                            <h3>Auditoría de Coeficientes</h3>
+                            <p>Sistema que verifica automáticamente que las alícuotas aplicadas a cada departamento coincidan con el reglamento sin desvíos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <!-- Call to action and QR -->
+            <div class="cta-section">
+                <div class="cta-text">
+                    <h2>¡Accedé desde tu celular!</h2>
+                    <p>El panel es gratuito, no requiere instalar ninguna aplicación y se actualiza mensualmente de forma directa con los datos formalizados en las liquidaciones.</p>
+                    <ul class="cta-instructions">
+                        <li><span>📱</span> Abrí la cámara de tu celular</li>
+                        <li><span>📷</span> Enfocá el código QR de la derecha</li>
+                        <li><span>🔗</span> Tocá el enlace que aparece en pantalla</li>
+                    </ul>
+                </div>
+                <div class="qr-box">
+                    <!-- Dynamic QR code generator API link -->
+                    <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://alexismartyniuk.com.ar/sarmiento-151/" alt="Código QR de Acceso">
+                    <div class="qr-url">alexismartyniuk.com.ar/sarmiento-151/</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div>Desarrollado de forma independiente por un copropietario de Sarmiento 151.</div>
+                <div class="footer-tag">Transparencia Consorcial</div>
+            </footer>
+        </div>
+    </div>
+
+</body>
+</html>
