@@ -230,12 +230,16 @@ const setupEventListeners = () => {
     const searchInp  = document.getElementById("searchInput");
     const statusSel  = document.getElementById("statusFilter");
     const chartTyp   = document.getElementById("chartTypeFilter");
+    const chartTime  = document.getElementById("chartTimeRangeFilter");
     const pageSizeSel= document.getElementById("pageSizeSelect");
 
     periodSel.addEventListener("change", applyFilter);
     searchInp.addEventListener("input",  applyFilter);
     statusSel.addEventListener("change", applyFilter);
     chartTyp.addEventListener("change",  () => renderHistoricalChart());
+    if (chartTime) {
+        chartTime.addEventListener("change", () => renderHistoricalChart());
+    }
     pageSizeSel.addEventListener("change", () => {
         pageSize = parseInt(pageSizeSel.value);
         currentPage = 1;
@@ -458,8 +462,16 @@ const renderAnomalySection = (period) => {
 // ── HISTORICAL LINE CHART ───────────────────────────────────────
 const renderHistoricalChart = () => {
     const chartType = document.getElementById("chartTypeFilter").value;
+    const timeRangeEl = document.getElementById("chartTimeRangeFilter");
+    const timeRange = timeRangeEl ? timeRangeEl.value : "6";
     const cleanExpenses = rawExpenses.filter(e => e.estado !== "Pendiente");
-    const periods = [...new Set(cleanExpenses.map(e => e.periodo))].sort();
+    let periods = [...new Set(cleanExpenses.map(e => e.periodo))].sort();
+
+    if (timeRange === "6") {
+        periods = periods.slice(-6);
+    } else if (timeRange === "12") {
+        periods = periods.slice(-12);
+    }
 
     const sumBy = (rubro) => periods.map(p =>
         Math.round(cleanExpenses.filter(e => e.periodo === p && e.rubro === rubro)
