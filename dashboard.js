@@ -554,7 +554,11 @@ const renderHistoricalChart = () => {
 
     if (chartHistorical) chartHistorical.destroy();
     chartHistorical = new ApexCharts(document.querySelector("#historicalChart"), opts);
-    chartHistorical.render();
+    chartHistorical.render().then(() => {
+        setTimeout(() => {
+            if (chartHistorical) chartHistorical.zoomX(minIndex, maxIndex);
+        }, 100);
+    });
 };
 
 // ── DONUT CHART ─────────────────────────────────────────────────
@@ -734,7 +738,11 @@ const renderComparisonChart = () => {
 
     if (chartComparison) chartComparison.destroy();
     chartComparison = new ApexCharts(document.querySelector("#comparisonChart"), opts);
-    chartComparison.render();
+    chartComparison.render().then(() => {
+        setTimeout(() => {
+            if (chartComparison) chartComparison.zoomX(minIndex, maxIndex);
+        }, 100);
+    });
 };
 
 // ── DRILLDOWN SUB-CHARTS (EACH CATEGORY) ─────────────────────────
@@ -825,7 +833,11 @@ const createDrillChart = (selectorId, categoryName, currentInstance) => {
 
     if (currentInstance) currentInstance.destroy();
     const chart = new ApexCharts(document.querySelector(selectorId), opts);
-    chart.render();
+    chart.render().then(() => {
+        setTimeout(() => {
+            if (chart) chart.zoomX(minIndex, maxIndex);
+        }, 100);
+    });
     return chart;
 };
 
@@ -917,7 +929,11 @@ const renderEmployeeChart = () => {
 
     if (chartEmployee) chartEmployee.destroy();
     chartEmployee = new ApexCharts(document.querySelector('#employeeChart'), opts);
-    chartEmployee.render();
+    chartEmployee.render().then(() => {
+        setTimeout(() => {
+            if (chartEmployee) chartEmployee.zoomX(minIndex, maxIndex);
+        }, 100);
+    });
 };
 
 // ── EMPLOYEE KPI CARDS ───────────────────────────────────────────
@@ -1257,7 +1273,11 @@ const renderPatrimonialChart = () => {
 
     if (chartPatrimonial) chartPatrimonial.destroy();
     chartPatrimonial = new ApexCharts(document.querySelector("#patrimonialChart"), opts);
-    chartPatrimonial.render();
+    chartPatrimonial.render().then(() => {
+        setTimeout(() => {
+            if (chartPatrimonial) chartPatrimonial.zoomX(minIndex, maxIndex);
+        }, 100);
+    });
 };
 
 // ── PROVIDER AUDIT TABLE RENDERER ──────────────────────────────

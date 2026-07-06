@@ -451,7 +451,11 @@ const openModal = (ufNum) => {
 
     if (chartUfHistory) chartUfHistory.destroy();
     chartUfHistory = new ApexCharts(document.querySelector("#ufHistoryChart"), opts);
-    chartUfHistory.render();
+    chartUfHistory.render().then(() => {
+        setTimeout(() => {
+            if (chartUfHistory) chartUfHistory.zoomX(minIndex, maxIndex);
+        }, 100);
+    });
 
     document.getElementById("ufModal").classList.add("open");
 };
