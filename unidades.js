@@ -400,8 +400,8 @@ const openModal = (ufNum) => {
     const categories = ufRecords.map(e => e.periodo);
 
     const totalPeriods = categories.length;
-    const minIndex = Math.max(0, totalPeriods - 12);
-    const maxIndex = totalPeriods - 1;
+    const minIndex = Math.max(1, totalPeriods - 11);
+    const maxIndex = totalPeriods;
 
     const opts = {
         series: [{

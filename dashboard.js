@@ -479,8 +479,8 @@ const renderHistoricalChart = () => {
     }
 
     const totalPeriods = periods.length;
-    const minIndex = Math.max(0, totalPeriods - 12);
-    const maxIndex = totalPeriods - 1;
+    const minIndex = Math.max(1, totalPeriods - 11);
+    const maxIndex = totalPeriods;
 
     const opts = {
         series,
@@ -680,8 +680,8 @@ const renderComparisonChart = () => {
     }));
 
     const totalPeriods = allPeriods.length;
-    const minIndex = Math.max(0, totalPeriods - 12);
-    const maxIndex = totalPeriods - 1;
+    const minIndex = Math.max(1, totalPeriods - 11);
+    const maxIndex = totalPeriods;
 
     const opts = {
         series,
@@ -775,8 +775,8 @@ const createDrillChart = (selectorId, categoryName, currentInstance) => {
     }));
 
     const totalPeriods = allPeriods.length;
-    const minIndex = Math.max(0, totalPeriods - 12);
-    const maxIndex = totalPeriods - 1;
+    const minIndex = Math.max(1, totalPeriods - 11);
+    const maxIndex = totalPeriods;
 
     const opts = {
         series,
@@ -873,8 +873,8 @@ const renderEmployeeChart = () => {
     ];
 
     const totalPeriods = periods.length;
-    const minIndex = Math.max(0, totalPeriods - 12);
-    const maxIndex = totalPeriods - 1;
+    const minIndex = Math.max(1, totalPeriods - 11);
+    const maxIndex = totalPeriods;
 
     const opts = {
         series,
@@ -1218,8 +1218,8 @@ const renderPatrimonialChart = () => {
     const disponibilidades = cleanBalances.map(b => b.saldo_disponibilidades || b.saldo_banco);
 
     const totalPeriods = categories.length;
-    const minIndex = Math.max(0, totalPeriods - 12);
-    const maxIndex = totalPeriods - 1;
+    const minIndex = Math.max(1, totalPeriods - 11);
+    const maxIndex = totalPeriods;
 
     const opts = {
         series: [
