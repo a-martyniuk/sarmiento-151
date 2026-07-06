@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartelera Media Hoja - Sarmiento 151</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0f172a;
+            --teal: #0d9488;
+            --teal-light: #f0fdfa;
+            --text-main: #334155;
+            --text-dark: #0f172a;
+            --gray-light: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background-color: #fff;
+            line-height: 1.4;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* A4 Page (Flyer occupies top half only) */
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            position: relative;
+            background: white;
+        }
+
+        /* Top Half Container (Flyer) */
+        .flyer-container {
+            height: 148.5mm; /* Exactly half A4 */
+            padding: 10mm 15mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header-decor {
+            height: 6px;
+            background: linear-gradient(90deg, var(--navy) 0%, var(--teal) 100%);
+            border-radius: 3px;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Flex row for main content */
+        .main-content {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex: 1;
+        }
+
+        .left-side {
+            flex: 1.3;
+        }
+
+        .right-side {
+            flex: 0.9;
+            background: var(--gray-light);
+            border: 1.5px dashed var(--teal);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Typography */
+        .title-area {
+            margin-bottom: 0.75rem;
+        }
+
+        .title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--teal);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .intro-text {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        /* Compact Feature List */
+        .features-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .features-list li {
+            display: flex;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .feature-icon {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .feature-text strong {
+            color: var(--text-dark);
+        }
+
+        /* QR Area (Right Side) */
+        .qr-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.4rem;
+        }
+
+        .qr-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .qr-image {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 0.5rem;
+        }
+
+        .qr-url {
+            font-family: monospace;
+            font-weight: 700;
+            color: var(--teal);
+            font-size: 0.75rem;
+            background: var(--teal-light);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(13, 148, 136, 0.2);
+        }
+
+        /* Compact Footer */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.68rem;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Cut line indicator at exactly half-A4 */
+        .cut-indicator {
+            position: absolute;
+            top: 148.5mm;
+            left: 0;
+            width: 100%;
+            border-top: 2px dashed #94a3b8;
+            text-align: center;
+            transform: translateY(-50%);
+        }
+
+        .cut-label {
+            background: white;
+            padding: 0 10px;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            transform: translateY(-50%);
+        }
+
+        /* Print Settings */
+        @media print {
+            body {
+                background: white;
+            }
+            .page {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                box-shadow: none;
+            }
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            /* Hide the cut line when printing if desired, or keep it as a guide */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <!-- FLYER (TOP HALF) -->
+        <div class="flyer-container">
+            <div>
+                <!-- Decorative colored line -->
+                <div class="header-decor"></div>
+
+                <!-- Title -->
+                <div class="title-area">
+                    <div class="subtitle">Consorcio Sarmiento 151</div>
+                    <h1 class="title">📈 Control de Expensas</h1>
+                </div>
+
+                <!-- Main Content Row -->
+                <div class="main-content">
+                    <div class="left-side">
+                        <div class="intro-text">
+                            <strong>¡Hola, vecinos!</strong> He desarrollado un panel digital (dashboard) de acceso libre para todo el edificio. <strong>A diferencia de las expensas en papel (que son una foto fija del mes)</strong>, esta herramienta online permite comparar períodos e históricos para seguir la evolución real de nuestros gastos.
+                        </div>
+                        <ul class="features-list">
+                            <li>
+                                <span class="feature-icon">🔍</span>
+                                <div class="feature-text"><strong>Auditoría de Proveedores:</strong> Monitoreo de aumentos de abonos fijos (Administración, piscina, ascensores, seguro, desinsectación) frente al IPC.</div>
+                            </li>
+                            <li>
+                                <span class="feature-icon">💰</span>
+                                <div class="feature-text"><strong>Caja e Ingresos:</strong> Historial de fondos recaudados y control de deudas del edificio.</div>
+                            </li>
+                            <li>
+                                <span class="feature-icon">👤</span>
+                                <div class="feature-text"><strong>Cargos y Personal:</strong> Detalle de sueldos y cargas sociales de forma agregada.</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="right-side">
+                        <h2 class="qr-title">Acceso Vecinal</h2>
+                        <p class="qr-subtitle">Escaneá con tu celular para ingresar de forma libre y gratuita</p>
+                        <!-- QR Code Image -->
+                        <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://alexismartyniuk.com.ar/sarmiento-151/" alt="QR Acceso">
+                        <div class="qr-url">sarmiento-151/</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div>Desarrollo independiente de un copropietario. Datos oficiales extraídos de las liquidaciones de expensas.</div>
+                <div style="font-weight: 700; color: var(--navy);">Transparencia Consorcial</div>
+            </footer>
+        </div>
+
+        <!-- Cutting line indicator -->
+        <div class="cut-indicator">
+            <span class="cut-label">✂️ LÍNEA DE CORTE (MEDIA HOJA A4) ✂️</span>
+        </div>
+    </div>
+
+</body>
+</html>
