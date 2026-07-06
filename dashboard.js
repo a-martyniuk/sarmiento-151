@@ -126,12 +126,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const allMultas   = data.multas || [];
 
             if (allExpenses.length > 0) {
-                const periods = [...new Set(allExpenses.map(e => e.periodo))].sort();
-                const latestPeriod = periods[periods.length - 1];
-                // Excluir globalmente el último período en curso por ser preliminar
-                rawExpenses = allExpenses.filter(e => e.periodo !== latestPeriod);
-                rawBalances = allBalances.filter(e => e.periodo !== latestPeriod);
-                rawMultas   = allMultas.filter(e => e.periodo !== latestPeriod);
+                rawExpenses = allExpenses;
+                rawBalances = allBalances;
+                rawMultas   = allMultas;
             } else {
                 rawExpenses = [];
                 rawBalances = [];

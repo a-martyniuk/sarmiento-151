@@ -25,10 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             const allProrrateo = data.prorrateo || [];
             if (allProrrateo.length > 0) {
-                const periods = [...new Set(allProrrateo.map(e => e.periodo))].sort();
-                const latestPeriod = periods[periods.length - 1];
-                // Excluir el último período (en curso) por ser preliminar
-                rawProrrateo = allProrrateo.filter(e => e.periodo !== latestPeriod);
+                rawProrrateo = allProrrateo;
             } else {
                 rawProrrateo = [];
             }
