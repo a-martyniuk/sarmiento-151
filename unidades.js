@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             populatePeriodFilter();
             setupEventListeners();
             applyFilter();
+            loadServicesStatus();
         })
         .catch(err => {
             console.error("Error loading prorrateo.json:", err);
@@ -503,4 +504,67 @@ const exportCSV = () => {
 // ── EXPORT PDF ──────────────────────────────────────────────────
 const exportPDF = () => {
     window.print();
+};
+
+// ── SERVICES STATUS MONITOR RENDERER ───────────────────────────
+const loadServicesStatus = () => {
+    const container = document.getElementById("servicesStatusWidget");
+    if (!container) return;
+
+    fetch(new URL("servicios_status.json", document.baseURI).href)
+        .then(r => r.json())
+        .then(data => {
+            const edesur = data.edesur || { status: "Normal", message: "Sin alertas" };
+            const aysa = data.aysa || { status: "Normal", message: "Sin alertas" };
+            const metrogas = data.metrogas || { status: "Normal", message: "Sin alertas" };
+
+            const getBadge = (srv) => {
+                if (srv.status === "Alerta") {
+                    return `<span class="badge badge-warning" style="white-space: nowrap;">⚠️ Alerta</span>`;
+                }
+                return `<span class="badge badge-success" style="white-space: nowrap;">🟢 Normal</span>`;
+            };
+
+            const getMessageHtml = (srv) => {
+                if (srv.status === "Alerta" && srv.message) {
+                    return `<div style="font-size: 0.65rem; color: var(--text-3); margin-top: 1px; margin-bottom: 0.4rem; padding-left: 12px; border-left: 1.5px dashed rgba(251,191,36,0.4); line-height: 1.25;">${srv.message}</div>`;
+                }
+                return '';
+            };
+
+            container.innerHTML = `
+                <!-- EDESUR -->
+                <div style="margin-bottom: 0.35rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
+                        <span style="color: var(--text-2);">⚡ Luz (Edesur)</span>
+                        ${getBadge(edesur)}
+                    </div>
+                    ${getMessageHtml(edesur)}
+                </div>
+
+                <!-- AYSA -->
+                <div style="margin-bottom: 0.35rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
+                        <span style="color: var(--text-2);">💧 Agua (AySA)</span>
+                        ${getBadge(aysa)}
+                    </div>
+                    ${getMessageHtml(aysa)}
+                </div>
+
+                <!-- METROGAS -->
+                <div style="margin-bottom: 0.35rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
+                        <span style="color: var(--text-2);">🔥 Gas (Metrogas)</span>
+                        ${getBadge(metrogas)}
+                    </div>
+                    ${getMessageHtml(metrogas)}
+                </div>
+
+                <div style="font-size: 0.6rem; color: var(--text-3); text-align: right; margin-top: 6px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 4px; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.1); width: max-content; margin-left: auto;" data-tooltip="El estado se actualiza automáticamente 4 veces al día (06:00, 12:00, 18:00 y 21:00 hs) consultando los servidores oficiales de las prestadoras.">Act: ${data.actualizado || 'N/D'}</div>
+            `;
+        })
+        .catch(err => {
+            console.warn("No se pudo cargar el estado de servicios:", err);
+            container.innerHTML = `<span style="font-size: 0.75rem; color: var(--text-3);">Estado no disponible</span>`;
+        });
 };
