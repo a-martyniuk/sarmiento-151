@@ -530,6 +530,41 @@
             transform: scale(1);
         }
 
+        /* ── TOOLTIPS HACIA ARRIBA A LA IZQUIERDA (Para evitar recortes en bordes de barras laterales) ── */
+        [data-tooltip-top-right] {
+            position: relative;
+            cursor: help;
+        }
+        [data-tooltip-top-right]::after {
+            content: attr(data-tooltip-top-right);
+            position: absolute;
+            bottom: 130%;
+            right: 0;
+            transform: scale(0.95);
+            transform-origin: bottom right;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            line-height: 1.35;
+            white-space: normal;
+            width: 200px;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            text-align: left;
+        }
+        [data-tooltip-top-right]:hover::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
         /* ── RESPONSIVIDAD MOBILE (PANTALLAS <= 768px) ── */
         @media (max-width: 768px) {
             body {
