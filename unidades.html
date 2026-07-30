@@ -155,9 +155,11 @@
             border: 1px solid rgba(6, 182, 212, 0.25);
             border-radius: 8px;
             color: var(--text-1);
+            font-family: inherit;
             font-size: 0.78rem;
             font-weight: 600;
             text-decoration: none;
+            cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
@@ -709,12 +711,13 @@
     </nav>
 
     <div class="sidebar-footer">
-        <a href="mailto:alexis.martyniuk@gmail.com?subject=%5BSarmiento%20151%5D%20Consulta%20sobre%20el%20proyecto" 
-           class="btn-contact-sidebar"
-           title="Enviar correo a Alexis Martyniuk">
+        <button type="button" 
+                onclick="openContactModal(event)" 
+                class="btn-contact-sidebar"
+                title="Evacuar duda o contactar al desarrollador">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             <span>Evacuar Duda / Contacto</span>
-        </a>
+        </button>
         <div class="brand-sub" style="margin-bottom:6px;">Fuente de datos</div>
         <span class="sidebar-badge" id="sidebarPeriods">Cargando...</span>
     </div>
@@ -861,6 +864,71 @@
         </div>
     </div>
 </div>
+
+<!-- MODAL CONTACTO -->
+<div class="modal-overlay" id="contactModal">
+    <div class="modal" style="position:relative; max-width: 480px; width: 92%;">
+        <div class="modal-title">✉️ Contactar al Desarrollador</div>
+        <div class="modal-subtitle">Proyecto Sarmiento 151 — Alexis Martyniuk</div>
+        <button class="btn" style="position:absolute;top:1.25rem;right:1.25rem;padding:4px 10px;" onclick="closeContactModal()">✕ Cerrar</button>
+
+        <div style="margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <p style="font-size: 0.82rem; color: var(--text-2); line-height: 1.5;">
+                Selecciona la opción de tu preferencia para enviar tu duda o consulta:
+            </p>
+
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=alexis.martyniuk@gmail.com&su=%5BSarmiento%20151%5D%20Consulta%20sobre%20el%20proyecto" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="btn" 
+               style="display:flex; align-items:center; justify-content:center; gap:8px; padding:0.75rem; background:linear-gradient(135deg, rgba(6,182,212,0.2), rgba(139,92,246,0.2)); border:1px solid var(--accent); color:var(--text-1); font-weight:600; text-decoration:none;">
+                🌐 Abrir en Gmail (Navegador Web)
+            </a>
+
+            <a href="mailto:alexis.martyniuk@gmail.com?subject=%5BSarmiento%20151%5D%20Consulta%20sobre%20el%20proyecto" 
+               class="btn" 
+               style="display:flex; align-items:center; justify-content:center; gap:8px; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--text-1); text-decoration:none;">
+                💻 Abrir App de Correo (Mailto)
+            </a>
+
+            <button type="button" onclick="copyContactEmail()" class="btn" style="display:flex; align-items:center; justify-content:center; gap:8px; padding:0.75rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--text-1); cursor:pointer;">
+                📋 Copiar Email: alexis.martyniuk@gmail.com
+            </button>
+            <div id="copyEmailFeedback" style="font-size: 0.78rem; color: var(--green); text-align: center; display: none; font-weight: 500;">
+                ✓ ¡Dirección copiada al portapapeles!
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openContactModal(e) {
+    if (e) e.preventDefault();
+    const modal = document.getElementById('contactModal');
+    if (modal) modal.classList.add('open');
+}
+function closeContactModal() {
+    const modal = document.getElementById('contactModal');
+    if (modal) modal.classList.remove('open');
+}
+function copyContactEmail() {
+    navigator.clipboard.writeText('alexis.martyniuk@gmail.com').then(() => {
+        const feedback = document.getElementById('copyEmailFeedback');
+        if (feedback) {
+            feedback.style.display = 'block';
+            setTimeout(() => { feedback.style.display = 'none'; }, 3500);
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const contactModal = document.getElementById('contactModal');
+    if (contactModal) {
+        contactModal.addEventListener('click', (e) => {
+            if (e.target === contactModal) closeContactModal();
+        });
+    }
+});
+</script>
 
 <script src="unidades.js"></script>
 </body>
