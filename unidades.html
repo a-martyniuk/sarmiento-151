@@ -140,7 +140,45 @@
         }
         .sidebar-footer {
             padding: 0 1.5rem;
+            margin-top: auto;
         }
+
+        .btn-contact-sidebar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 0.55rem 0.75rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(139, 92, 246, 0.12));
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            border-radius: 8px;
+            color: var(--text-1);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-contact-sidebar:hover {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.28), rgba(139, 92, 246, 0.28));
+            border-color: var(--accent);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+        }
+
+        .btn-contact-sidebar svg {
+            color: var(--accent);
+            transition: color 0.2s;
+        }
+
+        .btn-contact-sidebar:hover svg {
+            color: #ffffff;
+        }
+
         .sidebar-badge {
             font-size: 0.7rem;
             background: var(--accent-dim);
@@ -671,6 +709,12 @@
     </nav>
 
     <div class="sidebar-footer">
+        <a href="mailto:alexis.martyniuk@gmail.com?subject=%5BSarmiento%20151%5D%20Consulta%20sobre%20el%20proyecto" 
+           class="btn-contact-sidebar"
+           title="Enviar correo a Alexis Martyniuk">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span>Evacuar Duda / Contacto</span>
+        </a>
         <div class="brand-sub" style="margin-bottom:6px;">Fuente de datos</div>
         <span class="sidebar-badge" id="sidebarPeriods">Cargando...</span>
     </div>
