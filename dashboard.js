@@ -187,10 +187,16 @@ const populatePeriodFilter = () => {
         sel.appendChild(opt);
     });
 
-    // Seleccionar por defecto el período consolidado más reciente con gastos pagados
-    const paidPeriods = [...new Set(rawExpenses.filter(e => e.estado === "Pagado").map(e => e.periodo))].sort().reverse();
-    if (paidPeriods.length > 0) {
-        sel.value = paidPeriods[0];
+    // Seleccionar por defecto el último período consolidado con datos válidos y completos
+    const validPeriods = periods.filter(p => {
+        const bal = rawBalances.find(b => b.periodo === p);
+        if (!bal || bal.egresos <= 0 || bal.patrimonio_neto <= 0) return false;
+        const count = rawExpenses.filter(e => e.periodo === p).length;
+        return count >= 10;
+    });
+
+    if (validPeriods.length > 0) {
+        sel.value = validPeriods[0];
     } else if (periods.length > 0) {
         sel.value = periods[0];
     }

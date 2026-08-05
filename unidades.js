@@ -58,12 +58,17 @@ const populatePeriodFilter = () => {
         sel.appendChild(opt);
     });
 
-    if (periods.length > 0) {
-        if (periods[0] === "2026-07" && periods.length > 1) {
-            sel.value = periods[1];
-        } else {
-            sel.value = periods[0];
-        }
+    // Seleccionar por defecto el último período con liquidación de expensas válida (ga_monto/gb_monto > 0)
+    const validPeriods = periods.filter(p => {
+        const items = rawProrrateo.filter(e => e.periodo === p);
+        if (items.length < 10) return false;
+        return items.some(e => (e.ga_monto || 0) > 0 || (e.gb_monto || 0) > 0);
+    });
+
+    if (validPeriods.length > 0) {
+        sel.value = validPeriods[0];
+    } else if (periods.length > 0) {
+        sel.value = periods[0];
     }
 
     const sidebarBadge = document.getElementById("sidebarPeriods");
