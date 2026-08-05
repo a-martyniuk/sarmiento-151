@@ -13991,6 +13991,18 @@
             "estado": "Pendiente",
             "anomalia": false,
             "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Mantenimiento y Reparaciones",
+            "concepto": "Albañilería; Jaime Daniel; ; Impermeabilización de contra frente de edificio. Reparar y sellar grietas, fisuras y microfisuras con sellador y vendas. Anticipo 50%.; ; XX-X- 0000-00000001",
+            "monto": 2250000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pendiente",
+            "anomalia": false,
+            "desviacion_pct": 0
         }
     ],
     "balances": [
@@ -14413,6 +14425,16 @@
             "deuda_acumulada": 25504861.49,
             "patrimonio_neto": 33490885.52,
             "saldo_disponibilidades": 9509725.91
+        },
+        {
+            "periodo": "2026-08",
+            "ingresos": 1339836.42,
+            "egresos": 0.0,
+            "saldo_banco": 11320653.09,
+            "recaudado_termino": 0.0,
+            "deuda_acumulada": 24735130.49,
+            "patrimonio_neto": 34819676.78,
+            "saldo_disponibilidades": 12334546.29
         }
     ],
     "multas": [
