@@ -1227,7 +1227,7 @@ const renderFines = (period) => {
 // ── PATRIMONIAL CHART RENDERER ─────────────────────────────────
 const renderPatrimonialChart = () => {
     const cleanBalances = rawBalances
-        .filter(b => b.periodo !== "2026-07" && b.patrimonio_neto > 0)
+        .filter(b => b.patrimonio_neto > 0 && b.egresos > 0 && rawExpenses.filter(e => e.periodo === b.periodo).length >= 10)
         .sort((a, b) => a.periodo.localeCompare(b.periodo));
 
     const categories = cleanBalances.map(b => b.periodo);

@@ -17,13 +17,22 @@ def clean_filename(filename):
     filename = filename.replace('"', '').replace("'", "")
     return re.sub(r'[\\/*?:"<>|]', "_", filename)
 
+# Permite forzar la re-evaluación y re-descarga de PDFs para los períodos recientes (ej. durante los días 1-5 del mes)
+FORCE_REDOWNLOAD_CURRENT = False
+
 def try_download(payload_str):
     predicted_filename = f"{payload_str}.pdf"
     filepath = os.path.join(DOWNLOAD_DIR, predicted_filename)
 
-    # REFUERZO DE RENDIMIENTO: Evitar llamadas de red si el archivo ya existe localmente
-    if os.path.exists(filepath):
-        return False # Retornamos False para no contarlo como nueva descarga
+    import datetime
+    now = datetime.datetime.now()
+    recent_period = f"{now.year}-{now.month - 1:02d}" if now.month > 1 else f"{now.year - 1}-12"
+    current_period = f"{now.year}-{now.month:02d}"
+    is_recent = (recent_period in payload_str) or (current_period in payload_str)
+
+    # Evitar llamadas de red si el archivo ya existe localmente, salvo que forcemos re-descarga de períodos recientes
+    if os.path.exists(filepath) and not (FORCE_REDOWNLOAD_CURRENT and is_recent):
+        return False
 
     # Encriptar el identificador predictivo de la expensa en Base64
     i_b64 = base64.b64encode(payload_str.encode('utf-8')).decode('utf-8')

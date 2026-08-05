@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
   schedule:
     # Verificación de Servicios (Luz, Agua, Gas): Diariamente a las 06:00, 12:00, 18:00 y 21:00 Arg (UTC-3).
     # UTC: 03:00 Arg es 06:00 UTC, etc.
@@ -42,8 +43,8 @@ jobs:
       - name: Determine Update Mode
         id: mode-selector
         run: |
-          # Si se activa por push o por el cron mensual de expensas (21:00 UTC en días 1-5)
-          if [ "${{ github.event_name }}" = "push" ] || { [ "${{ github.event_name }}" = "schedule" ] && [ "$(date +%d)" -le 5 ] && [ "$(date +%H)" -eq 21 ]; }; then
+          # Si se activa por push, dispatch o por cualquier cron durante los primeros 5 días del mes (días 1-5)
+          if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "${{ github.event_name }}" = "schedule" ] && [ "$(date +%d)" -le 5 ]; }; then
             echo "MODE=--all" >> $GITHUB_ENV
             echo "Determined Update Mode: --all (Full update + PDF search)"
           else

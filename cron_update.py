@@ -11,13 +11,26 @@ def load_json(filepath):
     except Exception:
         return None
 
-def check_period_exists(period):
-    # Verificar en gastos.json
+def is_period_valid(period):
+    """
+    Verifica si un período en gastos.json cuenta con información completa y válida:
+    - Debe tener al menos 10 registros de gastos procesados.
+    - El balance correspondiente debe indicar egresos > 0.
+    """
     gastos = load_json("gastos.json")
-    if gastos and "gastos" in gastos:
-        if any(e.get("periodo") == period for e in gastos["gastos"]):
-            return True
-    return False
+    if not gastos or "gastos" not in gastos:
+        return False
+
+    period_expenses = [e for e in gastos["gastos"] if e.get("periodo") == period]
+    if len(period_expenses) < 10:
+        return False
+
+    balances = gastos.get("balances", [])
+    period_balance = next((b for b in balances if b.get("periodo") == period), None)
+    if not period_balance or period_balance.get("egresos", 0.0) <= 0:
+        return False
+
+    return True
 
 def main():
     mode = "--services-only"
@@ -33,49 +46,44 @@ def main():
         print("⚠️  check_servicios.py finalizó con errores. El estado de los servicios no fue actualizado, pero el pipeline continúa.")
 
     if mode == "--all":
-        # Determinar el período esperado (mes anterior al corriente)
         now = datetime.datetime.now()
-        # Si es enero, el mes anterior es diciembre del año pasado
+        # Determinar el período esperado (mes anterior al corriente)
         if now.month == 1:
             expected_period = f"{now.year - 1}-12"
         else:
             expected_period = f"{now.year}-{now.month - 1:02d}"
 
-        print(f"Período de expensas esperado para descargar: {expected_period}")
+        print(f"Período de expensas esperado para evaluar/descargar: {expected_period}")
 
-        # Comprobar si ya tenemos datos para ese período
-        if check_period_exists(expected_period):
-            print(f"El período {expected_period} ya se encuentra disponible y con datos. Se cancela la descarga repetida.")
+        is_valid = is_period_valid(expected_period)
+        is_first_five_days = now.day <= 5
+
+        # Si el período actual es válido Y NO estamos en los primeros 5 días del mes, omitir re-descargas
+        if is_valid and not is_first_five_days:
+            print(f"El período {expected_period} se encuentra disponible con datos completos (válido). Se omite la descarga repetida.")
         else:
-            print(f"El período {expected_period} no está cargado. Buscando nuevas liquidaciones en el portal...")
-            
+            if is_first_five_days:
+                print(f"Período en ventana de publicación (Día 1-5 del mes). Iniciando búsqueda de versiones nuevas o definitivas...")
+            elif not is_valid:
+                print(f"El período {expected_period} no está cargado o contiene información incompleta/inválida. Buscando actualización...")
+
             # 1. Ejecutar descarga de PDFs desde el portal de la administración
-            # Modificamos temporalmente el script de descarga para usar rutas relativas si corre en Actions
             import download_historico
-            
-            # Modificar la constante DOWNLOAD_DIR dinámicamente si es necesario
             download_historico.DOWNLOAD_DIR = "liquidaciones"
-            
-            # Ejecutar el main de descarga
+            download_historico.FORCE_REDOWNLOAD_CURRENT = True
             download_historico.main()
 
-            # Verificar si se descargó el PDF de la nueva liquidación
-            expected_pdf_name = f"326_151_{expected_period}_liquidacion.pdf"
-            pdf_path = os.path.join("liquidaciones", expected_pdf_name)
+            # 2. Ejecutar extractores de datos para sincronizar gastos.json y prorrateo.json
+            print("Ejecutando extract_data.py para actualizar la base de gastos...")
+            subprocess.run([sys.executable, "extract_data.py"], check=True)
 
-            if os.path.exists(pdf_path):
-                print(f"¡Nueva liquidación detectada: {expected_pdf_name}! Procesando y parseando PDF...")
-                
-                # 2. Ejecutar extractores de datos
-                print("Ejecutando extract_data.py...")
-                subprocess.run([sys.executable, "extract_data.py"], check=True)
-                
-                print("Ejecutando extract_prorrateo.py...")
-                subprocess.run([sys.executable, "extract_prorrateo.py"], check=True)
-                
-                print("Datos actualizados con éxito en gastos.json y prorrateo.json.")
+            print("Ejecutando extract_prorrateo.py para actualizar la base de prorrateos...")
+            subprocess.run([sys.executable, "extract_prorrateo.py"], check=True)
+
+            if is_period_valid(expected_period):
+                print(f"¡Sincronización exitosa! El período {expected_period} cuenta ahora con información válida y completa.")
             else:
-                print(f"Aún no está disponible la liquidación {expected_pdf_name} en el portal de la administración.")
+                print(f"Sincronización completada. El período {expected_period} aún no cuenta con liquidación definitiva publicada por la administración.")
 
 if __name__ == "__main__":
     main()
