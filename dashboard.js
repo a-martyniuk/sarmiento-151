@@ -870,20 +870,27 @@ const renderDrilldownCharts = () => {
 
 // ── EMPLOYEE BREAKDOWN CHART ─────────────────────────────────────
 let chartEmployee = null;
+const isEmployeeMatch = {
+    ibrahim: (e) => e.empleado === 'Ibrahim Yamil' || e.empleado === 'Encargado Permanente',
+    lourdes: (e) => e.empleado === 'Lourdes Zaracho' || e.empleado === 'Ayudante / Suplente',
+    cargas:  (e) => e.empleado === 'Cargas Sociales / Sindicato' || e.empleado === 'Cargas Sociales / ART',
+    yamil:   (e) => e.empleado === 'Yamil Reparaciones'
+};
+
 const renderEmployeeChart = () => {
     const periods = [...new Set(rawExpenses.map(e => e.periodo))].sort();
 
-    const sumBy = (nombre) => periods.map(p =>
+    const sumBy = (matcher) => periods.map(p =>
         Math.round(rawExpenses
-            .filter(e => e.periodo === p && e.empleado === nombre)
+            .filter(e => e.periodo === p && matcher(e))
             .reduce((a, e) => a + e.monto, 0))
     );
 
     const series = [
-        { name: 'Encargado Permanente',    data: sumBy('Encargado Permanente') },
-        { name: 'Ayudante / Suplente',      data: sumBy('Ayudante / Suplente') },
-        { name: 'Cargas Sociales / ART',   data: sumBy('Cargas Sociales / Sindicato') },
-        { name: 'Yamil Reparaciones',      data: sumBy('Yamil Reparaciones') },
+        { name: 'Encargado Permanente',    data: sumBy(isEmployeeMatch.ibrahim) },
+        { name: 'Ayudante / Suplente',      data: sumBy(isEmployeeMatch.lourdes) },
+        { name: 'Cargas Sociales / ART',   data: sumBy(isEmployeeMatch.cargas) },
+        { name: 'Yamil Reparaciones',      data: sumBy(isEmployeeMatch.yamil) },
     ];
 
     const totalPeriods = periods.length;
@@ -961,20 +968,20 @@ const renderEmployeeKPIs = (period) => {
         }
     }
 
-    const sumEmp = (nombre) => {
+    const sumEmp = (matcher) => {
         const src = period === 'todos'
-            ? rawExpenses.filter(e => e.empleado === nombre)
-            : rawExpenses.filter(e => e.periodo === period && e.empleado === nombre);
+            ? rawExpenses.filter(e => matcher(e))
+            : rawExpenses.filter(e => e.periodo === period && matcher(e));
         return src.reduce((a, e) => a + e.monto, 0);
     };
 
-    const ibTotal  = sumEmp('Encargado Permanente');
-    const loTotal  = sumEmp('Ayudante / Suplente');
-    const crTotal  = sumEmp('Cargas Sociales / Sindicato');
-    const yrTotal  = sumEmp('Yamil Reparaciones');
+    const ibTotal  = sumEmp(isEmployeeMatch.ibrahim);
+    const loTotal  = sumEmp(isEmployeeMatch.lourdes);
+    const crTotal  = sumEmp(isEmployeeMatch.cargas);
+    const yrTotal  = sumEmp(isEmployeeMatch.yamil);
 
-    const ibHist = rawExpenses.filter(e => e.empleado === 'Encargado Permanente').reduce((a,e) => a+e.monto, 0);
-    const loHist = rawExpenses.filter(e => e.empleado === 'Ayudante / Suplente').reduce((a,e) => a+e.monto, 0);
+    const ibHist = rawExpenses.filter(isEmployeeMatch.ibrahim).reduce((a,e) => a+e.monto, 0);
+    const loHist = rawExpenses.filter(isEmployeeMatch.lourdes).reduce((a,e) => a+e.monto, 0);
 
     document.getElementById('empIbrahimMonto').textContent  = ibTotal > 0 ? fmt(ibTotal) : '—';
     document.getElementById('empLourdesMonto').textContent  = loTotal > 0 ? fmt(loTotal) : '—';
