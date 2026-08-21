@@ -29,14 +29,15 @@ const fetchIPC = async () => {
             ipcData[p] = { valor: val, inflacion };
         }
 
-        // Proyectar meses futuros hasta 2026-07 para evitar N/D
+        // Proyectar meses futuros hasta el mes corriente dinámicamente para evitar N/D
         const periods = Object.keys(ipcData).sort();
         if (periods.length > 0) {
             let lastPeriod = periods[periods.length - 1];
             let lastVal = ipcData[lastPeriod].valor;
             let [y, m] = lastPeriod.split("-").map(Number);
-            const limitYear = 2026;
-            const limitMonth = 7;
+            const now = new Date();
+            const limitYear = now.getFullYear();
+            const limitMonth = now.getMonth() + 1;
 
             while (y < limitYear || (y === limitYear && m < limitMonth)) {
                 m++;
