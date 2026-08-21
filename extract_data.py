@@ -82,10 +82,14 @@ def parse_pdf_expenses(filepath):
     
     filename = os.path.basename(filepath)
     match_date = re.search(r"(\d{4})-(\d{2})", filename)
-    if not match_date:
-        return [], None, []
-    
-    period = f"{match_date.group(1)}-{match_date.group(2)}"
+    if match_date:
+        period = f"{match_date.group(1)}-{match_date.group(2)}"
+    else:
+        match_date_rev = re.search(r"(\d{2})[-_](\d{4})", filename)
+        if match_date_rev:
+            period = f"{match_date_rev.group(2)}-{match_date_rev.group(1)}"
+        else:
+            return [], None, []
     current_rubro = "Gastos Varios"
 
     balance_data = {
@@ -382,6 +386,15 @@ def detect_anomalies(expenses):
             
     return expenses
 
+def get_period_from_filename(filename):
+    match_date = re.search(r"(\d{4})-(\d{2})", filename)
+    if match_date:
+        return f"{match_date.group(1)}-{match_date.group(2)}"
+    match_date_rev = re.search(r"(\d{2})[-_](\d{4})", filename)
+    if match_date_rev:
+        return f"{match_date_rev.group(2)}-{match_date_rev.group(1)}"
+    return None
+
 def main():
     print("Iniciando análisis y extracción granular de gastos...")
     all_expenses = []
@@ -392,10 +405,23 @@ def main():
         print(f"ERROR: No existe el directorio {LIQUIDACIONES_DIR}")
         return
 
-    files = [os.path.join(LIQUIDACIONES_DIR, f) for f in os.listdir(LIQUIDACIONES_DIR) 
-             if f.endswith("_liquidacion.pdf")]
-    
-    print(f"Encontradas {len(files)} liquidaciones para procesar.")
+    files_by_period = {}
+    for f in os.listdir(LIQUIDACIONES_DIR):
+        if f.endswith("_liquidacion.pdf"):
+            p = get_period_from_filename(f)
+            if p:
+                files_by_period[p] = os.path.join(LIQUIDACIONES_DIR, f)
+            
+    excepciones_dir = os.path.join(LIQUIDACIONES_DIR, "Excepciones")
+    if os.path.exists(excepciones_dir):
+        for f in os.listdir(excepciones_dir):
+            if f.lower().endswith(".pdf"):
+                p = get_period_from_filename(f)
+                if p:
+                    files_by_period[p] = os.path.join(excepciones_dir, f)
+                
+    files = [files_by_period[p] for p in sorted(files_by_period.keys())]
+    print(f"Encontradas {len(files)} liquidaciones consolidadas para procesar.")
 
     for filepath in sorted(files):
         print(f"   Procesando: {os.path.basename(filepath)}...")
