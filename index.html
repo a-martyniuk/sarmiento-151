@@ -1829,6 +1829,56 @@ Propietario/a U.F. [Nº Unidad] — Consorcio Sarmiento 151
     </div>
 </div>
 
+<!-- MODAL CORTE DE AGUA AYSA -->
+<div class="modal-overlay" id="aysaAlertModal">
+    <div class="modal" style="position:relative; max-width: 520px; width: 92%; border-top: 3px solid #06b6d4; background: var(--bg-surface);">
+        <button class="btn" style="position:absolute;top:1.25rem;right:1.25rem;padding:4px 10px;" onclick="closeAysaModal()">✕ Cerrar</button>
+        
+        <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.3); padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; color:#06b6d4; margin-bottom:0.5rem;">
+            💧 AYSA · CORTE PROGRAMADO
+        </div>
+        <div class="modal-title" style="font-size:1.35rem; line-height:1.2;">Interrupción del Servicio de Agua</div>
+        <div class="modal-subtitle" style="font-size:0.8rem; color:var(--text-3); margin-top:2px;">Aviso oficial de Agua y Saneamientos Argentinos S.A.</div>
+
+        <div style="margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.85rem;">
+            <!-- Fechas y horarios -->
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:0.9rem 1rem;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem; border-bottom:1px dashed rgba(255,255,255,0.08); padding-bottom:0.6rem; margin-bottom:0.6rem;">
+                    <div>
+                        <div style="font-size:0.68rem; color:var(--text-3); text-transform:uppercase; font-weight:700;">🕒 Inicio del Corte</div>
+                        <div style="font-size:0.88rem; font-weight:700; color:#f43f5e; margin-top:2px;">Jueves 27/08 · 22:00 hs</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.68rem; color:var(--text-3); text-transform:uppercase; font-weight:700;">🏁 Fin Estimado</div>
+                        <div style="font-size:0.88rem; font-weight:700; color:#10b981; margin-top:2px;">Viernes 28/08 · 15:00 hs</div>
+                    </div>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-2); display:flex; flex-direction:column; gap:3px;">
+                    <div><strong>Inmuebles Afectados:</strong> Sarmiento 151 (Cta. 141117) y Sarmiento 149 (Cta. 141118)</div>
+                    <div><strong>Motivo:</strong> Trabajos de mantenimiento de instalación en red de distribución.</div>
+                </div>
+            </div>
+
+            <!-- Recomendaciones -->
+            <div style="background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.2); border-radius:10px; padding:0.85rem 1rem;">
+                <div style="font-size:0.75rem; font-weight:700; color:#fbbf24; margin-bottom:0.3rem;">💡 Recomendaciones para el Consorcio y Vecinos:</div>
+                <ul style="font-size:0.75rem; color:var(--text-2); line-height:1.45; padding-left:1.1rem; margin:0;">
+                    <li>Cuidar el uso de agua para preservar las reservas del tanque y cisterna.</li>
+                    <li>Evitar el uso de lavarropas o artefactos de alto consumo durante el corte.</li>
+                    <li>Verificar que las canillas queden bien cerradas para evitar desbordes al normalizarse la presión.</li>
+                </ul>
+            </div>
+
+            <!-- Botones -->
+            <div style="display:flex; gap:0.5rem; margin-top:0.25rem;">
+                <button type="button" onclick="closeAysaModal()" class="btn btn-primary" style="flex:1; padding:0.65rem; font-size:0.82rem; font-weight:600;">
+                    ✓ Entendido / Cerrar Aviso
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- MODAL CONTACTO -->
 <div class="modal-overlay" id="contactModal">
     <div class="modal" style="position:relative; max-width: 480px; width: 92%;">
@@ -1893,7 +1943,7 @@ function toggleClaimText() {
             if (btn) btn.innerHTML = '🙈 Ocultar Nota';
         } else {
             el.style.display = 'none';
-            if (btn) btn.innerHTML = '👁️ Ver Nota Completa';
+            if (btn) btn.innerHTML = '👁️ Ver Modelo Completo';
         }
     }
 }
@@ -1909,11 +1959,43 @@ function copyClaimText() {
         });
     }
 }
+
+// ── AYSA ALERT CONTROLLER ──
+function checkAysaAlert() {
+    const expiryDate = new Date('2026-08-28T15:00:00-03:00');
+    const now = new Date();
+    if (now <= expiryDate) {
+        const isDismissed = sessionStorage.getItem('aysa_alert_20260827_closed');
+        if (!isDismissed) {
+            setTimeout(() => {
+                const modal = document.getElementById('aysaAlertModal');
+                if (modal) modal.classList.add('open');
+            }, 600);
+        }
+    }
+}
+function openAysaModal() {
+    const modal = document.getElementById('aysaAlertModal');
+    if (modal) modal.classList.add('open');
+}
+function closeAysaModal() {
+    const modal = document.getElementById('aysaAlertModal');
+    if (modal) modal.classList.remove('open');
+    sessionStorage.setItem('aysa_alert_20260827_closed', 'true');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    checkAysaAlert();
     const contactModal = document.getElementById('contactModal');
     if (contactModal) {
         contactModal.addEventListener('click', (e) => {
             if (e.target === contactModal) closeContactModal();
+        });
+    }
+    const aysaModal = document.getElementById('aysaAlertModal');
+    if (aysaModal) {
+        aysaModal.addEventListener('click', (e) => {
+            if (e.target === aysaModal) closeAysaModal();
         });
     }
 });

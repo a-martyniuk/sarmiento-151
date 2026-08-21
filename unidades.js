@@ -548,7 +548,7 @@ const loadServicesStatus = () => {
                 </div>
 
                 <!-- AYSA -->
-                <div style="margin-bottom: 0.35rem;">
+                <div style="margin-bottom: 0.35rem; cursor: pointer;" onclick="if(typeof openAysaModal === 'function') openAysaModal();" title="Click para ver detalle del corte programado">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
                         <span style="color: var(--text-2);">💧 Agua (AySA)</span>
                         ${getBadge(aysa)}
