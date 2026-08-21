@@ -1,15 +1,15 @@
 {
-    "actualizado": "21/08/2026 12:00",
+    "actualizado": "21/08/2026 12:02",
     "edesur": {
         "status": "Normal",
         "message": "Servicio eléctrico operando normalmente."
     },
     "aysa": {
-        "status": "Alerta",
-        "message": "Corte programado: 27/08 22:00 a 28/08 15:00 hs por mantenimiento de instalación."
+        "status": "Desconocido",
+        "message": "No se pudo verificar el estado del suministro de agua. Revisar manualmente."
     },
     "metrogas": {
-        "status": "Normal",
-        "message": "Servicio de gas operando normalmente."
+        "status": "Desconocido",
+        "message": "No se pudo verificar el estado del suministro de gas. Revisar manualmente."
     }
 }
