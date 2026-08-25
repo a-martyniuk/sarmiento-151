@@ -1,8 +1,8 @@
 {
-    "actualizado": "24/08/2026 18:20",
+    "actualizado": "24/08/2026 21:43",
     "edesur": {
-        "status": "Normal",
-        "message": "Servicio eléctrico operando normalmente."
+        "status": "Desconocido",
+        "message": "No se pudo verificar el estado del servicio eléctrico. Revisar manualmente."
     },
     "aysa": {
         "status": "Desconocido",
