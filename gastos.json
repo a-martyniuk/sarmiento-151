@@ -13945,6 +13945,42 @@
             "desviacion_pct": 0
         },
         {
+            "periodo": "2026-09",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Sueldos; Ibrahim Yamil; ; Sueldo encargado s/viv. 08/2026 + vacaciones + Bono. Saldo.; ;",
+            "monto": 950820.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": "Ibrahim Yamil",
+            "estado": "Pendiente",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-09",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Sueldos; Lourdes Zaracho; ; Sueldo encargada adicional s/viv. 08/2026 + Bono. Saldo.; ;",
+            "monto": 466594.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": "Lourdes Zaracho",
+            "estado": "Pendiente",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-09",
+            "rubro": "Mantenimiento y Reparaciones",
+            "concepto": "Albañilería; Jaime Daniel; ; Impermeabilización de contra frente de edificio. Reparar y sellar grietas, fisuras y microfisuras con sellador y vendas. Cuota 1/2 Saldo.; ; XX-X- 0000-00000001",
+            "monto": 1125000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pendiente",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
             "periodo": "2026-07",
             "rubro": "Sueldos y Cargas Sociales",
             "concepto": "Cargas sociales y ART, AFIP, Período 06/2026.",
@@ -14727,6 +14763,16 @@
             "saldo_disponibilidades": 12334546.29
         },
         {
+            "periodo": "2026-09",
+            "ingresos": 186845.83,
+            "egresos": 0.0,
+            "saldo_banco": 7668466.67,
+            "recaudado_termino": 0.0,
+            "deuda_acumulada": 29449882.08,
+            "patrimonio_neto": 35589827.95,
+            "saldo_disponibilidades": 8682359.87
+        },
+        {
             "periodo": "2026-07",
             "ingresos": 19644975.2,
             "egresos": 17560034.82,
@@ -15052,6 +15098,13 @@
             "propietario": "SANCHEZ/ Cristian",
             "motivo": "Por dejar canilla abierta y generar filtraciones",
             "monto": 120000.0
+        },
+        {
+            "periodo": "2026-09",
+            "uf": "142",
+            "propietario": "CPT INT/ Camila Nuñez",
+            "motivo": "Por dejar canilla baño piso 27 abierta.",
+            "monto": 100000.0
         }
     ]
 }
