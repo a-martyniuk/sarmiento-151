@@ -6,17 +6,13 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    # Verificación de Servicios (Luz, Agua, Gas): Diariamente a las 06:00, 12:00, 18:00 y 21:00 Arg (UTC-3).
-    # UTC: 03:00 Arg es 06:00 UTC, etc.
-    # 06:00 Arg -> 09:00 UTC
-    # 12:00 Arg -> 15:00 UTC
-    # 18:00 Arg -> 21:00 UTC
-    # 21:00 Arg -> 00:00 UTC (del día siguiente)
-    # Cron en UTC: 0 0,9,15,21 * * *
+    # Verificación de Servicios (Luz, Agua, Gas) y Expensas (días 1 a 5): Diariamente a las 06:00, 12:00, 18:00 y 21:00 Arg (UTC-3).
+    # En UTC: 00:00, 09:00, 15:00 y 21:00 hs.
     - cron: '0 0,9,15,21 * * *'
-    # Verificación de Expensas: Primeros 5 días del mes a las 18:00 Arg (21:00 UTC).
-    # Cron en UTC: 0 21 1-5 * *
-    - cron: '0 21 1-5 * *'
+
+concurrency:
+  group: sarmiento-151-pipeline
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -43,7 +39,7 @@ jobs:
       - name: Determine Update Mode
         id: mode-selector
         run: |
-          # Si se activa por push, dispatch o por cualquier cron durante los primeros 5 días del mes (días 1-5)
+          # Si se activa por push, dispatch o por schedule durante los primeros 5 días del mes (días 1-5)
           if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "${{ github.event_name }}" = "schedule" ] && [ "$(date +%d)" -le 5 ]; }; then
             echo "MODE=--all" >> $GITHUB_ENV
             echo "Determined Update Mode: --all (Full update + PDF search)"
@@ -64,8 +60,20 @@ jobs:
           # Hacer commit solo si hay cambios en staging para evitar fallar el job
           if ! git diff --cached --quiet; then
             git commit -m "chore(auto-update): sync database and status data [skip ci]"
-            git pull --rebase origin main
-            git push origin main
+            for attempt in 1 2 3; do
+              if git push origin main; then
+                echo "Push exitoso en intento $attempt."
+                break
+              else
+                echo "Conflicto de concurrencia al empujar a main. Sincronizando con rebase..."
+                git fetch origin main
+                git rebase -X theirs origin/main || {
+                  git checkout --ours gastos.json prorrateo.json servicios_status.json 2>/dev/null || true
+                  git add gastos.json prorrateo.json servicios_status.json liquidaciones/
+                  git -c core.editor=true rebase --continue || git rebase --abort
+                }
+              fi
+            done
           else
             echo "No changes in utility status or PDF database."
           fi
