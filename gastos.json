@@ -6585,8 +6585,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 45
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-01",
@@ -9274,7 +9274,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 84
+            "desviacion_pct": 80
         },
         {
             "periodo": "2025-07",
@@ -10462,7 +10462,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 158
+            "desviacion_pct": 150
         },
         {
             "periodo": "2025-10",
@@ -10497,8 +10497,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 47
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-10",
@@ -10822,7 +10822,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 161
+            "desviacion_pct": 153
         },
         {
             "periodo": "2025-11",
@@ -10857,8 +10857,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 46
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-11",
@@ -11578,7 +11578,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 105
+            "desviacion_pct": 101
         },
         {
             "periodo": "2026-01",
@@ -12034,7 +12034,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 75
+            "desviacion_pct": 71
         },
         {
             "periodo": "2026-02",
@@ -12430,7 +12430,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 62
+            "desviacion_pct": 59
         },
         {
             "periodo": "2026-03",
@@ -12537,8 +12537,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 47
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2026-03",
@@ -12862,7 +12862,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 52
+            "desviacion_pct": 49
         },
         {
             "periodo": "2026-04",
@@ -12958,7 +12958,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 52
+            "desviacion_pct": 49
         },
         {
             "periodo": "2026-04",
@@ -13162,7 +13162,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 57
+            "desviacion_pct": 54
         },
         {
             "periodo": "2026-05",
@@ -13246,7 +13246,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 57
+            "desviacion_pct": 54
         },
         {
             "periodo": "2026-05",
@@ -13474,7 +13474,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 121
+            "desviacion_pct": 85
         },
         {
             "periodo": "2026-05",
@@ -13546,7 +13546,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 63
+            "desviacion_pct": 60
         },
         {
             "periodo": "2026-06",
@@ -13934,9 +13934,405 @@
         },
         {
             "periodo": "2026-08",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Cargas sociales y ART, AFIP, Período 07/2026.",
+            "monto": 1509179.6,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": "Cargas Sociales / Sindicato",
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Seracarh, SUTERH",
+            "monto": 463159.62,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": "Cargas Sociales / Sindicato",
+            "estado": "Pagado",
+            "anomalia": true,
+            "desviacion_pct": 76
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Sueldos, Altamirano Javier, Suplencia jornada reducida turno mañana.",
+            "monto": 178223.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Sueldos, Ibrahim Yamil, Sueldo encargado s/viv. 08/2026 + vacaciones + Bono. A cuenta.",
+            "monto": 800000.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": "Ibrahim Yamil",
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Sueldos, Lourdes Zaracho, Sueldo encargada adicional s/viv. 08/2026 + Bono. A cuenta.",
+            "monto": 500000.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": "Lourdes Zaracho",
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Seguros",
+            "concepto": "Seguros, Seguro, Seguro integral consorcio compañía Allianz. Póliza N° 260230781632",
+            "monto": 341791.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Servicios Públicos",
+            "concepto": "Agua servicio, AySA, Cuenta de Servicios 141117",
+            "monto": 575890.06,
+            "tipo": "Fijo",
+            "servicio": "AySA",
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": true,
+            "desviacion_pct": 57
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Servicios Públicos",
+            "concepto": "Agua servicio, AySA, Cuenta de Servicios 141118",
+            "monto": 1050540.2,
+            "tipo": "Fijo",
+            "servicio": "AySA",
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Servicios Públicos",
+            "concepto": "Energía eléctrica, Edesur, Servicios generales Cliente 80500917",
+            "monto": 3259213.44,
+            "tipo": "Fijo",
+            "servicio": "Edesur",
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": true,
+            "desviacion_pct": 188
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Servicios Públicos",
+            "concepto": "Gas servicio, Metrogas, Servicios generales 030014278517",
+            "monto": 2210505.6,
+            "tipo": "Fijo",
+            "servicio": "Metrogas",
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": true,
+            "desviacion_pct": 65
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Contratos y Abonos",
+            "concepto": "Ascensores Abono, Guillemi, Servicio de mantenimiento de 2 ascensores. (Julio), FC-B-0002-00026119, CUIT: 30710235119",
+            "monto": 157773.69,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Contratos y Abonos",
+            "concepto": "Cámaras y vigilancia electrónica, Díaz Hernan Ariel, Visita técnica, revisión general y puesta en funcionamiento de 2 cámaras. FC-C- 0001-00000298, CUIT: 20409969616",
+            "monto": 90000.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Contratos y Abonos",
+            "concepto": "Cámaras y vigilancia electrónica, Díaz Hernan Ariel, Visita técnica, revisión general y puesta en funcionamiento de cámaras. FC-C-0001- 00000293, CUIT: 20409969616",
+            "monto": 120000.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Contratos y Abonos",
+            "concepto": "Cámaras y vigilancia electrónica, Internet, Servicio mensual de internet para cámaras. FC-X-0000-00000001",
+            "monto": 75620.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Contratos y Abonos",
+            "concepto": "Desinsectación, Fumigación, Servicio control de plagas. FC-C-0002- 00004779, CUIT: 20184459028",
+            "monto": 75000.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Contratos y Abonos",
+            "concepto": "Mantenimiento de piscina, FB Saneamiento Ambiental, Abono mantenimiento Junio. 8 Visitas. FC-C-0002-00002606, CUIT: 20181562669",
+            "monto": 280000.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Administración",
+            "concepto": "Honorarios administración, Administración Magariños, Honorarios mes de Agosto. FC-C-0003-00000720, CUIT: 24287539408",
+            "monto": 1017000.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Administración",
+            "concepto": "Sistema de gestión, Global, Sistema de gestión online para consorcios. FC-B-0004-00072608, CUIT: 30715733044",
+            "monto": 71898.16,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
             "rubro": "Mantenimiento y Reparaciones",
-            "concepto": "Albañilería; Jaime Daniel; ; Impermeabilización de contra frente de edificio. Reparar y sellar grietas, fisuras y microfisuras con sellador y vendas. Anticipo 50%.; ; XX-X- 0000-00000001",
+            "concepto": "Albañilería, Jaime Daniel, Impermeabilización de contra frente de edificio. Reparar y sellar grietas, fisuras y microfisuras con sellador y vendas. Anticipo 50%. XX-X-0000-00000001, CUIT: 20256030870",
             "monto": 2250000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Mantenimiento y Reparaciones",
+            "concepto": "Bombas, Metalurgica SerMat, Reparación, turbina a nuevo Bomba Rowa de recirculación de agua caliente. Sala termos. XX-X-0000- 00000001",
+            "monto": 200000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Mantenimiento y Reparaciones",
+            "concepto": "Bombas, Perez German, Servicio de cambio de bombas de recirculación. Instalación. FC-C-0003-00002712, CUIT: 23184094789",
+            "monto": 100000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Mantenimiento y Reparaciones",
+            "concepto": "Cerrajería, Cerradura & Herrajes Veiga, 2 Cerraduras Prive y 1 duplicado. FC-B-0012-00006574, CUIT: 30708508221",
+            "monto": 52000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Mantenimiento y Reparaciones",
+            "concepto": "Electricidad, Posse Raúl Alejandro, Servicio de iluminación cocheras",
+            "monto": 120000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Varios",
+            "concepto": "Artículos de limpieza, QS Artículos Limpieza, Artículos de limpieza varios. FC-B-0003-00004781",
+            "monto": 199950.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Varios",
+            "concepto": "Artículos de limpieza, QS Artículos Limpieza, Artículos de limpieza varios. XX-X-0000-00000001",
+            "monto": 12500.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Varios",
+            "concepto": "Ferretería, Ferrelom, 20 Bulbos Macroled, 1 fecha hembra, 2 discos Tyrolit y una broca. FC-B-0004-00091203",
+            "monto": 40443.8,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Varios",
+            "concepto": "Gastos Varios, 6 Bidones agua Ivess",
+            "monto": 60000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Varios",
+            "concepto": "Gastos Varios, Confección aportes, cargas y sueldos.",
+            "monto": 400000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": "Cargas Sociales / Sindicato",
+            "estado": "Pagado",
+            "anomalia": true,
+            "desviacion_pct": 180
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Varios",
+            "concepto": "Gastos Varios, Telecentro, Servicio de internet para SUM.",
+            "monto": 223469.15,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": null,
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Varios",
+            "concepto": "Gastos Varios, Yamil Reparaciones, Cambio de cerradura puerta sala de tanques en PB y de sala de ascensores. Cambio de tapa y colocación. Ajuste y reparación de canilla del SUM.",
+            "monto": 120000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": "Yamil Reparaciones",
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Varios",
+            "concepto": "Gastos Varios, Yamil Reparaciones, plegado y armado de nueva tapa tanque terraza. Materiales + mano obra.",
+            "monto": 150000.0,
+            "tipo": "Variable",
+            "servicio": null,
+            "empleado": "Yamil Reparaciones",
+            "estado": "Pagado",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Sueldos; Ibrahim Yamil; ; Sueldo encargado s/viv. 08/2026 + vacaciones + Bono. Saldo.; ;",
+            "monto": 950820.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": "Ibrahim Yamil",
+            "estado": "Pendiente",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Sueldos y Cargas Sociales",
+            "concepto": "Sueldos; Lourdes Zaracho; ; Sueldo encargada adicional s/viv. 08/2026 + Bono. Saldo.; ;",
+            "monto": 466594.0,
+            "tipo": "Fijo",
+            "servicio": null,
+            "empleado": "Lourdes Zaracho",
+            "estado": "Pendiente",
+            "anomalia": false,
+            "desviacion_pct": 0
+        },
+        {
+            "periodo": "2026-08",
+            "rubro": "Mantenimiento y Reparaciones",
+            "concepto": "Albañilería; Jaime Daniel; ; Impermeabilización de contra frente de edificio. Reparar y sellar grietas, fisuras y microfisuras con sellador y vendas. Cuota 1/2 Saldo.; ; XX-X- 0000-00000001",
+            "monto": 1125000.0,
             "tipo": "Variable",
             "servicio": null,
             "empleado": null,
@@ -13990,7 +14386,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 61
+            "desviacion_pct": 59
         },
         {
             "periodo": "2026-07",
@@ -14002,7 +14398,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 161
+            "desviacion_pct": 156
         },
         {
             "periodo": "2026-07",
@@ -14073,8 +14469,8 @@
             "servicio": "Edesur",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 55
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2026-07",
@@ -14278,7 +14674,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 121
+            "desviacion_pct": 85
         },
         {
             "periodo": "2026-07",
@@ -14754,13 +15150,13 @@
         },
         {
             "periodo": "2026-08",
-            "ingresos": 1339836.42,
-            "egresos": 0.0,
-            "saldo_banco": 11320653.09,
+            "ingresos": 19304293.44,
+            "egresos": 21803489.27,
+            "saldo_banco": 7481620.84,
             "recaudado_termino": 0.0,
-            "deuda_acumulada": 24735130.49,
-            "patrimonio_neto": 34819676.78,
-            "saldo_disponibilidades": 12334546.29
+            "deuda_acumulada": 29636727.91,
+            "patrimonio_neto": 35589827.95,
+            "saldo_disponibilidades": 8495514.04
         },
         {
             "periodo": "2026-09",
@@ -15098,6 +15494,13 @@
             "propietario": "SANCHEZ/ Cristian",
             "motivo": "Por dejar canilla abierta y generar filtraciones",
             "monto": 120000.0
+        },
+        {
+            "periodo": "2026-08",
+            "uf": "142",
+            "propietario": "CPT INT/ Camila Nuñez",
+            "motivo": "Por dejar canilla baño piso 27 abierta.",
+            "monto": 100000.0
         },
         {
             "periodo": "2026-09",
