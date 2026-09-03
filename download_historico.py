@@ -68,16 +68,27 @@ def try_download(payload_str):
 
         final_filepath = os.path.join(DOWNLOAD_DIR, filename)
 
-        # Doble verificación de existencia física por si el redireccionamiento cambió el nombre final
-        if os.path.exists(final_filepath):
+        # Si el archivo ya existe localmente y no estamos evaluando períodos recientes, omitir
+        if os.path.exists(final_filepath) and not (FORCE_REDOWNLOAD_CURRENT and is_recent):
             return False
 
-        print(f"   [Descargado] -> {filename}")
+        # Si ya existe pero estamos en período reciente, verificar si el contenido realmente cambió
+        new_content = bytearray(first_chunk)
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                new_content.extend(chunk)
+
+        if os.path.exists(final_filepath):
+            with open(final_filepath, 'rb') as f:
+                existing_content = f.read()
+            if existing_content == bytes(new_content):
+                return False
+            print(f"   [Actualizado con versión nueva] -> {filename}")
+        else:
+            print(f"   [Descargado] -> {filename}")
+
         with open(final_filepath, 'wb') as f:
-            f.write(first_chunk)
-            for chunk in response.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
+            f.write(new_content)
         return True
     except Exception:
         return False
