@@ -101,40 +101,64 @@ const matchConcept = (c1, c2) => {
     const raw1 = c1.toLowerCase();
     const raw2 = c2.toLowerCase();
     
-    // Si tienen números de cuenta de AySA (1411XX) diferentes, no deben emparejarse
+    // AySA: si tienen números de cuenta (1411XX) diferentes, no deben emparejarse
     const getAySA = (s) => { const m = s.match(/1411\d+/); return m ? m[0] : null; };
     const a1 = getAySA(raw1), a2 = getAySA(raw2);
-    if (a1 && a2 && a1 !== a2) return false;
+    if ((a1 || a2) && a1 !== a2) return false;
 
-    // Si tienen números de cliente de Edesur (8050XX) diferentes, no deben emparejarse
+    // Edesur: si tienen números de cliente (8050XX) diferentes, no deben emparejarse
     const getEdesur = (s) => { const m = s.match(/8050\d+/); return m ? m[0] : null; };
     const e1 = getEdesur(raw1), e2 = getEdesur(raw2);
-    if (e1 && e2 && e1 !== e2) return false;
+    if ((e1 || e2) && e1 !== e2) return false;
 
-    // Si refieren a departamentos distintos (ej. Depto 10 B vs Depto 10 E)
+    // Metrogas: distinguir cuenta principal (caldera/calefacción) de cuenta secundaria (anafe/cocina)
+    const getMetrogas = (s) => {
+        if (!s.includes('metrogas') && !s.includes('gas servicio') && !s.includes('gas')) return null;
+        if (s.includes('519800') || s.includes('20456519800')) return 'mg_secundaria';
+        if (s.includes('278517') || s.includes('14278517') || s.includes('30014278517') || s.includes('300014278517')) return 'mg_principal';
+        return 'mg_general';
+    };
+    const mg1 = getMetrogas(raw1), mg2 = getMetrogas(raw2);
+    if ((mg1 || mg2) && mg1 !== mg2) return false;
+
+    // Si refieren a departamentos distintos (o uno a un depto y otro a áreas comunes)
     const getDepto = (s) => { const m = s.match(/depto\.?\s*([0-9]+[a-z]?)/i); return m ? m[1].toLowerCase() : null; };
     const d1 = getDepto(raw1), d2 = getDepto(raw2);
-    if (d1 && d2 && d1 !== d2) return false;
+    if ((d1 || d2) && d1 !== d2) return false;
+
+    // Si refieren a etapas de obra distintas (ej. Etapa 1 vs Etapa 2)
+    const getEtapa = (s) => { const m = s.match(/etapa\s*(\d+)/i); return m ? m[1] : null; };
+    const et1 = getEtapa(raw1), et2 = getEtapa(raw2);
+    if ((et1 || et2) && et1 !== et2) return false;
+
+    // Mano de obra vs Materiales (no comparar insumos físicos contra trabajo de mano de obra)
+    const isManoObra1 = raw1.includes('mano de obra') || raw1.includes('mano obra');
+    const isManoObra2 = raw2.includes('mano de obra') || raw2.includes('mano obra');
+    const isMaterial1 = raw1.includes('material') || raw1.includes('materiales');
+    const isMaterial2 = raw2.includes('material') || raw2.includes('materiales');
+    if (isManoObra1 && isMaterial2) return false;
+    if (isMaterial1 && isManoObra2) return false;
 
     // Si uno es 'A cuenta' / 'Anticipo' y el otro es 'Saldo'
     const isAcuenta1 = raw1.includes('a cuenta') || raw1.includes('anticipo');
     const isAcuenta2 = raw2.includes('a cuenta') || raw2.includes('anticipo');
     const isSaldo1 = raw1.includes('saldo');
     const isSaldo2 = raw2.includes('saldo');
-    if (isAcuenta1 !== isAcuenta2 && (isAcuenta1 || isAcuenta2)) return false;
-    if (isSaldo1 !== isSaldo2 && (isSaldo1 || isSaldo2)) return false;
+    if ((isAcuenta1 || isAcuenta2) && isAcuenta1 !== isAcuenta2) return false;
+    if ((isSaldo1 || isSaldo2) && isSaldo1 !== isSaldo2) return false;
 
     // Si refieren a cuotas distintas (ej. Cuota 1/2 vs Cuota 2/2)
     const getCuota = (s) => { const m = s.match(/cuota\s*(\d+)\s*\/\s*(\d+)/i); return m ? `${m[1]}/${m[2]}` : null; };
     const c1_cuota = getCuota(raw1), c2_cuota = getCuota(raw2);
-    if (c1_cuota && c2_cuota && c1_cuota !== c2_cuota) return false;
+    if ((c1_cuota || c2_cuota) && c1_cuota !== c2_cuota) return false;
 
-    // Limpieza de fechas y meses para comparar la raíz del concepto
+    // Limpieza de fechas, meses y sufijos para comparar la raíz del concepto
     const cleanRoot = (s) => s
         .replace(/\b(0\d|1[0-2])\/\d{4}\b/g, '')
         .replace(/\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/gi, '')
         .replace(/\b\d{4}\b/g, '')
         .replace(/cuota\s*\d+\s*\/\s*\d+/gi, '')
+        .replace(/etapa\s*\d+/gi, '')
         .replace(/\s+/g, ' ')
         .trim();
 
@@ -467,14 +491,48 @@ const renderAnomalySection = (period) => {
         return;
     }
 
+    const getAnomalyInsight = (item) => {
+        const c = item.concepto.toLowerCase();
+        const [y, m] = (item.periodo || "").split("-").map(Number);
+        if (c.includes("aysa")) {
+            return "⚡ Salto tarifario del servicio de agua";
+        }
+        if (c.includes("metrogas") || (c.includes("gas") && item.rubro === "Servicios Públicos")) {
+            if ([5, 6, 7, 8, 9].includes(m)) {
+                return "❄️ Estacionalidad invernal habitual (caldera central y calefacción)";
+            }
+            return "⚡ Salto tarifario en servicio de gas";
+        }
+        if (c.includes("edesur") || (c.includes("energía") && item.rubro === "Servicios Públicos")) {
+            if ([12, 1, 2, 7, 8].includes(m)) {
+                return "⚡ Mayor consumo estacional o ajuste tarifario eléctrico";
+            }
+            return "⚡ Salto tarifario en servicio eléctrico";
+        }
+        if (c.includes("afip") || c.includes("cargas") || c.includes("suterh") || c.includes("seracarh")) {
+            if ([1, 7].includes(m) || c.includes("12/") || c.includes("06/")) {
+                return "💼 Incremento estacional por cargas sobre SAC (Aguinaldo)";
+            }
+            return "💼 Ajuste en cargas sociales o paritarias del sector";
+        }
+        if (c.includes("confección") || c.includes("aportes, cargas")) {
+            return "📋 Aumento en honorarios por liquidación de haberes";
+        }
+        if (c.includes("telecentro")) {
+            return "📡 Ajuste tarifario en abono de conectividad SUM";
+        }
+        return `📈 Supera en +${item.desviacion_pct}% la media de los últimos 3 meses`;
+    };
+
     section.style.display = "block";
     container.innerHTML = anomalies.map(item => `
         <div class="anomaly-item">
             <div class="anomaly-item-header">
-                <span class="anomaly-badge" data-tooltip="Este gasto supera al promedio móvil histórico de las últimas 3 facturas de este mismo concepto." style="cursor: help;">+${item.desviacion_pct}% del histórico</span>
+                <span class="anomaly-badge" data-tooltip="Este gasto supera al promedio móvil histórico de las últimas 3 facturas de este mismo concepto." style="cursor: help;">+${item.desviacion_pct}% vs. media reciente</span>
                 <span class="anomaly-monto">${fmt(item.monto)}</span>
             </div>
             <div class="anomaly-concepto">${item.concepto}</div>
+            <div style="font-size:0.72rem; color:var(--text-3); display:flex; align-items:center; gap:4px; margin-top:4px;">${getAnomalyInsight(item)}</div>
             <div style="margin-top:4px;">${getCatPill(item.rubro)}</div>
         </div>
     `).join('');
@@ -982,27 +1040,70 @@ const renderEmployeeKPIs = (period) => {
         }
     }
 
-    const sumEmp = (matcher) => {
-        const src = period === 'todos'
-            ? rawExpenses.filter(e => matcher(e))
-            : rawExpenses.filter(e => e.periodo === period && matcher(e));
-        return src.reduce((a, e) => a + e.monto, 0);
+    const getEmpDetails = (matcher) => {
+        if (period === 'todos') {
+            const total = rawExpenses.filter(e => matcher(e)).reduce((a, e) => a + e.monto, 0);
+            return { main: total, arrears: 0, total };
+        }
+        const empItems = rawExpenses.filter(e => e.periodo === period && matcher(e));
+        const regularItems = empItems.filter(e => {
+            const m = e.concepto.match(/\b(0[1-9]|1[0-2])\/(\d{4})\b/);
+            const devPeriod = m ? `${m[2]}-${m[1]}` : e.periodo;
+            return devPeriod === period;
+        });
+        const arrearsItems = empItems.filter(e => {
+            const m = e.concepto.match(/\b(0[1-9]|1[0-2])\/(\d{4})\b/);
+            const devPeriod = m ? `${m[2]}-${m[1]}` : e.periodo;
+            return devPeriod < period;
+        });
+        const regularTotal = regularItems.reduce((a, e) => a + e.monto, 0);
+        const arrearsTotal = arrearsItems.reduce((a, e) => a + e.monto, 0);
+        const total = empItems.reduce((a, e) => a + e.monto, 0);
+        return {
+            main: regularTotal > 0 ? regularTotal : total,
+            arrears: arrearsTotal,
+            total
+        };
     };
 
-    const ibTotal  = sumEmp(isEmployeeMatch.ibrahim);
-    const loTotal  = sumEmp(isEmployeeMatch.lourdes);
-    const crTotal  = sumEmp(isEmployeeMatch.cargas);
-    const yrTotal  = sumEmp(isEmployeeMatch.yamil);
+    const ibInfo = getEmpDetails(isEmployeeMatch.ibrahim);
+    const loInfo = getEmpDetails(isEmployeeMatch.lourdes);
+    const crTotal = period === 'todos'
+        ? rawExpenses.filter(e => isEmployeeMatch.cargas(e)).reduce((a, e) => a + e.monto, 0)
+        : rawExpenses.filter(e => e.periodo === period && isEmployeeMatch.cargas(e)).reduce((a, e) => a + e.monto, 0);
+    const yrTotal = period === 'todos'
+        ? rawExpenses.filter(e => isEmployeeMatch.yamil(e)).reduce((a, e) => a + e.monto, 0)
+        : rawExpenses.filter(e => e.periodo === period && isEmployeeMatch.yamil(e)).reduce((a, e) => a + e.monto, 0);
 
     const ibHist = rawExpenses.filter(isEmployeeMatch.ibrahim).reduce((a,e) => a+e.monto, 0);
     const loHist = rawExpenses.filter(isEmployeeMatch.lourdes).reduce((a,e) => a+e.monto, 0);
 
-    document.getElementById('empIbrahimMonto').textContent  = ibTotal > 0 ? fmt(ibTotal) : '—';
-    document.getElementById('empLourdesMonto').textContent  = loTotal > 0 ? fmt(loTotal) : '—';
+    const ibEl = document.getElementById('empIbrahimMonto');
+    if (ibInfo.main > 0) {
+        if (ibInfo.arrears > 0) {
+            ibEl.innerHTML = `${fmt(ibInfo.main)} <span style="display:block; font-size:0.68rem; font-weight:500; color:#fbbf24; margin-top:3px;" title="Saldo pendiente de meses anteriores cancelado en este período">+ ${fmt(ibInfo.arrears)} saldo mes anterior</span>`;
+        } else {
+            ibEl.textContent = fmt(ibInfo.main);
+        }
+    } else {
+        ibEl.textContent = '—';
+    }
+
+    const loEl = document.getElementById('empLourdesMonto');
+    if (loInfo.main > 0) {
+        if (loInfo.arrears > 0) {
+            loEl.innerHTML = `${fmt(loInfo.main)} <span style="display:block; font-size:0.68rem; font-weight:500; color:#fbbf24; margin-top:3px;" title="Saldo pendiente de meses anteriores cancelado en este período">+ ${fmt(loInfo.arrears)} saldo mes anterior</span>`;
+        } else {
+            loEl.textContent = fmt(loInfo.main);
+        }
+    } else {
+        loEl.textContent = '—';
+    }
+
     document.getElementById('empCargasMonto').textContent   = crTotal > 0 ? fmt(crTotal)  : '—';
     document.getElementById('empYamilRepMonto').textContent = yrTotal > 0 ? fmt(yrTotal)  : '—';
-    document.getElementById('empIbrahimHist').textContent   = 'Acum. histórico: ' + fmt(ibHist);
-    document.getElementById('empLourdesHist').textContent   = 'Acum. histórico: ' + fmt(loHist);
+    document.getElementById('empIbrahimHist').textContent   = period === 'todos' ? 'Acum. histórico: ' + fmt(ibHist) : (ibInfo.arrears > 0 ? `Total liquidado: ${fmt(ibInfo.total)} | Acum.: ${fmt(ibHist)}` : 'Acum. histórico: ' + fmt(ibHist));
+    document.getElementById('empLourdesHist').textContent   = period === 'todos' ? 'Acum. histórico: ' + fmt(loHist) : (loInfo.arrears > 0 ? `Total liquidado: ${fmt(loInfo.total)} | Acum.: ${fmt(loHist)}` : 'Acum. histórico: ' + fmt(loHist));
 };
 
 // ── TABLE ────────────────────────────────────────────────────────
@@ -1041,37 +1142,47 @@ const renderTable = () => {
         const isPerson = item.empleado && 
                          !item.empleado.includes("Cargas Sociales") && 
                          !item.empleado.includes("Sindicato") && 
-                         !item.empleado.includes("Contratista");
+                         !item.empleado.includes("Contratista") &&
+                         !item.empleado.includes("Yamil Reparaciones");
 
         let prevMonto = 0, varHtml = `<span class="var-null">—</span>`, diff = 0;
 
         if (isPerson && !isSAC) {
-            // Sueldos de empleados individuales: comparar contra la remuneración completa devengada del período anterior
-            const prevEmpItems = rawExpenses.filter(x => 
-                x.periodo === pp && 
-                x.empleado === item.empleado && 
-                !x.concepto.toLowerCase().includes("sac") && 
-                !x.concepto.toLowerCase().includes("aguinaldo")
-            );
+            // Sueldos de empleados individuales:
+            const m = item.concepto.match(/\b(0[1-9]|1[0-2])\/(\d{4})\b/);
+            const targetPeriod = m ? `${m[2]}-${m[1]}` : item.periodo;
+            const isDelayedSaldo = targetPeriod < item.periodo;
+            const isAcuenta = item.concepto.toLowerCase().includes("a cuenta") || item.concepto.toLowerCase().includes("anticipo");
 
-            if (prevEmpItems.length > 0) {
-                if (isPartial) {
-                    const exactPrev = prevEmpItems.find(x => matchConcept(x.concepto, item.concepto));
-                    prevMonto = exactPrev ? exactPrev.monto : 0;
-                } else {
-                    // Remuneración total mensual completa del mes anterior
-                    prevMonto = prevEmpItems.reduce((acc, x) => acc + x.monto, 0);
-                }
+            if (isDelayedSaldo || isAcuenta) {
+                // Pagos de saldos diferidos de meses anteriores o adelantos: no comparar individualmente contra el total mensual
+                prevMonto = 0;
+            } else {
+                // Sueldo mensual completo: comparar contra la remuneración total devengada del período anterior (pp)
+                const prevEmpItems = rawExpenses.filter(x => 
+                    x.periodo === pp && 
+                    x.empleado === item.empleado && 
+                    !x.concepto.toLowerCase().includes("sac") && 
+                    !x.concepto.toLowerCase().includes("aguinaldo")
+                );
+                prevMonto = prevEmpItems.reduce((acc, x) => acc + x.monto, 0);
             }
         } else if (!isSAC) {
-            const prevItem = rawExpenses.find(x =>
-                x.periodo === pp &&
-                matchConcept(x.concepto, item.concepto)
-            );
-            if (prevItem) {
-                const prevIsPartial = prevItem.concepto.toLowerCase().includes("a cuenta") || prevItem.concepto.toLowerCase().includes("saldo");
-                if (isPartial === prevIsPartial) {
-                    prevMonto = prevItem.monto;
+            // En Mantenimiento y Reparaciones u obras, evitar emparejar compras o trabajos puntuales no recurrentes
+            const isOneOff = (item.rubro === 'Mantenimiento y Reparaciones' || (item.rubro === 'Varios' && !item.concepto.toLowerCase().includes('telecentro') && !item.concepto.toLowerCase().includes('banc') && !item.concepto.toLowerCase().includes('confección'))) &&
+                             !item.concepto.toLowerCase().includes('abono') &&
+                             !item.concepto.toLowerCase().includes('servicio mensual');
+
+            if (!isOneOff) {
+                const prevItem = rawExpenses.find(x =>
+                    x.periodo === pp &&
+                    matchConcept(x.concepto, item.concepto)
+                );
+                if (prevItem) {
+                    const prevIsPartial = prevItem.concepto.toLowerCase().includes("a cuenta") || prevItem.concepto.toLowerCase().includes("saldo");
+                    if (isPartial === prevIsPartial) {
+                        prevMonto = prevItem.monto;
+                    }
                 }
             }
         }
