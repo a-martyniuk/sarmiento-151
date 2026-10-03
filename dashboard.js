@@ -111,7 +111,39 @@ const matchConcept = (c1, c2) => {
     const e1 = getEdesur(raw1), e2 = getEdesur(raw2);
     if (e1 && e2 && e1 !== e2) return false;
 
-    // Comparación de prefijo mayor (30 caracteres)
+    // Si refieren a departamentos distintos (ej. Depto 10 B vs Depto 10 E)
+    const getDepto = (s) => { const m = s.match(/depto\.?\s*([0-9]+[a-z]?)/i); return m ? m[1].toLowerCase() : null; };
+    const d1 = getDepto(raw1), d2 = getDepto(raw2);
+    if (d1 && d2 && d1 !== d2) return false;
+
+    // Si uno es 'A cuenta' / 'Anticipo' y el otro es 'Saldo'
+    const isAcuenta1 = raw1.includes('a cuenta') || raw1.includes('anticipo');
+    const isAcuenta2 = raw2.includes('a cuenta') || raw2.includes('anticipo');
+    const isSaldo1 = raw1.includes('saldo');
+    const isSaldo2 = raw2.includes('saldo');
+    if (isAcuenta1 !== isAcuenta2 && (isAcuenta1 || isAcuenta2)) return false;
+    if (isSaldo1 !== isSaldo2 && (isSaldo1 || isSaldo2)) return false;
+
+    // Si refieren a cuotas distintas (ej. Cuota 1/2 vs Cuota 2/2)
+    const getCuota = (s) => { const m = s.match(/cuota\s*(\d+)\s*\/\s*(\d+)/i); return m ? `${m[1]}/${m[2]}` : null; };
+    const c1_cuota = getCuota(raw1), c2_cuota = getCuota(raw2);
+    if (c1_cuota && c2_cuota && c1_cuota !== c2_cuota) return false;
+
+    // Limpieza de fechas y meses para comparar la raíz del concepto
+    const cleanRoot = (s) => s
+        .replace(/\b(0\d|1[0-2])\/\d{4}\b/g, '')
+        .replace(/\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/gi, '')
+        .replace(/\b\d{4}\b/g, '')
+        .replace(/cuota\s*\d+\s*\/\s*\d+/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    const cr1 = cleanRoot(raw1);
+    const cr2 = cleanRoot(raw2);
+
+    if (cr1.length >= 25 && cr2.length >= 25) {
+        return cr1.slice(0, 35) === cr2.slice(0, 35);
+    }
     return raw1.slice(0, 30) === raw2.slice(0, 30);
 };
 
@@ -136,29 +168,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 rawMultas   = [];
             }
 
-            // Corregir anomalías históricas usando media móvil para evitar distorsiones por inflación acumulada
-            rawExpenses.sort((a, b) => a.periodo.localeCompare(b.periodo));
-            const history = {};
+            // Asegurar flags de anomalía consistentes provenientes del modelo consolidado
             rawExpenses.forEach(e => {
-                const key = e.concepto.toLowerCase().slice(0, 30);
-                const prev = history[key] || [];
-                const isSAC = e.concepto.toUpperCase().includes("SAC");
-                if (prev.length >= 2) {
-                    const recent = prev.slice(-3);
-                    const avg = recent.reduce((a, v) => a + v, 0) / recent.length;
-                    if (avg > 10000 && e.monto > (avg * 1.45) && !isSAC) {
-                        e.anomalia = true;
-                        e.desviacion_pct = Math.round(((e.monto - avg) / avg) * 100);
-                    } else {
-                        e.anomalia = false;
-                        e.desviacion_pct = 0;
-                    }
-                } else {
-                    e.anomalia = false;
-                    e.desviacion_pct = 0;
-                }
-                if (!history[key]) history[key] = [];
-                history[key].push(e.monto);
+                e.anomalia = !!e.anomalia;
+                e.desviacion_pct = e.desviacion_pct || 0;
             });
 
             populatePeriodFilter();
@@ -1023,15 +1036,47 @@ const renderTable = () => {
     tbody.innerHTML = pageItems.map(item => {
         const isSAC = item.concepto.toLowerCase().includes("sac") || item.concepto.toLowerCase().includes("aguinaldo");
         const pp = prevPeriod(item.periodo);
-
-        const prevItem = isSAC ? null : rawExpenses.find(x =>
-            x.periodo === pp &&
-            matchConcept(x.concepto, item.concepto)
-        );
+        const isPartial = item.concepto.toLowerCase().includes("a cuenta") || 
+                          (item.concepto.toLowerCase().includes("saldo") && !item.concepto.toLowerCase().includes("total"));
+        const isPerson = item.empleado && 
+                         !item.empleado.includes("Cargas Sociales") && 
+                         !item.empleado.includes("Sindicato") && 
+                         !item.empleado.includes("Contratista");
 
         let prevMonto = 0, varHtml = `<span class="var-null">—</span>`, diff = 0;
-        if (prevItem) {
-            prevMonto = prevItem.monto;
+
+        if (isPerson && !isSAC) {
+            // Sueldos de empleados individuales: comparar contra la remuneración completa devengada del período anterior
+            const prevEmpItems = rawExpenses.filter(x => 
+                x.periodo === pp && 
+                x.empleado === item.empleado && 
+                !x.concepto.toLowerCase().includes("sac") && 
+                !x.concepto.toLowerCase().includes("aguinaldo")
+            );
+
+            if (prevEmpItems.length > 0) {
+                if (isPartial) {
+                    const exactPrev = prevEmpItems.find(x => matchConcept(x.concepto, item.concepto));
+                    prevMonto = exactPrev ? exactPrev.monto : 0;
+                } else {
+                    // Remuneración total mensual completa del mes anterior
+                    prevMonto = prevEmpItems.reduce((acc, x) => acc + x.monto, 0);
+                }
+            }
+        } else if (!isSAC) {
+            const prevItem = rawExpenses.find(x =>
+                x.periodo === pp &&
+                matchConcept(x.concepto, item.concepto)
+            );
+            if (prevItem) {
+                const prevIsPartial = prevItem.concepto.toLowerCase().includes("a cuenta") || prevItem.concepto.toLowerCase().includes("saldo");
+                if (isPartial === prevIsPartial) {
+                    prevMonto = prevItem.monto;
+                }
+            }
+        }
+
+        if (prevMonto > 0) {
             diff = ((item.monto - prevMonto) / prevMonto) * 100;
             if (diff > 0.5)       varHtml = `<span class="var-up">+${diff.toFixed(1)}% ▲</span>`;
             else if (diff < -0.5) varHtml = `<span class="var-down">${diff.toFixed(1)}% ▼</span>`;
@@ -1044,12 +1089,19 @@ const renderTable = () => {
 
         let badges = [];
         if (item.anomalia) {
-            badges.push(`<span class="badge badge-anomalia" title="Desviación +${item.desviacion_pct}% del histórico">⚠ Anomalía</span>`);
+            badges.push(`<span class="badge badge-anomalia" title="Desviación +${item.desviacion_pct}% del promedio móvil de los últimos 3 meses">⚠ Anomalía</span>`);
         }
         
-        // Aplica a fijos, abonos o servicios recurrentes (como Telecentro, luz, agua, etc.) que suban >25%
-        const esRecurrente = item.tipo === "Fijo" || ["servicios públicos", "contratos y abonos", "varios"].includes(item.rubro.toLowerCase());
-        if (esRecurrente && diff > 25) {
+        // Aplica únicamente a abonos fijos o servicios públicos recurrentes que suban >25% mes a mes
+        const isOneOffOrPartial = isPartial || 
+            item.concepto.toLowerCase().includes("depto") || 
+            item.concepto.toLowerCase().includes("cuota") || 
+            item.concepto.toLowerCase().includes("reparación") ||
+            item.concepto.toLowerCase().includes("trabajo de");
+
+        const esRecurrente = (item.tipo === "Fijo" || ["servicios públicos", "contratos y abonos"].includes(item.rubro.toLowerCase())) && !isOneOffOrPartial;
+
+        if (esRecurrente && diff > 25 && prevMonto > 0) {
             badges.push(`<span class="badge badge-anomalia" style="background:rgba(251,146,60,0.1); border-color:#fb923c; color:#fb923c;" title="Aumento mayor al 25% respecto al mes anterior">⚠️ Aumento >25%</span>`);
         }
 

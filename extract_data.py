@@ -354,37 +354,51 @@ def parse_pdf_expenses(filepath):
     return expenses, balance_data, unique_multas
 
 def detect_anomalies(expenses):
-    concept_history = {}
-    
     def normalize_concept(c):
         c_norm = c.lower()
         c_norm = re.sub(r'\b(0\d|1[0-2])/\d{4}\b', '', c_norm)
         c_norm = re.sub(r'\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b', '', c_norm)
-        c_norm = re.sub(r'\b(abril|mayo|junio|julio|agosto)\b', '', c_norm)
         return " ".join(c_norm.split())
 
-    for exp in expenses:
+    # Ordenar cronológicamente para que la ventana móvil compare contra períodos anteriores reales
+    sorted_expenses = sorted(expenses, key=lambda x: x.get("periodo", ""))
+    concept_history = {}
+
+    for exp in sorted_expenses:
         norm = normalize_concept(exp["concepto"])
+        monto = exp["monto"]
+        concepto_lower = exp["concepto"].lower()
+        
+        # Pagos parciales o cuotas de obras no deben considerarse baseline mensual completo
+        is_partial = "a cuenta" in concepto_lower or "saldo" in concepto_lower or "cuota" in concepto_lower
+        
+        past = concept_history.get(norm, [])
+        # Ventana móvil de los últimos 3 meses no parciales
+        recent_past = [x for x in past if not x["is_partial"]][-3:]
+        if len(recent_past) < 2 and len(past) >= 2:
+            recent_past = past[-3:]
+
+        is_anom = False
+        desv_pct = 0
+        if len(recent_past) >= 2 and not is_partial and monto > 20000:
+            recent_avg = sum(x["monto"] for x in recent_past) / len(recent_past)
+            # Salto anómalo si supera en más del 40% el promedio móvil reciente de 3 períodos
+            if recent_avg > 0 and monto > (recent_avg * 1.40):
+                is_anom = True
+                desv_pct = round(((monto - recent_avg) / recent_avg) * 100)
+
+        exp["anomalia"] = is_anom
+        exp["desviacion_pct"] = desv_pct
+
         if norm not in concept_history:
             concept_history[norm] = []
-        concept_history[norm].append(exp["monto"])
+        concept_history[norm].append({
+            "periodo": exp.get("periodo", ""),
+            "monto": monto,
+            "is_partial": is_partial
+        })
 
-    concept_averages = {}
-    for norm, montos in concept_history.items():
-        if len(montos) >= 2:
-            concept_averages[norm] = sum(montos) / len(montos)
-
-    for exp in expenses:
-        norm = normalize_concept(exp["concepto"])
-        avg = concept_averages.get(norm)
-        if avg and avg > 10000 and exp["monto"] > (avg * 1.45):
-            exp["anomalia"] = True
-            exp["desviacion_pct"] = round(((exp["monto"] - avg) / avg) * 100)
-        else:
-            exp["anomalia"] = False
-            exp["desviacion_pct"] = 0
-            
-    return expenses
+    return sorted_expenses
 
 def get_period_from_filename(filename):
     match_date = re.search(r"(\d{4})-(\d{2})", filename)
