@@ -104,6 +104,9 @@ def parse_pdf_expenses(filepath):
     }
 
     seccion_gasto = "Pagado"
+    current_expense = None
+    in_rubro = False
+    in_multas = False
 
     with pdfplumber.open(filepath) as pdf:
         for page in pdf.pages:
@@ -112,9 +115,6 @@ def parse_pdf_expenses(filepath):
                 continue
 
             lines = text.split("\n")
-            current_expense = None
-            in_rubro = False
-            in_multas = False
 
             for line in lines:
                 line = line.strip()
@@ -261,9 +261,9 @@ def parse_pdf_expenses(filepath):
                         continue
                     concept_lower = concept_part.lower()
                     if any(x in concept_lower for x in [
-                        "saldo final", "saldo inicial", "bancarios",
+                        "saldo final", "saldo inicial", "movimientos bancarios",
                         "estado patrimonial", "patrimonio neto",
-                        "disponibilidades", "movimientos", "concepto",
+                        "disponibilidades", "concepto",
                         "grupo a", "sin locales", "exp.ext", "multa",
                         "egresos", "ingresos", "saldo al", "saldo de", "resumen de"
                     ]):
@@ -314,7 +314,7 @@ def parse_pdf_expenses(filepath):
                     }
                 else:
                     if current_expense and len(line) > 2:
-                        if not any(x in line for x in ["Grupo A", "SIN LOCALES", "EXP.EXT", "MULTA", "Total"]):
+                        if not any(x in line for x in ["Grupo A", "SIN LOCALES", "EXP.EXT", "MULTA", "Total", "Administración:", "EXPENSAS - SARMIENTO", "PAGOS DEL PER", "Liquidación 202"]):
                             cleaned_part = clean_concept_text(line)
                             current_expense["concepto"] += " " + cleaned_part
                             
@@ -338,9 +338,9 @@ def parse_pdf_expenses(filepath):
                                                              "suterh", "fateryh", "jubilaci", "aporte"]):
                                 current_expense["empleado"] = "Cargas Sociales / Sindicato"
 
-            if current_expense:
-                expenses.append(current_expense)
-                current_expense = None
+        if current_expense:
+            expenses.append(current_expense)
+            current_expense = None
 
     # Eliminar multas duplicadas exactas (debido a repetición de fragmentos flotantes en pdfplumber)
     unique_multas = []
