@@ -1745,17 +1745,23 @@ const getReglamentoFineAudit = (m) => {
     if (mot.includes("canilla") || mot.includes("filtracion")) {
         return `<span class="badge badge-danger" data-tooltip-right="Cap. 4 Reglamento Interno: Sólo tipifica como Falta Grave el daño intencional ('adrede'). Los descuidos accidentales sólo habilitan recuperar el gasto real con factura, no aplicar multas punitivas fijas.">🚫 No tipificada como multa (Cap. 4 RI)</span>`;
     }
+    if (mot.includes("romper")) {
+        return `<span class="badge badge-danger" data-tooltip-right="Cap. 4 Reglamento Interno: Los daños involuntarios deben liquidarse como recupero del costo real de reparación con factura respaldatoria (Art. 2), no como multa punitiva de $710.000.">🧾 Exige factura de reparación (Cap. 4 RI)</span>`;
+    }
     if (mot.includes("ruido") || mot.includes("reuni")) {
         return `<span class="badge badge-warning" data-tooltip-right="Art. 5 Reglamento Interno: Exige 3 o más quejas firmadas de distintos propietarios dirigidas a Administración y Consejo, y valuación igual a 1 expensa de depto. 2 ambientes.">⚠️ Exige 3 quejas firmadas + Valor 2 amb. (Art. 5 RI)</span>`;
     }
     if (mot.includes("perro") || mot.includes("mascota")) {
         return `<span class="badge badge-warning" data-tooltip-right="Art. 11 Reglamento Interno: Exige registro previo del Encargado en el Libro de Novedades, notificación al Consejo y valuación igual a 1 expensa de 2 ambientes.">⚠️ Exige Libro Novedades + Valor 2 amb. (Art. 11 RI)</span>`;
     }
-    if (mot.includes("portón") || mot.includes("porton") || mot.includes("puerta")) {
-        return `<span class="badge badge-warning" data-tooltip-right="Art. 1 Reglamento Interno: Fija como única unidad sancionatoria 'el último valor de una expensa de un departamento de dos ambientes', no un monto nominal arbitrario.">⚖️ Monto fijo vs. Expensa 2 amb. (Art. 1 RI)</span>`;
+    if (mot.includes("portón") || mot.includes("porton") || mot.includes("puerta") || mot.includes("semáforo") || mot.includes("semaforo")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Arts. 1 y 3 Reglamento Interno: Fijan como única unidad sancionatoria 'el último valor de una expensa de un departamento de dos ambientes', no un monto nominal arbitrario.">⚖️ Monto fijo vs. Expensa 2 amb. (Arts. 1/3 RI)</span>`;
     }
-    if (mot.includes("mudanza") || mot.includes("muebles")) {
-        return `<span class="badge badge-warning" data-tooltip-right="Art. 2 Reglamento Interno: Fija horarios L-V 8-12/14-18 y Sáb 8-13 hs y multa equivalente al último valor de una expensa de 2 ambientes.">⚖️ Monto fijo vs. Expensa 2 amb. (Art. 2 RI)</span>`;
+    if (mot.includes("mudanza") || mot.includes("muebles") || mot.includes("ascensor")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Art. 2 y Cap. 2 Reglamento Interno: Fijan normas de uso de ascensores y mudanzas y multa equivalente al último valor de una expensa de 2 ambientes.">⚖️ Monto fijo vs. Expensa 2 amb. (Art. 2 / Cap. 2 RI)</span>`;
+    }
+    if (mot.includes("sum") || mot.includes("pileta")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Cap. 3 Reglamento Interno (SUM y Piscina): Exige constatación de la infracción y valuación equivalente al último valor de una expensa de 2 ambientes.">⚖️ Monto fijo vs. Expensa 2 amb. (Cap. 3 RI)</span>`;
     }
     if (mot.includes("cochera") || mot.includes("estaciona") || mot.includes("vehículo") || mot.includes("auto")) {
         return `<span class="badge badge-warning" data-tooltip-right="Art. 3 Reglamento Interno: La multa debe equivaler exactamente al último valor de una expensa de un departamento de 2 ambientes.">⚖️ Monto fijo vs. Expensa 2 amb. (Art. 3 RI)</span>`;

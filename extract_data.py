@@ -148,8 +148,16 @@ def parse_pdf_expenses(filepath):
                             prop = partes[0].strip()
                             motivo = "Por " + partes[1].strip()
                         else:
-                            prop = prop_motivo
-                            motivo = "Multa aplicada"
+                            m_verb = re.search(
+                                r'\s+((?:[Dd]ejar|DEJAR|MUDANZA|ROMPER|[Nn]o\s+respetar|[Ss]ubir|[Ii]ngresar|[Gg]enerar)\b.+)$',
+                                prop_motivo
+                            )
+                            if m_verb:
+                                prop = prop_motivo[:m_verb.start()].strip()
+                                motivo = m_verb.group(1).strip()
+                            else:
+                                prop = prop_motivo
+                                motivo = "Multa aplicada"
                             
                         multas.append({
                             "periodo": period,
@@ -525,7 +533,7 @@ def enrich_with_prorrateo(all_balances, all_multas, prorrateo_path="prorrateo.js
 
         # El Reglamento Interno exige "el último valor de una expensa de un departamento de dos ambientes" (M-1 o M)
         prior_candidates = [p for p in valid_ref_periods if p < per]
-        ref_per = prior_candidates[-1] if prior_candidates else (per if per in referencia_2amb else (valid_ref_periods[-1] if valid_ref_periods else ""))
+        ref_per = prior_candidates[-1] if prior_candidates else (per if per in referencia_2amb else (valid_ref_periods[0] if valid_ref_periods else ""))
         ref_val = referencia_2amb.get(ref_per, 0.0)
 
         m["ref_2amb_periodo"] = ref_per
