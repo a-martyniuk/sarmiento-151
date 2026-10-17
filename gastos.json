@@ -17974,7 +17974,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 0.0,
             "patrimonio_neto": 0.0,
-            "saldo_disponibilidades": 0.0
+            "saldo_disponibilidades": 0.0,
+            "pagos_prorrateo": 0,
+            "multas_prorrateo": 0,
+            "intereses_prorrateo": 0,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-03",
@@ -17984,7 +17989,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 1912616.91,
             "patrimonio_neto": 2225974.49,
-            "saldo_disponibilidades": 313357.58
+            "saldo_disponibilidades": 313357.58,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 0.0,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-04",
@@ -17994,7 +18004,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 2391026.91,
             "patrimonio_neto": 2307845.91,
-            "saldo_disponibilidades": 16219.0
+            "saldo_disponibilidades": 16219.0,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 237069.15,
+            "intereses_prorrateo": 1561877.06,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-05",
@@ -18004,7 +18019,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 2368047.91,
             "patrimonio_neto": 2404881.34,
-            "saldo_disponibilidades": 36833.43
+            "saldo_disponibilidades": 36833.43,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 352793.94,
+            "intereses_prorrateo": 1953210.06,
+            "saldo_caja_efectivo": 16533.43,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-06",
@@ -18014,7 +18034,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 2493986.91,
             "patrimonio_neto": 2405410.9,
-            "saldo_disponibilidades": 43633.99
+            "saldo_disponibilidades": 43633.99,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 315818.6,
+            "intereses_prorrateo": 1921083.06,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-07",
@@ -18024,7 +18049,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 2539713.91,
             "patrimonio_neto": 2261177.98,
-            "saldo_disponibilidades": 6973.67
+            "saldo_disponibilidades": 6973.67,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 356686.36,
+            "intereses_prorrateo": 2077577.79,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-08",
@@ -18034,7 +18064,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 3442533.91,
             "patrimonio_neto": 2235802.32,
-            "saldo_disponibilidades": 15540.35
+            "saldo_disponibilidades": 15540.35,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 352419.12,
+            "intereses_prorrateo": 2134257.37,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-09",
@@ -18044,7 +18079,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 4112158.91,
             "patrimonio_neto": 2982082.72,
-            "saldo_disponibilidades": 1298.04
+            "saldo_disponibilidades": 1298.04,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 411413.87,
+            "intereses_prorrateo": 2850667.07,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-10",
@@ -18054,7 +18094,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 4128568.91,
             "patrimonio_neto": 3351012.51,
-            "saldo_disponibilidades": -216.2
+            "saldo_disponibilidades": -216.2,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 443178.42,
+            "intereses_prorrateo": 3419940.07,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-11",
@@ -18064,7 +18109,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 4112046.91,
             "patrimonio_neto": 3370320.36,
-            "saldo_disponibilidades": 44565.51
+            "saldo_disponibilidades": 44565.51,
+            "pagos_prorrateo": 0.0,
+            "multas_prorrateo": 455952.64,
+            "intereses_prorrateo": 3446109.07,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2023-12",
@@ -18074,7 +18124,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 3973027.91,
             "patrimonio_neto": 4229102.68,
-            "saldo_disponibilidades": 256074.77
+            "saldo_disponibilidades": 256074.77,
+            "pagos_prorrateo": 1163.0,
+            "multas_prorrateo": 99.02,
+            "intereses_prorrateo": 3729751.0,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-01",
@@ -18084,7 +18139,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 3842321.91,
             "patrimonio_neto": 4269167.76,
-            "saldo_disponibilidades": 426845.85
+            "saldo_disponibilidades": 426845.85,
+            "pagos_prorrateo": 780.0,
+            "multas_prorrateo": 99.02,
+            "intereses_prorrateo": 3577029.88,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-02",
@@ -18094,7 +18154,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 4014257.91,
             "patrimonio_neto": 4296997.06,
-            "saldo_disponibilidades": 282739.15
+            "saldo_disponibilidades": 282739.15,
+            "pagos_prorrateo": 780.0,
+            "multas_prorrateo": 99.02,
+            "intereses_prorrateo": 3440510.66,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-03",
@@ -18104,7 +18169,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 3298472.91,
             "patrimonio_neto": 4319532.13,
-            "saldo_disponibilidades": 1021059.22
+            "saldo_disponibilidades": 1021059.22,
+            "pagos_prorrateo": 780.0,
+            "multas_prorrateo": 99.02,
+            "intereses_prorrateo": 3794174.78,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-04",
@@ -18114,7 +18184,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 6244282.91,
             "patrimonio_neto": 5157574.69,
-            "saldo_disponibilidades": 21916.78
+            "saldo_disponibilidades": 21916.78,
+            "pagos_prorrateo": 780.0,
+            "multas_prorrateo": 99.02,
+            "intereses_prorrateo": 3166975.95,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-05",
@@ -18124,7 +18199,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 6412065.91,
             "patrimonio_neto": 5367901.47,
-            "saldo_disponibilidades": 4219.56
+            "saldo_disponibilidades": 4219.56,
+            "pagos_prorrateo": 5216081.82,
+            "multas_prorrateo": 25000.0,
+            "intereses_prorrateo": 48630.64,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-06",
@@ -18134,7 +18214,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 6920163.91,
             "patrimonio_neto": 5637428.85,
-            "saldo_disponibilidades": 215576.58
+            "saldo_disponibilidades": 215576.58,
+            "pagos_prorrateo": 5581792.03,
+            "multas_prorrateo": 30000.0,
+            "intereses_prorrateo": 39814.78,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-07",
@@ -18144,7 +18229,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 7353622.91,
             "patrimonio_neto": 6360734.21,
-            "saldo_disponibilidades": 85821.3
+            "saldo_disponibilidades": 85821.3,
+            "pagos_prorrateo": 6000525.86,
+            "multas_prorrateo": 60000.0,
+            "intereses_prorrateo": 43258.05,
+            "saldo_caja_efectivo": 2997.73,
+            "recaudado_efectivo_mes": 92415.13
         },
         {
             "periodo": "2024-08",
@@ -18154,7 +18244,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 7762113.91,
             "patrimonio_neto": 6371381.98,
-            "saldo_disponibilidades": 55889.07
+            "saldo_disponibilidades": 55889.07,
+            "pagos_prorrateo": 6397254.78,
+            "multas_prorrateo": 35000.0,
+            "intereses_prorrateo": 42991.92,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-09",
@@ -18164,7 +18259,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 8322442.26,
             "patrimonio_neto": 6823116.6,
-            "saldo_disponibilidades": 101960.34
+            "saldo_disponibilidades": 101960.34,
+            "pagos_prorrateo": 6810252.22,
+            "multas_prorrateo": 105000.0,
+            "intereses_prorrateo": 46152.12,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 50963.26
         },
         {
             "periodo": "2024-10",
@@ -18174,7 +18274,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 9263154.21,
             "patrimonio_neto": 7201178.38,
-            "saldo_disponibilidades": 4114.17
+            "saldo_disponibilidades": 4114.17,
+            "pagos_prorrateo": 7183652.24,
+            "multas_prorrateo": 40000.0,
+            "intereses_prorrateo": 50788.21,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-11",
@@ -18184,7 +18289,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 10325902.91,
             "patrimonio_neto": 8140419.87,
-            "saldo_disponibilidades": 30354.99
+            "saldo_disponibilidades": 30354.99,
+            "pagos_prorrateo": 8212699.22,
+            "multas_prorrateo": 40000.0,
+            "intereses_prorrateo": 48188.69,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2024-12",
@@ -18194,7 +18304,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 11372460.91,
             "patrimonio_neto": 9679745.64,
-            "saldo_disponibilidades": 86655.67
+            "saldo_disponibilidades": 86655.67,
+            "pagos_prorrateo": 9116366.1,
+            "multas_prorrateo": 50000.0,
+            "intereses_prorrateo": 52054.79,
+            "saldo_caja_efectivo": 0.0,
+            "recaudado_efectivo_mes": 48800.0
         },
         {
             "periodo": "2025-01",
@@ -18204,7 +18319,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 12243870.91,
             "patrimonio_neto": 11292701.97,
-            "saldo_disponibilidades": 971765.0
+            "saldo_disponibilidades": 971765.0,
+            "pagos_prorrateo": 9926010.39,
+            "multas_prorrateo": 50000.0,
+            "intereses_prorrateo": 62029.13,
+            "saldo_caja_efectivo": 182586.83,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2025-02",
@@ -18214,7 +18334,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 13662894.91,
             "patrimonio_neto": 13400391.39,
-            "saldo_disponibilidades": 1035645.48
+            "saldo_disponibilidades": 1035645.48,
+            "pagos_prorrateo": 10583144.24,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 68095.15,
+            "saldo_caja_efectivo": 182586.83,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2025-03",
@@ -18224,7 +18349,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 15642589.91,
             "patrimonio_neto": 16332718.46,
-            "saldo_disponibilidades": 690128.55
+            "saldo_disponibilidades": 690128.55,
+            "pagos_prorrateo": 10693074.77,
+            "multas_prorrateo": 50000.0,
+            "intereses_prorrateo": 133169.29,
+            "saldo_caja_efectivo": 273052.42,
+            "recaudado_efectivo_mes": 90465.59
         },
         {
             "periodo": "2025-04",
@@ -18234,7 +18364,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 13958146.91,
             "patrimonio_neto": 18141247.37,
-            "saldo_disponibilidades": 4183100.46
+            "saldo_disponibilidades": 4183100.46,
+            "pagos_prorrateo": 12820209.43,
+            "multas_prorrateo": 180000.0,
+            "intereses_prorrateo": 127597.8,
+            "saldo_caja_efectivo": 273052.42,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2025-05",
@@ -18244,7 +18379,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 15380773.91,
             "patrimonio_neto": 19316042.13,
-            "saldo_disponibilidades": 3935268.22
+            "saldo_disponibilidades": 3935268.22,
+            "pagos_prorrateo": 11854946.93,
+            "multas_prorrateo": 150000.0,
+            "intereses_prorrateo": 87272.88,
+            "saldo_caja_efectivo": 344232.42,
+            "recaudado_efectivo_mes": 71180.0
         },
         {
             "periodo": "2025-06",
@@ -18254,7 +18394,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 16515411.91,
             "patrimonio_neto": 20459573.3,
-            "saldo_disponibilidades": 3944161.39
+            "saldo_disponibilidades": 3944161.39,
+            "pagos_prorrateo": 12156108.29,
+            "multas_prorrateo": 50000.0,
+            "intereses_prorrateo": 142478.04,
+            "saldo_caja_efectivo": 807460.17,
+            "recaudado_efectivo_mes": 463227.75
         },
         {
             "periodo": "2025-07",
@@ -18264,7 +18409,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 16721624.91,
             "patrimonio_neto": 21109150.44,
-            "saldo_disponibilidades": 4387525.53
+            "saldo_disponibilidades": 4387525.53,
+            "pagos_prorrateo": 13243460.72,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 148627.79,
+            "saldo_caja_efectivo": 807460.17,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2025-08",
@@ -18274,7 +18424,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 17759679.91,
             "patrimonio_neto": 21835227.29,
-            "saldo_disponibilidades": 4075547.38
+            "saldo_disponibilidades": 4075547.38,
+            "pagos_prorrateo": 13281950.39,
+            "multas_prorrateo": 70000.0,
+            "intereses_prorrateo": 155057.29,
+            "saldo_caja_efectivo": 807460.17,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2025-09",
@@ -18284,7 +18439,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 19166327.91,
             "patrimonio_neto": 22528508.82,
-            "saldo_disponibilidades": 3362180.91
+            "saldo_disponibilidades": 3362180.91,
+            "pagos_prorrateo": 13402218.94,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 192244.56,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 206433.03
         },
         {
             "periodo": "2025-10",
@@ -18294,7 +18454,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 28266287.91,
             "patrimonio_neto": 22682001.1,
-            "saldo_disponibilidades": 2915713.19
+            "saldo_disponibilidades": 2915713.19,
+            "pagos_prorrateo": 15542618.92,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 152124.59,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2025-11",
@@ -18304,7 +18469,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 17069743.58,
             "patrimonio_neto": 20743491.92,
-            "saldo_disponibilidades": 5798748.34
+            "saldo_disponibilidades": 5798748.34,
+            "pagos_prorrateo": 24075116.23,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 185439.29,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2025-12",
@@ -18314,7 +18484,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 23692066.91,
             "patrimonio_neto": 22375339.87,
-            "saldo_disponibilidades": 2596880.96
+            "saldo_disponibilidades": 2596880.96,
+            "pagos_prorrateo": 11753506.37,
+            "multas_prorrateo": 400000.0,
+            "intereses_prorrateo": 230623.04,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-01",
@@ -18324,7 +18499,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 26286304.91,
             "patrimonio_neto": 24083514.33,
-            "saldo_disponibilidades": 1168633.42
+            "saldo_disponibilidades": 1168633.42,
+            "pagos_prorrateo": 18732936.15,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 206497.94,
+            "saldo_caja_efectivo": 154740.22,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-02",
@@ -18334,7 +18514,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 26920908.91,
             "patrimonio_neto": 27394829.69,
-            "saldo_disponibilidades": 2598920.78
+            "saldo_disponibilidades": 2598920.78,
+            "pagos_prorrateo": 20173931.25,
+            "multas_prorrateo": 300000.0,
+            "intereses_prorrateo": 263266.39,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-03",
@@ -18344,7 +18529,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 26860219.91,
             "patrimonio_neto": 28957656.69,
-            "saldo_disponibilidades": 6097436.78
+            "saldo_disponibilidades": 6097436.78,
+            "pagos_prorrateo": 20720705.15,
+            "multas_prorrateo": 300000.0,
+            "intereses_prorrateo": 261368.15,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-04",
@@ -18354,7 +18544,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 21969190.79,
             "patrimonio_neto": 30524174.15,
-            "saldo_disponibilidades": 10554983.36
+            "saldo_disponibilidades": 10554983.36,
+            "pagos_prorrateo": 20144194.69,
+            "multas_prorrateo": 100000.0,
+            "intereses_prorrateo": 272628.26,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-05",
@@ -18364,7 +18559,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 23895310.91,
             "patrimonio_neto": 32063978.74,
-            "saldo_disponibilidades": 10168667.83
+            "saldo_disponibilidades": 10168667.83,
+            "pagos_prorrateo": 16226576.04,
+            "multas_prorrateo": 300000.0,
+            "intereses_prorrateo": 238491.91,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-06",
@@ -18374,7 +18574,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 26104817.91,
             "patrimonio_neto": 33490885.52,
-            "saldo_disponibilidades": 8909769.49
+            "saldo_disponibilidades": 8909769.49,
+            "pagos_prorrateo": 17890234.04,
+            "multas_prorrateo": 240000.0,
+            "intereses_prorrateo": 235354.21,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-08",
@@ -18384,7 +18589,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 29636727.91,
             "patrimonio_neto": 35589827.95,
-            "saldo_disponibilidades": 8495514.04
+            "saldo_disponibilidades": 8495514.04,
+            "pagos_prorrateo": 19304293.44,
+            "multas_prorrateo": 100000.0,
+            "intereses_prorrateo": 260991.59,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-09",
@@ -18394,7 +18604,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 29511101.78,
             "patrimonio_neto": 38498354.54,
-            "saldo_disponibilidades": 10112252.76
+            "saldo_disponibilidades": 10112252.76,
+            "pagos_prorrateo": 22524166.73,
+            "multas_prorrateo": 200000.0,
+            "intereses_prorrateo": 289503.37,
+            "saldo_caja_efectivo": 2108606.73,
+            "recaudado_efectivo_mes": 1094713.53
         },
         {
             "periodo": "2026-10",
@@ -18404,7 +18619,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 29343953.72,
             "patrimonio_neto": 38498354.54,
-            "saldo_disponibilidades": 10279400.82
+            "saldo_disponibilidades": 10279400.82,
+            "pagos_prorrateo": 167148.06,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 0.0,
+            "saldo_caja_efectivo": 2108606.73,
+            "recaudado_efectivo_mes": 0.0
         },
         {
             "periodo": "2026-07",
@@ -18414,7 +18634,12 @@
             "recaudado_termino": 0.0,
             "deuda_acumulada": 26074966.91,
             "patrimonio_neto": 34819676.78,
-            "saldo_disponibilidades": 10994709.87
+            "saldo_disponibilidades": 10994709.87,
+            "pagos_prorrateo": 19644975.2,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 247290.42,
+            "saldo_caja_efectivo": 1013893.2,
+            "recaudado_efectivo_mes": 0.0
         }
     ],
     "multas": [
@@ -18423,406 +18648,1474 @@
             "uf": "135",
             "propietario": "PAZOS/ Maria Eugenia Forlano",
             "motivo": "Por dejar canilla abierta y generar filtraciones",
-            "monto": 120000.0
+            "monto": 120000.0,
+            "dpto": "12 A",
+            "ref_2amb_periodo": "2026-09",
+            "ref_2amb_monto": 142309.57,
+            "desvio_2amb_monto": -22309.57,
+            "desvio_2amb_pct": -15.7
         },
         {
             "periodo": "2023-02",
             "uf": "145",
             "propietario": "SANCHEZ/ Cristian",
             "motivo": "Por dejar canilla abierta y generar filtraciones",
-            "monto": 120000.0
+            "monto": 120000.0,
+            "dpto": "14 A",
+            "ref_2amb_periodo": "2026-09",
+            "ref_2amb_monto": 142309.57,
+            "desvio_2amb_monto": -22309.57,
+            "desvio_2amb_pct": -15.7
         },
         {
             "periodo": "2023-03",
             "uf": "135",
             "propietario": "PAZOS/ Maria Eugenia Forlano",
             "motivo": "Por dejar canilla abierta y generar filtraciones",
-            "monto": 120000.0
+            "monto": 120000.0,
+            "dpto": "12 A",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 108951.53,
+            "desvio_2amb_pct": 986.1
         },
         {
             "periodo": "2023-03",
             "uf": "145",
             "propietario": "SANCHEZ/ Cristian",
             "motivo": "Por dejar canilla abierta y generar filtraciones",
-            "monto": 120000.0
+            "monto": 120000.0,
+            "dpto": "14 A",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 108951.53,
+            "desvio_2amb_pct": 986.1
         },
         {
             "periodo": "2024-01",
             "uf": "037",
             "propietario": "SS 75 LIRA HERNAN Dejar portón abierto",
             "motivo": "Multa aplicada",
-            "monto": 26000.0
+            "monto": 26000.0,
+            "dpto": "SS 75",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 14951.53,
+            "desvio_2amb_pct": 135.3
         },
         {
             "periodo": "2024-02",
             "uf": "037",
             "propietario": "SS 75 LIRA HERNAN Dejar portón abierto",
             "motivo": "Multa aplicada",
-            "monto": 26000.0
+            "monto": 26000.0,
+            "dpto": "SS 75",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 14951.53,
+            "desvio_2amb_pct": 135.3
         },
         {
             "periodo": "2024-03",
             "uf": "081",
             "propietario": "GONZALEZ ESTELA DEJAR PUERTA ABIERTA",
             "motivo": "Multa aplicada",
-            "monto": 25000.0
+            "monto": 25000.0,
+            "dpto": "1 E",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 13951.53,
+            "desvio_2amb_pct": 126.3
         },
         {
             "periodo": "2024-04",
             "uf": "185",
             "propietario": "HECTOR ALMANDOZ DEJAR PUERTA ABIERTA",
             "motivo": "Multa aplicada",
-            "monto": 24000.0
+            "monto": 24000.0,
+            "dpto": "26 A",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 12951.53,
+            "desvio_2amb_pct": 117.2
         },
         {
             "periodo": "2024-04",
             "uf": "104",
             "propietario": "URQUIZU DEJAR PORTÓN ABIERTO",
             "motivo": "Multa aplicada",
-            "monto": 24000.0
+            "monto": 24000.0,
+            "dpto": "6 B",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 12951.53,
+            "desvio_2amb_pct": 117.2
         },
         {
             "periodo": "2024-04",
             "uf": "142",
             "propietario": "CPT INTEGRAL SA MUDANZA FUERA DE HORARIO",
             "motivo": "Multa aplicada",
-            "monto": 24000.0
+            "monto": 24000.0,
+            "dpto": "13 D",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 12951.53,
+            "desvio_2amb_pct": 117.2
         },
         {
             "periodo": "2024-04",
             "uf": "119",
             "propietario": "LAUMAN MARIA DEJAR PORTÓN ABIERTO",
             "motivo": "Multa aplicada",
-            "monto": 24000.0
+            "monto": 24000.0,
+            "dpto": "9 B",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 12951.53,
+            "desvio_2amb_pct": 117.2
         },
         {
             "periodo": "2024-04",
             "uf": "113",
             "propietario": "VIDAL GUIDO DEJAR PUERTA ABIERTA",
             "motivo": "Multa aplicada",
-            "monto": 24000.0
+            "monto": 24000.0,
+            "dpto": "8 C",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 12951.53,
+            "desvio_2amb_pct": 117.2
         },
         {
             "periodo": "2024-04",
             "uf": "103",
             "propietario": "ALFANO ALBERTO ROMPER PORTÓN",
             "motivo": "Multa aplicada",
-            "monto": 710000.0
+            "monto": 710000.0,
+            "dpto": "6 C",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 698951.53,
+            "desvio_2amb_pct": 6326.2
         },
         {
             "periodo": "2024-05",
             "uf": "081",
             "propietario": "GONZALEZ ESTELA Dejar que perro orine Puerta de ingreso.",
             "motivo": "Multa aplicada",
-            "monto": 25000.0
+            "monto": 25000.0,
+            "dpto": "1 E",
+            "ref_2amb_periodo": "2023-03",
+            "ref_2amb_monto": 11048.47,
+            "desvio_2amb_monto": 13951.53,
+            "desvio_2amb_pct": 126.3
         },
         {
             "periodo": "2024-06",
             "uf": "180",
             "propietario": "VELAYOS CELINA Dejar Portón abierto. 28/06/2024.",
             "motivo": "Multa aplicada",
-            "monto": 30000.0
+            "monto": 30000.0,
+            "dpto": "23 B",
+            "ref_2amb_periodo": "2024-05",
+            "ref_2amb_monto": 34616.92,
+            "desvio_2amb_monto": -4616.92,
+            "desvio_2amb_pct": -13.3
         },
         {
             "periodo": "2024-07",
             "uf": "122",
             "propietario": "GENTINETTA LU Dejar Portón abierto",
             "motivo": "Multa aplicada",
-            "monto": 30000.0
+            "monto": 30000.0,
+            "dpto": "9 D",
+            "ref_2amb_periodo": "2024-06",
+            "ref_2amb_monto": 43624.37,
+            "desvio_2amb_monto": -13624.37,
+            "desvio_2amb_pct": -31.2
         },
         {
             "periodo": "2024-07",
             "uf": "186",
             "propietario": "CORIGLIANO PABLO Dejar Portón abierta",
             "motivo": "Multa aplicada",
-            "monto": 30000.0
+            "monto": 30000.0,
+            "dpto": "26 B",
+            "ref_2amb_periodo": "2024-06",
+            "ref_2amb_monto": 43624.37,
+            "desvio_2amb_monto": -13624.37,
+            "desvio_2amb_pct": -31.2
         },
         {
             "periodo": "2024-08",
             "uf": "081",
             "propietario": "GONZALEZ ESTELA",
             "motivo": "Por dejar que perro orine entrada edificio.",
-            "monto": 35000.0
+            "monto": 35000.0,
+            "dpto": "1 E",
+            "ref_2amb_periodo": "2024-07",
+            "ref_2amb_monto": 47166.0,
+            "desvio_2amb_monto": -12166.0,
+            "desvio_2amb_pct": -25.8
         },
         {
             "periodo": "2024-09",
             "uf": "081",
             "propietario": "GONZALEZ ESTELA",
             "motivo": "Por dejar que perro orine entrada edificio.",
-            "monto": 35000.0
+            "monto": 35000.0,
+            "dpto": "1 E",
+            "ref_2amb_periodo": "2024-08",
+            "ref_2amb_monto": 51026.21,
+            "desvio_2amb_monto": -16026.21,
+            "desvio_2amb_pct": -31.4
         },
         {
             "periodo": "2024-09",
             "uf": "091",
             "propietario": "TERZI/ Farina Maria Victoria",
             "motivo": "Por dejar que perro orine entrada edificio",
-            "monto": 35000.0
+            "monto": 35000.0,
+            "dpto": "3 E",
+            "ref_2amb_periodo": "2024-08",
+            "ref_2amb_monto": 51026.21,
+            "desvio_2amb_monto": -16026.21,
+            "desvio_2amb_pct": -31.4
         },
         {
             "periodo": "2024-09",
             "uf": "184",
             "propietario": "HOLAN/ Vazquez",
             "motivo": "Por dejar que perro orine entrada edificio",
-            "monto": 35000.0
+            "monto": 35000.0,
+            "dpto": "25 B",
+            "ref_2amb_periodo": "2024-08",
+            "ref_2amb_monto": 51026.21,
+            "desvio_2amb_monto": -16026.21,
+            "desvio_2amb_pct": -31.4
         },
         {
             "periodo": "2024-10",
             "uf": "172",
             "propietario": "NUÑEZ ADRIAN",
             "motivo": "Por dejar SUM sucio luego de su uso",
-            "monto": 40000.0
+            "monto": 40000.0,
+            "dpto": "19 D",
+            "ref_2amb_periodo": "2024-09",
+            "ref_2amb_monto": 54788.87,
+            "desvio_2amb_monto": -14788.87,
+            "desvio_2amb_pct": -27.0
         },
         {
             "periodo": "2024-11",
             "uf": "154",
             "propietario": "NUÑEZ MARIA VICTORIA",
             "motivo": "Por dejar Portón abierto. 21.11.24.",
-            "monto": 40000.0
+            "monto": 40000.0,
+            "dpto": "16 B",
+            "ref_2amb_periodo": "2024-10",
+            "ref_2amb_monto": 59033.33,
+            "desvio_2amb_monto": -19033.33,
+            "desvio_2amb_pct": -32.2
         },
         {
             "periodo": "2024-12",
             "uf": "168",
             "propietario": "MARTYNIUK",
             "motivo": "Por dejar puerta de ingreso principal abierta",
-            "monto": 50000.0
+            "monto": 50000.0,
+            "dpto": "19 C",
+            "ref_2amb_periodo": "2024-11",
+            "ref_2amb_monto": 64436.34,
+            "desvio_2amb_monto": -14436.34,
+            "desvio_2amb_pct": -22.4
         },
         {
             "periodo": "2025-01",
             "uf": "138",
             "propietario": "PRIMAVERA DOMINGO",
             "motivo": "Por dejar Portón abierto",
-            "monto": 50000.0
+            "monto": 50000.0,
+            "dpto": "13 C",
+            "ref_2amb_periodo": "2024-12",
+            "ref_2amb_monto": 69382.42,
+            "desvio_2amb_monto": -19382.42,
+            "desvio_2amb_pct": -27.9
         },
         {
             "periodo": "2025-03",
             "uf": "180",
             "propietario": "VELAYOS CELINA",
             "motivo": "Por dejar Portón abierto el 07/03/2025.",
-            "monto": 50000.0
+            "monto": 50000.0,
+            "dpto": "23 B",
+            "ref_2amb_periodo": "2025-02",
+            "ref_2amb_monto": 75891.85,
+            "desvio_2amb_monto": -25891.85,
+            "desvio_2amb_pct": -34.1
         },
         {
             "periodo": "2025-04",
             "uf": "003",
             "propietario": "ALMANDOZ HECTOR",
             "motivo": "Por dejar Portón abierto el 24/04/2025.",
-            "monto": 60000.0
+            "monto": 60000.0,
+            "dpto": "LOC 3",
+            "ref_2amb_periodo": "2025-03",
+            "ref_2amb_monto": 86718.05,
+            "desvio_2amb_monto": -26718.05,
+            "desvio_2amb_pct": -30.8
         },
         {
             "periodo": "2025-04",
             "uf": "176",
             "propietario": "PALUMBO",
             "motivo": "Por no respetar Semáforo el 24/04/2025.",
-            "monto": 60000.0
+            "monto": 60000.0,
+            "dpto": "21 B",
+            "ref_2amb_periodo": "2025-03",
+            "ref_2amb_monto": 86718.05,
+            "desvio_2amb_monto": -26718.05,
+            "desvio_2amb_pct": -30.8
         },
         {
             "periodo": "2025-04",
             "uf": "185",
             "propietario": "ALMANDOZ HECTOR",
             "motivo": "Por dejar Portón abierto el 29/04/2025.",
-            "monto": 60000.0
+            "monto": 60000.0,
+            "dpto": "26 A",
+            "ref_2amb_periodo": "2025-03",
+            "ref_2amb_monto": 86718.05,
+            "desvio_2amb_monto": -26718.05,
+            "desvio_2amb_pct": -30.8
         },
         {
             "periodo": "2025-05",
             "uf": "119",
             "propietario": "LANTERO",
             "motivo": "Por no respetar Semáforo el 26/04/2025.",
-            "monto": 50000.0
+            "monto": 50000.0,
+            "dpto": "9 B",
+            "ref_2amb_periodo": "2025-04",
+            "ref_2amb_monto": 68171.61,
+            "desvio_2amb_monto": -18171.61,
+            "desvio_2amb_pct": -26.7
         },
         {
             "periodo": "2025-05",
             "uf": "131",
             "propietario": "NIECSYPORUK FIORELLA",
             "motivo": "Por dejar Puerta principal abierta el 23/05/2025",
-            "monto": 50000.0
+            "monto": 50000.0,
+            "dpto": "11 E",
+            "ref_2amb_periodo": "2025-04",
+            "ref_2amb_monto": 68171.61,
+            "desvio_2amb_monto": -18171.61,
+            "desvio_2amb_pct": -26.7
         },
         {
             "periodo": "2025-05",
             "uf": "082",
             "propietario": "MEDICI PABLO",
             "motivo": "Por dejar Puerta principal abierta el 27/05/2025.",
-            "monto": 50000.0
+            "monto": 50000.0,
+            "dpto": "1 D",
+            "ref_2amb_periodo": "2025-04",
+            "ref_2amb_monto": 68171.61,
+            "desvio_2amb_monto": -18171.61,
+            "desvio_2amb_pct": -26.7
         },
         {
             "periodo": "2025-06",
             "uf": "159",
             "propietario": "MOSCOLINI",
             "motivo": "Por dejar orinar a mascota frente edif. 29/06",
-            "monto": 50000.0
+            "monto": 50000.0,
+            "dpto": "17 B",
+            "ref_2amb_periodo": "2025-05",
+            "ref_2amb_monto": 82187.47,
+            "desvio_2amb_monto": -32187.47,
+            "desvio_2amb_pct": -39.2
         },
         {
             "periodo": "2025-07",
             "uf": "159",
             "propietario": "MOSCOLINI",
             "motivo": "Por dejar orinar a mascota frente edif. 29/06",
-            "monto": 50000.0
+            "monto": 50000.0,
+            "dpto": "17 B",
+            "ref_2amb_periodo": "2025-06",
+            "ref_2amb_monto": 81758.58,
+            "desvio_2amb_monto": -31758.58,
+            "desvio_2amb_pct": -38.8
         },
         {
             "periodo": "2025-08",
             "uf": "175",
             "propietario": "IACUZZIO",
             "motivo": "Por dejar puerta abierta el 05/08/2025.",
-            "monto": 70000.0
+            "monto": 70000.0,
+            "dpto": "21 A",
+            "ref_2amb_periodo": "2025-07",
+            "ref_2amb_monto": 77519.63,
+            "desvio_2amb_monto": -7519.63,
+            "desvio_2amb_pct": -9.7
         },
         {
             "periodo": "2025-09",
             "uf": "175",
             "propietario": "IACUZZIO",
             "motivo": "Por dejar puerta abierta el 05/08/2025.",
-            "monto": 70000.0
+            "monto": 70000.0,
+            "dpto": "21 A",
+            "ref_2amb_periodo": "2025-08",
+            "ref_2amb_monto": 91104.91,
+            "desvio_2amb_monto": -21104.91,
+            "desvio_2amb_pct": -23.2
         },
         {
             "periodo": "2025-12",
             "uf": "157",
             "propietario": "LIRA HERNAN",
             "motivo": "Por dejar Portón abierto. 10/12/2025",
-            "monto": 80000.0
+            "monto": 80000.0,
+            "dpto": "16 D",
+            "ref_2amb_periodo": "2025-11",
+            "ref_2amb_monto": 85374.93,
+            "desvio_2amb_monto": -5374.93,
+            "desvio_2amb_pct": -6.3
         },
         {
             "periodo": "2025-12",
             "uf": "168",
             "propietario": "MARTYNIUK ALEXIS",
             "motivo": "Por dejar Puerta principal abierta. 16/12/2025",
-            "monto": 80000.0
+            "monto": 80000.0,
+            "dpto": "19 C",
+            "ref_2amb_periodo": "2025-11",
+            "ref_2amb_monto": 85374.93,
+            "desvio_2amb_monto": -5374.93,
+            "desvio_2amb_pct": -6.3
         },
         {
             "periodo": "2025-12",
             "uf": "168",
             "propietario": "MARTYNIUK ALEXIS",
             "motivo": "Por dejar Puerta principal abierta. 17/12/2025",
-            "monto": 80000.0
+            "monto": 80000.0,
+            "dpto": "19 C",
+            "ref_2amb_periodo": "2025-11",
+            "ref_2amb_monto": 85374.93,
+            "desvio_2amb_monto": -5374.93,
+            "desvio_2amb_pct": -6.3
         },
         {
             "periodo": "2025-12",
             "uf": "117",
             "propietario": "ULZURRUN JAVIER",
             "motivo": "Por subir a la Pileta con alimentos. 27/12/2025",
-            "monto": 80000.0
+            "monto": 80000.0,
+            "dpto": "8 D",
+            "ref_2amb_periodo": "2025-11",
+            "ref_2amb_monto": 85374.93,
+            "desvio_2amb_monto": -5374.93,
+            "desvio_2amb_pct": -6.3
         },
         {
             "periodo": "2025-12",
             "uf": "114",
             "propietario": "RODRIGUEZ FLORENCIA",
             "motivo": "Por subir a la Pileta con alimentos. 30/12/2025",
-            "monto": 80000.0
+            "monto": 80000.0,
+            "dpto": "8 B",
+            "ref_2amb_periodo": "2025-11",
+            "ref_2amb_monto": 85374.93,
+            "desvio_2amb_monto": -5374.93,
+            "desvio_2amb_pct": -6.3
         },
         {
             "periodo": "2026-01",
             "uf": "102",
             "propietario": "TETTAMANTI VIVIANA",
             "motivo": "Por repetición de ruidos molestos.",
-            "monto": 80000.0
+            "monto": 80000.0,
+            "dpto": "5 D",
+            "ref_2amb_periodo": "2025-12",
+            "ref_2amb_monto": 96612.84,
+            "desvio_2amb_monto": -16612.84,
+            "desvio_2amb_pct": -17.2
         },
         {
             "periodo": "2026-02",
             "uf": "100",
             "propietario": "CPT INTEGRAL",
             "motivo": "Por no respetar uso debido del Ascensor",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "5 A",
+            "ref_2amb_periodo": "2026-01",
+            "ref_2amb_monto": 108347.08,
+            "desvio_2amb_monto": -8347.08,
+            "desvio_2amb_pct": -7.7
         },
         {
             "periodo": "2026-02",
             "uf": "178",
             "propietario": "CARDINALLI",
             "motivo": "Por dejar Ascensor trabado",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "22 B",
+            "ref_2amb_periodo": "2026-01",
+            "ref_2amb_monto": 108347.08,
+            "desvio_2amb_monto": -8347.08,
+            "desvio_2amb_pct": -7.7
         },
         {
             "periodo": "2026-02",
             "uf": "083",
             "propietario": "ZABALA LAURA",
             "motivo": "Por no respestar horario SUM",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "2 C",
+            "ref_2amb_periodo": "2026-01",
+            "ref_2amb_monto": 108347.08,
+            "desvio_2amb_monto": -8347.08,
+            "desvio_2amb_pct": -7.7
         },
         {
             "periodo": "2026-03",
             "uf": "102",
             "propietario": "TETTAMANTI",
             "motivo": "Por generar ruidos molestos fuera de horario",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "5 D",
+            "ref_2amb_periodo": "2026-02",
+            "ref_2amb_monto": 116507.8,
+            "desvio_2amb_monto": -16507.8,
+            "desvio_2amb_pct": -14.2
         },
         {
             "periodo": "2026-03",
             "uf": "145",
             "propietario": "SANCHEZ",
             "motivo": "Por ingresar a la pileta con alimentos",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "14 A",
+            "ref_2amb_periodo": "2026-02",
+            "ref_2amb_monto": 116507.8,
+            "desvio_2amb_monto": -16507.8,
+            "desvio_2amb_pct": -14.2
         },
         {
             "periodo": "2026-04",
             "uf": "119",
             "propietario": "LANTERO J.C.",
             "motivo": "Por no respetar uso correcto del SUM",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "9 B",
+            "ref_2amb_periodo": "2026-03",
+            "ref_2amb_monto": 99810.2,
+            "desvio_2amb_monto": 189.8,
+            "desvio_2amb_pct": 0.2
         },
         {
             "periodo": "2026-05",
             "uf": "111",
             "propietario": "CAVIGLIA/ Estefania Piano",
             "motivo": "Por no respetar uso correcto del SUM",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "7 E",
+            "ref_2amb_periodo": "2026-04",
+            "ref_2amb_monto": 96823.23,
+            "desvio_2amb_monto": 3176.77,
+            "desvio_2amb_pct": 3.3
         },
         {
             "periodo": "2026-05",
             "uf": "150",
             "propietario": "ANASTACIO/ Daniel",
             "motivo": "Por no respetar uso correcto del SUM",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "15 A",
+            "ref_2amb_periodo": "2026-04",
+            "ref_2amb_monto": 96823.23,
+            "desvio_2amb_monto": 3176.77,
+            "desvio_2amb_pct": 3.3
         },
         {
             "periodo": "2026-05",
             "uf": "138",
             "propietario": "PRIMAVERA/ Mica Gutierrez",
             "motivo": "Por no respetar uso correcto del SUM",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "13 C",
+            "ref_2amb_periodo": "2026-04",
+            "ref_2amb_monto": 96823.23,
+            "desvio_2amb_monto": 3176.77,
+            "desvio_2amb_pct": 3.3
         },
         {
             "periodo": "2026-06",
             "uf": "135",
             "propietario": "PAZOS/ Maria Eugenia Forlano",
             "motivo": "Por dejar canilla abierta y generar filtraciones",
-            "monto": 120000.0
+            "monto": 120000.0,
+            "dpto": "12 A",
+            "ref_2amb_periodo": "2026-05",
+            "ref_2amb_monto": 91455.41,
+            "desvio_2amb_monto": 28544.59,
+            "desvio_2amb_pct": 31.2
         },
         {
             "periodo": "2026-06",
             "uf": "145",
             "propietario": "SANCHEZ/ Cristian",
             "motivo": "Por dejar canilla abierta y generar filtraciones",
-            "monto": 120000.0
+            "monto": 120000.0,
+            "dpto": "14 A",
+            "ref_2amb_periodo": "2026-05",
+            "ref_2amb_monto": 91455.41,
+            "desvio_2amb_monto": 28544.59,
+            "desvio_2amb_pct": 31.2
         },
         {
             "periodo": "2026-08",
             "uf": "142",
             "propietario": "CPT INT/ Camila Nuñez",
             "motivo": "Por dejar canilla baño piso 27 abierta.",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "13 D",
+            "ref_2amb_periodo": "2026-07",
+            "ref_2amb_monto": 114713.24,
+            "desvio_2amb_monto": -14713.24,
+            "desvio_2amb_pct": -12.8
         },
         {
             "periodo": "2026-09",
             "uf": "114",
             "propietario": "Fernandez Miscione",
             "motivo": "Por dejar puerta principal abierta",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "8 B",
+            "ref_2amb_periodo": "2026-08",
+            "ref_2amb_monto": 113600.67,
+            "desvio_2amb_monto": -13600.67,
+            "desvio_2amb_pct": -12.0
         },
         {
             "periodo": "2026-09",
             "uf": "003",
             "propietario": "Local 3",
             "motivo": "Por dejar Portón abierto",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "LOC 3",
+            "ref_2amb_periodo": "2026-08",
+            "ref_2amb_monto": 113600.67,
+            "desvio_2amb_monto": -13600.67,
+            "desvio_2amb_pct": -12.0
         },
         {
             "periodo": "2026-10",
             "uf": "114",
             "propietario": "Fernandez Miscione",
             "motivo": "Por dejar puerta principal abierta",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "8 B",
+            "ref_2amb_periodo": "2026-09",
+            "ref_2amb_monto": 142309.57,
+            "desvio_2amb_monto": -42309.57,
+            "desvio_2amb_pct": -29.7
         },
         {
             "periodo": "2026-10",
             "uf": "003",
             "propietario": "Local 3",
             "motivo": "Por dejar Portón abierto",
-            "monto": 100000.0
+            "monto": 100000.0,
+            "dpto": "LOC 3",
+            "ref_2amb_periodo": "2026-09",
+            "ref_2amb_monto": 142309.57,
+            "desvio_2amb_monto": -42309.57,
+            "desvio_2amb_pct": -29.7
+        }
+    ],
+    "referencia_2amb": {
+        "2023-03": 11048.47,
+        "2024-05": 34616.92,
+        "2024-06": 43624.37,
+        "2024-07": 47166.0,
+        "2024-08": 51026.21,
+        "2024-09": 54788.87,
+        "2024-10": 59033.33,
+        "2024-11": 64436.34,
+        "2024-12": 69382.42,
+        "2025-01": 75949.93,
+        "2025-02": 75891.85,
+        "2025-03": 86718.05,
+        "2025-04": 68171.61,
+        "2025-05": 82187.47,
+        "2025-06": 81758.58,
+        "2025-07": 77519.63,
+        "2025-08": 91104.91,
+        "2025-09": 80630.25,
+        "2025-10": 86951.21,
+        "2025-11": 85374.93,
+        "2025-12": 96612.84,
+        "2026-01": 108347.08,
+        "2026-02": 116507.8,
+        "2026-03": 99810.2,
+        "2026-04": 96823.23,
+        "2026-05": 91455.41,
+        "2026-06": 118567.86,
+        "2026-07": 114713.24,
+        "2026-08": 113600.67,
+        "2026-09": 142309.57
+    },
+    "unidades_padron": [
+        {
+            "uf": 1,
+            "dpto": "SS 67"
+        },
+        {
+            "uf": 2,
+            "dpto": "SS 66"
+        },
+        {
+            "uf": 3,
+            "dpto": "LOC 3"
+        },
+        {
+            "uf": 4,
+            "dpto": "SS 40"
+        },
+        {
+            "uf": 5,
+            "dpto": "SS 41"
+        },
+        {
+            "uf": 6,
+            "dpto": "SS 42"
+        },
+        {
+            "uf": 7,
+            "dpto": "SS 43"
+        },
+        {
+            "uf": 8,
+            "dpto": "SS 44"
+        },
+        {
+            "uf": 9,
+            "dpto": "SS 45"
+        },
+        {
+            "uf": 10,
+            "dpto": "SS 46"
+        },
+        {
+            "uf": 11,
+            "dpto": "SS 47"
+        },
+        {
+            "uf": 12,
+            "dpto": "SS 48"
+        },
+        {
+            "uf": 13,
+            "dpto": "SS 49"
+        },
+        {
+            "uf": 14,
+            "dpto": "SS 50"
+        },
+        {
+            "uf": 15,
+            "dpto": "SS 51"
+        },
+        {
+            "uf": 16,
+            "dpto": "SS 52"
+        },
+        {
+            "uf": 17,
+            "dpto": "SS 53"
+        },
+        {
+            "uf": 18,
+            "dpto": "SS 54"
+        },
+        {
+            "uf": 19,
+            "dpto": "SS 55"
+        },
+        {
+            "uf": 20,
+            "dpto": "SS 56"
+        },
+        {
+            "uf": 21,
+            "dpto": "SS 57"
+        },
+        {
+            "uf": 22,
+            "dpto": "SS 58"
+        },
+        {
+            "uf": 23,
+            "dpto": "SS 59"
+        },
+        {
+            "uf": 24,
+            "dpto": "SS 60"
+        },
+        {
+            "uf": 25,
+            "dpto": "SS 61"
+        },
+        {
+            "uf": 26,
+            "dpto": "SS 62"
+        },
+        {
+            "uf": 27,
+            "dpto": "SS 63"
+        },
+        {
+            "uf": 28,
+            "dpto": "SS 64"
+        },
+        {
+            "uf": 29,
+            "dpto": "SS 65"
+        },
+        {
+            "uf": 30,
+            "dpto": "SS 68"
+        },
+        {
+            "uf": 31,
+            "dpto": "SS 69"
+        },
+        {
+            "uf": 32,
+            "dpto": "SS 70"
+        },
+        {
+            "uf": 33,
+            "dpto": "SS 71"
+        },
+        {
+            "uf": 34,
+            "dpto": "SS 72"
+        },
+        {
+            "uf": 35,
+            "dpto": "SS 73"
+        },
+        {
+            "uf": 36,
+            "dpto": "SS 74"
+        },
+        {
+            "uf": 37,
+            "dpto": "SS 75"
+        },
+        {
+            "uf": 38,
+            "dpto": "LOC 1"
+        },
+        {
+            "uf": 39,
+            "dpto": "LOC 2"
+        },
+        {
+            "uf": 40,
+            "dpto": "SEM 1"
+        },
+        {
+            "uf": 41,
+            "dpto": "SEM 2"
+        },
+        {
+            "uf": 42,
+            "dpto": "SEM 3"
+        },
+        {
+            "uf": 43,
+            "dpto": "SEM 4"
+        },
+        {
+            "uf": 44,
+            "dpto": "SEM 5"
+        },
+        {
+            "uf": 45,
+            "dpto": "SEM 6"
+        },
+        {
+            "uf": 46,
+            "dpto": "SEM 7"
+        },
+        {
+            "uf": 47,
+            "dpto": "SEM 8"
+        },
+        {
+            "uf": 48,
+            "dpto": "SEM 9"
+        },
+        {
+            "uf": 49,
+            "dpto": "SEM 10"
+        },
+        {
+            "uf": 50,
+            "dpto": "SEM 11"
+        },
+        {
+            "uf": 51,
+            "dpto": "SEM 12"
+        },
+        {
+            "uf": 52,
+            "dpto": "SEM 13"
+        },
+        {
+            "uf": 53,
+            "dpto": "SEM 14"
+        },
+        {
+            "uf": 54,
+            "dpto": "SEM 15"
+        },
+        {
+            "uf": 55,
+            "dpto": "SEM 16"
+        },
+        {
+            "uf": 56,
+            "dpto": "SEM 17"
+        },
+        {
+            "uf": 57,
+            "dpto": "SEM 18"
+        },
+        {
+            "uf": 58,
+            "dpto": "SEM 19"
+        },
+        {
+            "uf": 59,
+            "dpto": "SEM 20"
+        },
+        {
+            "uf": 60,
+            "dpto": "SEM 21"
+        },
+        {
+            "uf": 61,
+            "dpto": "SEM 22"
+        },
+        {
+            "uf": 62,
+            "dpto": "SEM 23"
+        },
+        {
+            "uf": 63,
+            "dpto": "SEM 24"
+        },
+        {
+            "uf": 64,
+            "dpto": "SEM 25"
+        },
+        {
+            "uf": 65,
+            "dpto": "SEM 26"
+        },
+        {
+            "uf": 66,
+            "dpto": "SEM 27"
+        },
+        {
+            "uf": 67,
+            "dpto": "SEM 28"
+        },
+        {
+            "uf": 68,
+            "dpto": "SEM 29"
+        },
+        {
+            "uf": 69,
+            "dpto": "SEM 38"
+        },
+        {
+            "uf": 70,
+            "dpto": "SEM 37"
+        },
+        {
+            "uf": 71,
+            "dpto": "SEM 36"
+        },
+        {
+            "uf": 72,
+            "dpto": "SEM 35"
+        },
+        {
+            "uf": 73,
+            "dpto": "SEM 34"
+        },
+        {
+            "uf": 74,
+            "dpto": "SEM 33"
+        },
+        {
+            "uf": 75,
+            "dpto": "SEM 32"
+        },
+        {
+            "uf": 76,
+            "dpto": "SEM 31"
+        },
+        {
+            "uf": 77,
+            "dpto": "SEM 30"
+        },
+        {
+            "uf": 78,
+            "dpto": "1 C"
+        },
+        {
+            "uf": 79,
+            "dpto": "1 B"
+        },
+        {
+            "uf": 80,
+            "dpto": "1 A"
+        },
+        {
+            "uf": 81,
+            "dpto": "1 E"
+        },
+        {
+            "uf": 82,
+            "dpto": "1 D"
+        },
+        {
+            "uf": 83,
+            "dpto": "2 C"
+        },
+        {
+            "uf": 84,
+            "dpto": "2 B"
+        },
+        {
+            "uf": 85,
+            "dpto": "2 A"
+        },
+        {
+            "uf": 86,
+            "dpto": "2 E"
+        },
+        {
+            "uf": 87,
+            "dpto": "2 D"
+        },
+        {
+            "uf": 88,
+            "dpto": "3 C"
+        },
+        {
+            "uf": 89,
+            "dpto": "3 B"
+        },
+        {
+            "uf": 90,
+            "dpto": "3 A"
+        },
+        {
+            "uf": 91,
+            "dpto": "3 E"
+        },
+        {
+            "uf": 92,
+            "dpto": "3 D"
+        },
+        {
+            "uf": 93,
+            "dpto": "4 C"
+        },
+        {
+            "uf": 94,
+            "dpto": "4 B"
+        },
+        {
+            "uf": 95,
+            "dpto": "4 A"
+        },
+        {
+            "uf": 96,
+            "dpto": "4 E"
+        },
+        {
+            "uf": 97,
+            "dpto": "4 D"
+        },
+        {
+            "uf": 98,
+            "dpto": "5 C"
+        },
+        {
+            "uf": 99,
+            "dpto": "5 B"
+        },
+        {
+            "uf": 100,
+            "dpto": "5 A"
+        },
+        {
+            "uf": 101,
+            "dpto": "5 E"
+        },
+        {
+            "uf": 102,
+            "dpto": "5 D"
+        },
+        {
+            "uf": 103,
+            "dpto": "6 C"
+        },
+        {
+            "uf": 104,
+            "dpto": "6 B"
+        },
+        {
+            "uf": 105,
+            "dpto": "6 A"
+        },
+        {
+            "uf": 106,
+            "dpto": "6 E"
+        },
+        {
+            "uf": 107,
+            "dpto": "6 D"
+        },
+        {
+            "uf": 108,
+            "dpto": "7 C"
+        },
+        {
+            "uf": 109,
+            "dpto": "7 B"
+        },
+        {
+            "uf": 110,
+            "dpto": "7 A"
+        },
+        {
+            "uf": 111,
+            "dpto": "7 E"
+        },
+        {
+            "uf": 112,
+            "dpto": "7 D"
+        },
+        {
+            "uf": 113,
+            "dpto": "8 C"
+        },
+        {
+            "uf": 114,
+            "dpto": "8 B"
+        },
+        {
+            "uf": 115,
+            "dpto": "8 A"
+        },
+        {
+            "uf": 116,
+            "dpto": "8 E"
+        },
+        {
+            "uf": 117,
+            "dpto": "8 D"
+        },
+        {
+            "uf": 118,
+            "dpto": "9 C"
+        },
+        {
+            "uf": 119,
+            "dpto": "9 B"
+        },
+        {
+            "uf": 120,
+            "dpto": "9 A"
+        },
+        {
+            "uf": 121,
+            "dpto": "9 E"
+        },
+        {
+            "uf": 122,
+            "dpto": "9 D"
+        },
+        {
+            "uf": 123,
+            "dpto": "10 C"
+        },
+        {
+            "uf": 124,
+            "dpto": "10 B"
+        },
+        {
+            "uf": 125,
+            "dpto": "10 A"
+        },
+        {
+            "uf": 126,
+            "dpto": "10 E"
+        },
+        {
+            "uf": 127,
+            "dpto": "10 D"
+        },
+        {
+            "uf": 128,
+            "dpto": "11 C"
+        },
+        {
+            "uf": 129,
+            "dpto": "11 B"
+        },
+        {
+            "uf": 130,
+            "dpto": "11 A"
+        },
+        {
+            "uf": 131,
+            "dpto": "11 E"
+        },
+        {
+            "uf": 132,
+            "dpto": "11 D"
+        },
+        {
+            "uf": 133,
+            "dpto": "12 C"
+        },
+        {
+            "uf": 134,
+            "dpto": "12 B"
+        },
+        {
+            "uf": 135,
+            "dpto": "12 A"
+        },
+        {
+            "uf": 136,
+            "dpto": "12 E"
+        },
+        {
+            "uf": 137,
+            "dpto": "12 D"
+        },
+        {
+            "uf": 138,
+            "dpto": "13 C"
+        },
+        {
+            "uf": 139,
+            "dpto": "13 B"
+        },
+        {
+            "uf": 140,
+            "dpto": "13 A"
+        },
+        {
+            "uf": 141,
+            "dpto": "13 E"
+        },
+        {
+            "uf": 142,
+            "dpto": "13 D"
+        },
+        {
+            "uf": 143,
+            "dpto": "14 C"
+        },
+        {
+            "uf": 144,
+            "dpto": "14 B"
+        },
+        {
+            "uf": 145,
+            "dpto": "14 A"
+        },
+        {
+            "uf": 146,
+            "dpto": "14 E"
+        },
+        {
+            "uf": 147,
+            "dpto": "14 D"
+        },
+        {
+            "uf": 148,
+            "dpto": "15 C"
+        },
+        {
+            "uf": 149,
+            "dpto": "15 B"
+        },
+        {
+            "uf": 150,
+            "dpto": "15 A"
+        },
+        {
+            "uf": 151,
+            "dpto": "15 E"
+        },
+        {
+            "uf": 152,
+            "dpto": "15 D"
+        },
+        {
+            "uf": 153,
+            "dpto": "16 C"
+        },
+        {
+            "uf": 154,
+            "dpto": "16 B"
+        },
+        {
+            "uf": 155,
+            "dpto": "16 A"
+        },
+        {
+            "uf": 156,
+            "dpto": "16 E"
+        },
+        {
+            "uf": 157,
+            "dpto": "16 D"
+        },
+        {
+            "uf": 158,
+            "dpto": "17 C"
+        },
+        {
+            "uf": 159,
+            "dpto": "17 B"
+        },
+        {
+            "uf": 160,
+            "dpto": "17 A"
+        },
+        {
+            "uf": 161,
+            "dpto": "17 E"
+        },
+        {
+            "uf": 162,
+            "dpto": "17 D"
+        },
+        {
+            "uf": 163,
+            "dpto": "18 C"
+        },
+        {
+            "uf": 164,
+            "dpto": "18 B"
+        },
+        {
+            "uf": 165,
+            "dpto": "18 A"
+        },
+        {
+            "uf": 166,
+            "dpto": "18 E"
+        },
+        {
+            "uf": 167,
+            "dpto": "18 D"
+        },
+        {
+            "uf": 168,
+            "dpto": "19 C"
+        },
+        {
+            "uf": 169,
+            "dpto": "19 B"
+        },
+        {
+            "uf": 170,
+            "dpto": "19 A"
+        },
+        {
+            "uf": 171,
+            "dpto": "19 E"
+        },
+        {
+            "uf": 172,
+            "dpto": "19 D"
+        },
+        {
+            "uf": 173,
+            "dpto": "20 A"
+        },
+        {
+            "uf": 174,
+            "dpto": "20 B"
+        },
+        {
+            "uf": 175,
+            "dpto": "21 A"
+        },
+        {
+            "uf": 176,
+            "dpto": "21 B"
+        },
+        {
+            "uf": 177,
+            "dpto": "22 A"
+        },
+        {
+            "uf": 178,
+            "dpto": "22 B"
+        },
+        {
+            "uf": 179,
+            "dpto": "23 A"
+        },
+        {
+            "uf": 180,
+            "dpto": "23 B"
+        },
+        {
+            "uf": 181,
+            "dpto": "24 A"
+        },
+        {
+            "uf": 182,
+            "dpto": "24 B"
+        },
+        {
+            "uf": 183,
+            "dpto": "25 A"
+        },
+        {
+            "uf": 184,
+            "dpto": "25 B"
+        },
+        {
+            "uf": 185,
+            "dpto": "26 A"
+        },
+        {
+            "uf": 186,
+            "dpto": "26 B"
         }
     ]
 }

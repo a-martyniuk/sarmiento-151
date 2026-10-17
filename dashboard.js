@@ -4,9 +4,13 @@
 let rawExpenses  = [];
 let rawBalances  = [];
 let rawMultas    = [];
+let unidadesPadron = [];
+let referencia2Amb = {};
 let filteredExpenses = [];
 let currentPage  = 1;
 let pageSize     = 20;
+let expenseSortField = "periodo";
+let expenseSortDir   = "desc";
 let ipcData      = {}; // Indexa la inflación del IPC por mes
 
 // Fetch inflación oficial del INDEC (Datos Abiertos)
@@ -435,6 +439,57 @@ const resolvePrevComparison = (item, allExpenses) => {
     return { prevMonto: 0 };
 };
 
+// ── Pre-compute comparison & alert metadata for fast filtering/sorting ──
+const enrichExpenseMetadata = () => {
+    rawExpenses.forEach(item => {
+        item.anomalia = !!item.anomalia;
+        item.desviacion_pct = item.desviacion_pct || 0;
+
+        const isPartial = item.concepto.toLowerCase().includes("a cuenta") ||
+                          (item.concepto.toLowerCase().includes("saldo") && !item.concepto.toLowerCase().includes("total"));
+        const comp = item.estado === "Pendiente" ? { prevMonto: 0 } : resolvePrevComparison(item, rawExpenses);
+        const prevMonto = comp.prevMonto || 0;
+        const diff = (prevMonto > 0 && !comp.customVarHtml) ? ((item.monto - prevMonto) / prevMonto) * 100 : null;
+
+        const meta = parseConceptMeta(item.concepto, item.rubro, item.periodo);
+        const effectiveTipo = (item.tipo === "Fijo" || meta.baseKey.startsWith("abo:")) ? "Fijo" : "Variable";
+
+        const isOneOffOrPartial = isPartial ||
+            comp.suppressIncreaseAlert ||
+            item.concepto.toLowerCase().includes("depto") ||
+            item.concepto.toLowerCase().includes("cuota") ||
+            item.concepto.toLowerCase().includes("reparación") ||
+            item.concepto.toLowerCase().includes("trabajo de");
+
+        const esRecurrente = (effectiveTipo === "Fijo" || ["servicios públicos", "contratos y abonos"].includes(item.rubro.toLowerCase())) && !isOneOffOrPartial;
+        const hasIncreaseAlert = !!(esRecurrente && diff !== null && diff > 25 && prevMonto > 0 && !comp.customVarHtml);
+        const isSinCae = /00000001|s\/n|sin\s+cae|recibo\s+com[uú]n/i.test(item.concepto) ||
+            (item.rubro === "Mantenimiento y Reparaciones" && !/fact\.?\s*[abc]|fc\.?\s*[abc]|\b000\d-\d{8}\b/i.test(item.concepto));
+
+        item._comp = comp;
+        item._prevMonto = prevMonto;
+        item._varPct = diff !== null ? diff : -999999;
+        item._effectiveTipo = effectiveTipo;
+        item._hasIncreaseAlert = hasIncreaseAlert;
+        item._isSinCae = isSinCae;
+    });
+};
+
+const populateClaimUfSelect = () => {
+    const sel = document.getElementById("claimUfSelect");
+    if (!sel || unidadesPadron.length === 0) return;
+
+    const currentVal = sel.value;
+    sel.innerHTML = `<option value="">— Seleccionar Unidad Funcional (186 U.F.) —</option>`;
+    unidadesPadron.forEach(u => {
+        const opt = document.createElement("option");
+        opt.value = `${u.uf}|${u.dpto || ""}|${u.propietario || ""}`;
+        opt.textContent = `U.F. ${String(u.uf).padStart(3, '0')} — Depto. ${u.dpto || 'S/D'} (${u.propietario || 'Consorcista'})`;
+        sel.appendChild(opt);
+    });
+    if (currentVal) sel.value = currentVal;
+};
+
 // ── BOOTSTRAP ──────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchIPC();
@@ -445,6 +500,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const allExpenses = data.gastos.filter(e => e.monto > 0);
             const allBalances = data.balances || [];
             const allMultas   = data.multas || [];
+            unidadesPadron    = data.unidades_padron || [];
+            referencia2Amb    = data.referencia_2amb || {};
 
             if (allExpenses.length > 0) {
                 rawExpenses = allExpenses;
@@ -456,13 +513,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 rawMultas   = [];
             }
 
-            // Asegurar flags de anomalía consistentes provenientes del modelo consolidado
-            rawExpenses.forEach(e => {
-                e.anomalia = !!e.anomalia;
-                e.desviacion_pct = e.desviacion_pct || 0;
-            });
-
+            enrichExpenseMetadata();
             populatePeriodFilter();
+            populateClaimUfSelect();
             setupEventListeners();
             applyFilter();
             loadServicesStatus();
@@ -480,8 +533,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 const populatePeriodFilter = () => {
     const sel = document.getElementById("periodFilter");
     const periods = [...new Set(rawExpenses.map(e => e.periodo))].sort().reverse();
-    
-
 
     periods.forEach(p => {
         const opt = document.createElement("option");
@@ -509,23 +560,33 @@ const populatePeriodFilter = () => {
 
 // ── Apply filter ────────────────────────────────────────────────
 const applyFilter = () => {
-    const periodSel  = document.getElementById("periodFilter");
-    const searchInp  = document.getElementById("searchInput");
-    const statusSel  = document.getElementById("statusFilter");
+    const periodSel   = document.getElementById("periodFilter");
+    const searchInp   = document.getElementById("searchInput");
+    const categorySel = document.getElementById("categoryFilter");
+    const alertSel    = document.getElementById("alertFilter");
+    const statusSel   = document.getElementById("statusFilter");
 
-    const period = periodSel.value;
-    const query  = searchInp ? searchInp.value.toLowerCase().trim() : "";
-    const status = statusSel.value;
+    const period   = periodSel ? periodSel.value : "todos";
+    const query    = searchInp ? searchInp.value.toLowerCase().trim() : "";
+    const category = categorySel ? categorySel.value : "todos";
+    const alertVal = alertSel ? alertSel.value : "todos";
+    const status   = statusSel ? statusSel.value : "todos";
 
     filteredExpenses = rawExpenses.filter(e => {
         const okPeriod = period === "todos" || e.periodo === period;
         const okSearch = !query ||
             e.concepto.toLowerCase().includes(query) ||
             e.rubro.toLowerCase().includes(query);
+        const okCategory = category === "todos" || e.rubro === category;
+        let okAlert = true;
+        if (alertVal === "anomalia") okAlert = !!e.anomalia;
+        else if (alertVal === "aumento") okAlert = !!e._hasIncreaseAlert;
+        else if (alertVal === "sincae") okAlert = !!e._isSinCae;
+
         // Si visualizamos "todos los períodos" y estado "todos", excluimos los pendientes para no duplicar en el histórico
-        const defaultExclusión = period === "todos" ? e.estado !== "Pendiente" : true;
-        const okStatus = status === "todos" ? defaultExclusión : (e.estado || "Pagado") === status;
-        return okPeriod && okSearch && okStatus;
+        const defaultExclusion = period === "todos" ? e.estado !== "Pendiente" : true;
+        const okStatus = status === "todos" ? defaultExclusion : (e.estado || "Pagado") === status;
+        return okPeriod && okSearch && okCategory && okAlert && okStatus;
     });
 
     currentPage = 1;
@@ -534,20 +595,33 @@ const applyFilter = () => {
 
 // ── Event listeners ─────────────────────────────────────────────
 const setupEventListeners = () => {
-    const periodSel  = document.getElementById("periodFilter");
-    const searchInp  = document.getElementById("searchInput");
-    const statusSel  = document.getElementById("statusFilter");
-    const chartTyp   = document.getElementById("chartTypeFilter");
-    const pageSizeSel= document.getElementById("pageSizeSelect");
+    const periodSel   = document.getElementById("periodFilter");
+    const searchInp   = document.getElementById("searchInput");
+    const categorySel = document.getElementById("categoryFilter");
+    const alertSel    = document.getElementById("alertFilter");
+    const statusSel   = document.getElementById("statusFilter");
+    const chartTyp    = document.getElementById("chartTypeFilter");
+    const pageSizeSel = document.getElementById("pageSizeSelect");
 
-    periodSel.addEventListener("change", applyFilter);
+    if (periodSel) periodSel.addEventListener("change", applyFilter);
     if (searchInp) searchInp.addEventListener("input",  applyFilter);
-    statusSel.addEventListener("change", applyFilter);
-    chartTyp.addEventListener("change",  () => renderHistoricalChart());
-    pageSizeSel.addEventListener("change", () => {
-        pageSize = parseInt(pageSizeSel.value);
-        currentPage = 1;
-        renderTable();
+    if (categorySel) categorySel.addEventListener("change", applyFilter);
+    if (alertSel) alertSel.addEventListener("change", applyFilter);
+    if (statusSel) statusSel.addEventListener("change", applyFilter);
+    if (chartTyp) chartTyp.addEventListener("change",  () => renderHistoricalChart());
+    if (pageSizeSel) {
+        pageSizeSel.addEventListener("change", () => {
+            pageSize = parseInt(pageSizeSel.value, 10);
+            currentPage = 1;
+            renderTable();
+        });
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            closeModal();
+            if (typeof closeAysaModal === "function") closeAysaModal();
+        }
     });
 };
 
@@ -600,12 +674,12 @@ const detectMissingInvoices = () => {
     }
 
     alertBox.innerHTML = missing.slice(-4).map(m => `
-        <div style="display:flex; flex-direction:column; gap:2px; background:rgba(251,191,36,0.04); border:1px solid rgba(251,191,36,0.12); border-radius:6px; padding:0.4rem 0.5rem; font-size:0.72rem; color:var(--text-2); width: 100%; box-sizing: border-box;">
+        <div style="display:flex; flex-direction:column; gap:2px; background:rgba(251,191,36,0.04); border:1px solid rgba(251,191,36,0.12); border-radius:6px; padding:0.4rem 0.5rem; font-size:0.75rem; color:var(--text-2); width: 100%; box-sizing: border-box;">
             <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
                 <span style="color:#fbbf24; font-weight:600;">⚠️ Faltante</span>
-                <span style="font-weight:600; color:var(--text-3); font-size:0.68rem;">${m.periodo}</span>
+                <span style="font-weight:600; color:var(--text-3); font-size:0.75rem;">${m.periodo}</span>
             </div>
-            <div style="font-weight:500; font-size:0.7rem; color:var(--text-1); margin-top:2px; word-break: break-word;">${m.service}</div>
+            <div style="font-weight:500; font-size:0.75rem; color:var(--text-1); margin-top:2px; word-break: break-word;">${m.service}</div>
         </div>
     `).join('');
 };
@@ -635,8 +709,6 @@ const updateDashboard = (multiPeriod = true) => {
 const renderKPIs = (period) => {
     const allPeriods = [...new Set(rawExpenses.map(e => e.periodo))].sort();
 
-
-
     // Gastos Pendientes de Pago (Devengados)
     let pendientesMes = 0;
     const idx = allPeriods.indexOf(period);
@@ -655,7 +727,7 @@ const renderKPIs = (period) => {
     }
     document.getElementById("kpiPendientes").textContent = pendientesMes > 0 ? fmt(pendientesMes) : "—";
 
-    const setBalance = (ing, egr, ingDelta, egrDelta, prevIng, prevEgr, prevPeriodName) => {
+    const setBalance = (ing, egr, ingDelta, egrDelta, prevIng, prevEgr, prevPeriodName, currentBal = null) => {
         document.getElementById("kpiRecaudado").textContent = ing > 0 ? fmt(ing) : "—";
         document.getElementById("kpiEgresado").textContent  = egr > 0 ? fmt(egr) : "—";
 
@@ -669,9 +741,12 @@ const renderKPIs = (period) => {
         const egrDeltaEl = document.getElementById("kpiEgresadoDelta");
 
         if (typeof ingDelta === "number") {
+            const cashNote = currentBal && currentBal.recaudado_efectivo_mes > 0
+                ? ` | Alert: ${fmtFull(currentBal.recaudado_efectivo_mes)} cobrados fuera de prorrateo bancario`
+                : "";
             ingDeltaEl.textContent = `${pct(ingDelta)} vs mes anterior`;
             ingDeltaEl.className = `kpi-delta ${ingDelta >= 0 ? "up" : "down"}`;
-            ingDeltaEl.setAttribute("data-tooltip", `Mes anterior (${prevPeriodName}): ${fmt(prevIng)}`);
+            ingDeltaEl.setAttribute("data-tooltip", `Mes anterior (${prevPeriodName}): ${fmt(prevIng)}${cashNote}`);
             ingDeltaEl.style.cursor = "help";
             ingDeltaEl.style.borderBottom = "1px dotted rgba(255,255,255,0.3)";
         } else {
@@ -692,7 +767,17 @@ const renderKPIs = (period) => {
         }
 
         const bDeltaEl = document.getElementById("kpiBalanceDelta");
-        bDeltaEl.textContent = delta >= 0 ? "✅ Recaudación cubre los gastos" : "⚠️ Los gastos superan la recaudación";
+        if (currentBal && currentBal.saldo_caja_efectivo > 0) {
+            bDeltaEl.textContent = `${delta >= 0 ? "✅ Superávit" : "⚠️ Déficit"} · Caja efvo.: ${fmt(currentBal.saldo_caja_efectivo)}`;
+            bDeltaEl.setAttribute("data-tooltip", `Saldo en Caja Efectivo no bancarizado al cierre: ${fmtFull(currentBal.saldo_caja_efectivo)} (Art. 2067 inc. g CCCN)`);
+            bDeltaEl.style.cursor = "help";
+            bDeltaEl.style.borderBottom = "1px dotted rgba(255,255,255,0.3)";
+        } else {
+            bDeltaEl.textContent = delta >= 0 ? "✅ Recaudación cubre los gastos" : "⚠️ Los gastos superan la recaudación";
+            bDeltaEl.removeAttribute("data-tooltip");
+            bDeltaEl.style.cursor = "default";
+            bDeltaEl.style.borderBottom = "none";
+        }
         bDeltaEl.className = `kpi-delta ${delta >= 0 ? "up" : "down"}`;
     };
 
@@ -723,7 +808,8 @@ const renderKPIs = (period) => {
             egrDelta, 
             balPrev ? balPrev.ingresos : 0, 
             balPrev ? balPrev.egresos : 0, 
-            prev
+            prev,
+            bal
         );
     } else {
         const gastos = filteredExpenses.reduce((a, e) => a + e.monto, 0);
@@ -799,7 +885,7 @@ const renderAnomalySection = (period) => {
                 <span class="anomaly-monto">${fmt(item.monto)}</span>
             </div>
             <div class="anomaly-concepto">${item.concepto}</div>
-            <div style="font-size:0.72rem; color:var(--text-3); display:flex; align-items:center; gap:4px; margin-top:4px;">${getAnomalyInsight(item)}</div>
+            <div style="font-size:0.75rem; color:var(--text-3); display:flex; align-items:center; gap:4px; margin-top:4px;">${getAnomalyInsight(item)}</div>
             <div style="margin-top:4px;">${getCatPill(item.rubro)}</div>
         </div>
     `).join('');
@@ -1361,9 +1447,9 @@ const renderEmployeeKPIs = (period) => {
             return;
         }
         if (info.arrears > 0) {
-            el.innerHTML = `${fmt(info.main)} <span style="display:block; font-size:0.68rem; font-weight:500; color:#fbbf24; margin-top:3px;" title="Saldo pendiente de meses anteriores cancelado en este período">+ ${fmt(info.arrears)} saldo mes anterior</span>`;
+            el.innerHTML = `${fmt(info.main)} <span style="display:block; font-size:0.75rem; font-weight:500; color:#fbbf24; margin-top:3px;" title="Saldo pendiente de meses anteriores cancelado en este período">+ ${fmt(info.arrears)} saldo mes anterior</span>`;
         } else if (info.isAcuentaOnly) {
-            el.innerHTML = `${fmt(info.main)} <span style="display:block; font-size:0.68rem; font-weight:500; color:#38bdf8; margin-top:3px;" title="En este período sólo se abonó un anticipo a cuenta; el saldo se canceló en el mes siguiente.">Anticipo a cuenta (Haber mes: ${fmt(info.devengadoMes)})</span>`;
+            el.innerHTML = `${fmt(info.main)} <span style="display:block; font-size:0.75rem; font-weight:500; color:#38bdf8; margin-top:3px;" title="En este período sólo se abonó un anticipo a cuenta; el saldo se canceló en el mes siguiente.">Anticipo a cuenta (Haber mes: ${fmt(info.devengadoMes)})</span>`;
         } else {
             el.textContent = fmt(info.main);
         }
@@ -1378,10 +1464,28 @@ const renderEmployeeKPIs = (period) => {
     document.getElementById('empLourdesHist').textContent   = period === 'todos' ? 'Acum. histórico: ' + fmt(loHist) : (loInfo.arrears > 0 ? `Total liquidado en caja: ${fmt(loInfo.total)} | Acum.: ${fmt(loHist)}` : 'Acum. histórico: ' + fmt(loHist));
 };
 
-// ── TABLE ────────────────────────────────────────────────────────
+// ── TABLE SORTING & RENDER ──────────────────────────────────────
+window.toggleExpenseSort = (field) => {
+    if (expenseSortField === field) {
+        expenseSortDir = expenseSortDir === "asc" ? "desc" : "asc";
+    } else {
+        expenseSortField = field;
+        expenseSortDir = ["monto", "prevMonto", "varPct", "periodo"].includes(field) ? "desc" : "asc";
+    }
+    document.querySelectorAll("#expensesTable th.sortable").forEach(th => {
+        th.classList.remove("sort-asc", "sort-desc");
+        if (th.getAttribute("data-sort") === expenseSortField) {
+            th.classList.add(expenseSortDir === "asc" ? "sort-asc" : "sort-desc");
+        }
+    });
+    currentPage = 1;
+    renderTable();
+};
+
 const renderTable = () => {
     const tbody  = document.getElementById("expensesTableBody");
     const total  = filteredExpenses.length;
+    const totalSum = filteredExpenses.reduce((acc, e) => acc + e.monto, 0);
     const ps     = pageSize >= 9999 ? total : pageSize;
     const pages  = Math.ceil(total / ps) || 1;
     currentPage  = Math.min(currentPage, pages);
@@ -1389,28 +1493,50 @@ const renderTable = () => {
     const end    = Math.min(start + ps, total);
 
     document.getElementById("tableInfo").textContent =
-        `${total.toLocaleString('es-AR')} registros encontrados`;
+        `${total.toLocaleString('es-AR')} registros · Subtotal: ${fmt(totalSum)}`;
     document.getElementById("paginationInfo").textContent =
-        `Mostrando ${start + 1}–${end} de ${total.toLocaleString('es-AR')}`;
+        total > 0 ? `Mostrando ${start + 1}–${end} de ${total.toLocaleString('es-AR')}` : `Mostrando 0 de 0`;
 
-    // Sort: period desc, amount desc
+    const mul = expenseSortDir === "asc" ? 1 : -1;
     const sorted = [...filteredExpenses].sort((a, b) => {
-        if (b.periodo !== a.periodo) return b.periodo.localeCompare(a.periodo);
-        return b.monto - a.monto;
+        if (expenseSortField === "periodo") {
+            if (a.periodo !== b.periodo) return a.periodo.localeCompare(b.periodo) * mul;
+            return b.monto - a.monto;
+        }
+        if (expenseSortField === "categoria") {
+            return (a.rubro || "").localeCompare(b.rubro || "") * mul;
+        }
+        if (expenseSortField === "tipo") {
+            return (a._effectiveTipo || a.tipo || "").localeCompare(b._effectiveTipo || b.tipo || "") * mul;
+        }
+        if (expenseSortField === "estado") {
+            return (a.estado || "Pagado").localeCompare(b.estado || "Pagado") * mul;
+        }
+        if (expenseSortField === "concepto") {
+            return (a.concepto || "").localeCompare(b.concepto || "") * mul;
+        }
+        if (expenseSortField === "prevMonto") {
+            return ((a._prevMonto || 0) - (b._prevMonto || 0)) * mul;
+        }
+        if (expenseSortField === "varPct") {
+            return ((a._varPct ?? -999999) - (b._varPct ?? -999999)) * mul;
+        }
+        if (expenseSortField === "monto") {
+            return (a.monto - b.monto) * mul;
+        }
+        return 0;
     });
 
     const pageItems = sorted.slice(start, end);
 
     if (pageItems.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--text-3);padding:2rem;">No se encontraron registros.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--text-3);padding:2rem;">No se encontraron registros para los filtros seleccionados.</td></tr>`;
         renderPagination(pages);
         return;
     }
     tbody.innerHTML = pageItems.map(item => {
-        const isPartial = item.concepto.toLowerCase().includes("a cuenta") || 
-                          (item.concepto.toLowerCase().includes("saldo") && !item.concepto.toLowerCase().includes("total"));
-        const comp = item.estado === "Pendiente" ? { prevMonto: 0 } : resolvePrevComparison(item, rawExpenses);
-        const prevMonto = comp.prevMonto || 0;
+        const comp = item._comp || (item.estado === "Pendiente" ? { prevMonto: 0 } : resolvePrevComparison(item, rawExpenses));
+        const prevMonto = item._prevMonto !== undefined ? item._prevMonto : (comp.prevMonto || 0);
 
         let varHtml = `<span class="var-null">—</span>`;
         let diff = 0;
@@ -1420,7 +1546,7 @@ const renderTable = () => {
         } else if (prevMonto > 0) {
             diff = ((item.monto - prevMonto) / prevMonto) * 100;
             const unitSub = comp.unitNote
-                ? `<span style="display:block;font-size:0.63rem;color:var(--text-3);font-weight:500;">(${comp.unitNote})</span>`
+                ? `<span style="display:block;font-size:0.75rem;color:var(--text-3);font-weight:500;">(${comp.unitNote})</span>`
                 : '';
             if (diff > 0.5)       varHtml = `<span class="var-up">+${diff.toFixed(1)}% ▲${unitSub}</span>`;
             else if (diff < -0.5) varHtml = `<span class="var-down">${diff.toFixed(1)}% ▼${unitSub}</span>`;
@@ -1428,7 +1554,7 @@ const renderTable = () => {
         }
 
         const prevTagHtml = comp.prevTag
-            ? `<span style="display:block;font-size:0.63rem;color:var(--text-3);font-weight:500;margin-top:1px;">${comp.prevTag}</span>`
+            ? `<span style="display:block;font-size:0.75rem;color:var(--text-3);font-weight:500;margin-top:1px;">${comp.prevTag}</span>`
             : '';
         const prevTooltipAttr = comp.prevTooltip
             ? `data-tooltip-right="${comp.prevTooltip.replace(/"/g, '&quot;')}" style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);"`
@@ -1437,8 +1563,7 @@ const renderTable = () => {
             ? `<span ${prevTooltipAttr}>${fmt(prevMonto)}</span>${prevTagHtml}`
             : '—';
 
-        const meta = parseConceptMeta(item.concepto, item.rubro, item.periodo);
-        const effectiveTipo = (item.tipo === "Fijo" || meta.baseKey.startsWith("abo:")) ? "Fijo" : "Variable";
+        const effectiveTipo = item._effectiveTipo || "Variable";
         const tipoBadge = effectiveTipo === "Fijo"
             ? `<span class="badge badge-fijo">Fijo</span>`
             : `<span class="badge badge-variable">Variable</span>`;
@@ -1448,17 +1573,12 @@ const renderTable = () => {
             badges.push(`<span class="badge badge-anomalia" title="Desviación +${item.desviacion_pct}% respecto al promedio móvil de los últimos 3 períodos">⚠ Anomalía</span>`);
         }
 
-        const isOneOffOrPartial = isPartial ||
-            comp.suppressIncreaseAlert ||
-            item.concepto.toLowerCase().includes("depto") ||
-            item.concepto.toLowerCase().includes("cuota") ||
-            item.concepto.toLowerCase().includes("reparación") ||
-            item.concepto.toLowerCase().includes("trabajo de");
-
-        const esRecurrente = (effectiveTipo === "Fijo" || ["servicios públicos", "contratos y abonos"].includes(item.rubro.toLowerCase())) && !isOneOffOrPartial;
-
-        if (esRecurrente && diff > 25 && prevMonto > 0 && !comp.customVarHtml) {
+        if (item._hasIncreaseAlert) {
             badges.push(`<span class="badge badge-anomalia" style="background:rgba(251,146,60,0.1); border-color:#fb923c; color:#fb923c;" title="Aumento mayor al 25% respecto al período anterior comparable">⚠️ Aumento >25%</span>`);
+        }
+
+        if (/00000001\b/i.test(item.concepto)) {
+            badges.push(`<span class="badge badge-danger" title="Numeración 00000001 repetida en múltiples meses o sin CAE verificable">🧾 Fact. 00000001</span>`);
         }
 
         const alertaBadge = badges.length > 0 
@@ -1479,7 +1599,7 @@ const renderTable = () => {
             <td>${alertaBadge}</td>
             <td>${estadoBadge}</td>
             <td class="concepto-cell">
-                <span class="concepto-text" onclick="openModal('${conceptSafe}')" title="Click para ver el historial completo de este concepto, obra o proveedor">${item.concepto}</span>
+                <span class="concepto-text" tabindex="0" role="button" onclick="openModal('${conceptSafe}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('${conceptSafe}');}" title="Click para ver el historial completo de este concepto, obra o proveedor">${item.concepto}</span>
             </td>
             <td class="amount-col amount-prev">${prevCellHtml}</td>
             <td style="text-align:right;white-space:nowrap;">${varHtml}</td>
@@ -1651,9 +1771,9 @@ const renderFines = (period) => {
     const subtitle = document.getElementById("finesSubtitle");
 
     if (period === "todos") {
-        subtitle.textContent = "Mostrando las 58 multas acumuladas históricas contrastadas con el Reglamento Interno";
+        subtitle.textContent = "Mostrando las 58 multas acumuladas históricas contrastadas con el Reglamento Interno y el valor real de 1 expensa de 2 ambientes";
     } else {
-        subtitle.textContent = `Multas aplicadas en la expensa de ${period} contrastadas con el Reglamento Interno`;
+        subtitle.textContent = `Multas aplicadas en la expensa de ${period} contrastadas con el Reglamento Interno y el valor real de 1 expensa de 2 ambientes`;
     }
 
     const filteredFines = period === "todos"
@@ -1661,18 +1781,34 @@ const renderFines = (period) => {
         : rawMultas.filter(m => m.periodo === period);
 
     if (filteredFines.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:1.5rem;">No se registraron multas en este período.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-3);padding:1.5rem;">No se registraron multas en este período.</td></tr>`;
         return;
     }
 
-    tbody.innerHTML = filteredFines.map(m => `
+    tbody.innerHTML = filteredFines.map(m => {
+        const refMonto = m.ref_2amb_monto || referencia2Amb[prevPeriod(m.periodo)] || referencia2Amb[m.periodo] || 0;
+        const refPer   = m.ref_2amb_periodo || prevPeriod(m.periodo);
+        const desvioPct = m.desvio_2amb_pct !== undefined
+            ? m.desvio_2amb_pct
+            : (refMonto > 0 ? ((m.monto - refMonto) / refMonto) * 100 : 0);
+        const desvioSign = desvioPct >= 0 ? "+" : "";
+        const refHtml = refMonto > 0
+            ? `<div style="font-weight:600; color:var(--text-2);">${fmt(refMonto)}</div>
+               <div style="font-size:0.75rem; color:${Math.abs(desvioPct) > 15 ? '#fbbf24' : 'var(--text-3)'}; font-weight:500;">${desvioSign}${desvioPct.toFixed(1)}% vs exp. ${refPer}</div>`
+            : "—";
+
+        return `
         <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-2); white-space: nowrap;">UF ${m.uf}${period === "todos" ? ` <span style="font-size:0.7rem;color:var(--text-3);font-weight:400;">(${m.periodo})</span>` : ''}</td>
+            <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-2); white-space: nowrap;">
+                UF ${m.uf}${m.dpto ? ` <span style="color:var(--accent);font-weight:600;">(${m.dpto})</span>` : ''}
+                ${period === "todos" ? `<span style="display:block;font-size:0.75rem;color:var(--text-3);font-weight:400;">Período ${m.periodo}</span>` : ''}
+            </td>
             <td style="padding: 0.75rem 0.5rem; color: var(--text-2); font-style: italic;">${m.motivo}</td>
             <td style="padding: 0.75rem 0.5rem;">${getReglamentoFineAudit(m)}</td>
+            <td style="padding: 0.75rem 0.5rem; text-align: right; white-space: nowrap;">${refHtml}</td>
             <td style="padding: 0.75rem 0.5rem; text-align: right; font-weight: 700; color: #f43f5e; white-space: nowrap;">${fmt(m.monto)}</td>
-        </tr>
-    `).join('');
+        </tr>`;
+    }).join('');
 };
 
 // ── PATRIMONIAL CHART RENDERER ─────────────────────────────────
@@ -1868,7 +2004,7 @@ const loadServicesStatus = () => {
 
             const getMessageHtml = (srv) => {
                 if (srv.status === "Alerta" && srv.message) {
-                    return `<div style="font-size: 0.65rem; color: var(--text-3); margin-top: 1px; margin-bottom: 0.4rem; padding-left: 12px; border-left: 1.5px dashed rgba(251,191,36,0.4); line-height: 1.25;">${srv.message}</div>`;
+                    return `<div style="font-size: 0.75rem; color: var(--text-3); margin-top: 1px; margin-bottom: 0.4rem; padding-left: 12px; border-left: 1.5px dashed rgba(251,191,36,0.4); line-height: 1.25;">${srv.message}</div>`;
                 }
                 return '';
             };
@@ -1901,7 +2037,7 @@ const loadServicesStatus = () => {
                     ${getMessageHtml(metrogas)}
                 </div>
 
-                <div style="font-size: 0.6rem; color: var(--text-3); text-align: right; margin-top: 6px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 4px; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.1); width: max-content; margin-left: auto;" data-tooltip-top-right="El estado se actualiza automáticamente 4 veces al día (06:00, 12:00, 18:00 y 21:00 hs) consultando los servidores oficiales de las prestadoras.">Act: ${data.actualizado || 'N/D'}</div>
+                <div style="font-size: 0.75rem; color: var(--text-3); text-align: right; margin-top: 6px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 4px; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.1); width: max-content; margin-left: auto;" data-tooltip-top-right="El estado se actualiza automáticamente 4 veces al día (06:00, 12:00, 18:00 y 21:00 hs) consultando los servidores oficiales de las prestadoras.">Act: ${data.actualizado || 'N/D'}</div>
             `;
         })
         .catch(err => {

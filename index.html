@@ -37,13 +37,13 @@
         :root {
             --bg-base: #050810;
             --bg-surface: #0b1120;
-            --bg-card: rgba(11, 17, 32, 0.7);
+            --bg-card: rgba(11, 17, 32, 0.78);
             --bg-sidebar: #07090f;
-            --border: rgba(255,255,255,0.06);
-            --border-accent: rgba(6,182,212,0.25);
-            --text-1: #f1f5f9;
-            --text-2: #94a3b8;
-            --text-3: #64748b;
+            --border: rgba(255,255,255,0.08);
+            --border-accent: rgba(6,182,212,0.3);
+            --text-1: #f8fafc;
+            --text-2: #cbd5e1;
+            --text-3: #94a3b8;
             --accent: #06b6d4;
             --accent-dim: rgba(6,182,212,0.12);
             --red: #f43f5e;
@@ -56,6 +56,8 @@
             --purple-dim: rgba(167,139,250,0.12);
             --blue: #60a5fa;
             --blue-dim: rgba(96,165,250,0.12);
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+            --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -69,10 +71,15 @@
             min-height: 100vh;
             display: flex;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         h1, h2, h3, h4, .brand, .kpi-val, .metric-val {
             font-family: 'Outfit', sans-serif;
+        }
+
+        .kpi-val, .metric-val, .anomaly-monto, .amount-col, .modal-stat-val, .history-row-amount, td, th {
+            font-variant-numeric: tabular-nums;
         }
 
         /* ── SIDEBAR ── */
@@ -88,26 +95,24 @@
             top: 0;
             height: 100vh;
             overflow-y: auto;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
         .sidebar::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
         }
 
         .brand {
             font-size: 1.4rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text-1);
             letter-spacing: -0.5px;
         }
 
         .brand-sub {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-3);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
             margin-top: 3px;
         }
 
@@ -127,9 +132,9 @@
             color: var(--text-2);
             font-size: 0.875rem;
             text-decoration: none;
-            transition: all 0.18s;
+            transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), transform 150ms var(--ease-out);
             cursor: pointer;
-            border: none;
+            border: 1px solid transparent;
             background: none;
             width: 100%;
             text-align: left;
@@ -142,10 +147,15 @@
 
         .nav-link.active {
             color: var(--accent);
-            border-left: 2px solid var(--accent);
+            border-color: var(--border-accent);
+            font-weight: 600;
         }
 
-        .nav-icon { flex-shrink: 0; opacity: 0.7; }
+        .nav-link:active {
+            transform: scale(0.98);
+        }
+
+        .nav-icon { flex-shrink: 0; opacity: 0.85; }
 
         .sidebar-footer {
             margin-top: auto;
@@ -170,21 +180,27 @@
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background-color 180ms var(--ease-out), border-color 180ms var(--ease-out), transform 150ms var(--ease-out), box-shadow 180ms var(--ease-out);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-contact-sidebar:hover {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.28), rgba(139, 92, 246, 0.28));
-            border-color: var(--accent);
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+        @media (hover: hover) and (pointer: fine) {
+            .btn-contact-sidebar:hover {
+                background: linear-gradient(135deg, rgba(6, 182, 212, 0.28), rgba(139, 92, 246, 0.28));
+                border-color: var(--accent);
+                color: #ffffff;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+            }
+        }
+
+        .btn-contact-sidebar:active {
+            transform: scale(0.97);
         }
 
         .btn-contact-sidebar svg {
             color: var(--accent);
-            transition: color 0.2s;
+            transition: color 150ms var(--ease-out);
         }
 
         .btn-contact-sidebar:hover svg {
@@ -192,7 +208,7 @@
         }
 
         .sidebar-badge {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             background: var(--accent-dim);
             color: var(--accent);
             padding: 3px 8px;
@@ -233,26 +249,30 @@
             background: var(--bg-surface);
             border: 1px solid var(--border);
             color: var(--text-1);
-            padding: 0.55rem 1rem;
+            padding: 0.5rem 0.9rem;
             border-radius: 8px;
-            font-size: 0.875rem;
-            width: 260px;
+            font-size: 0.84rem;
+            width: 250px;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
         }
 
-        .search-input:focus { border-color: var(--accent); }
+        .search-input:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15);
+        }
         .search-input::placeholder { color: var(--text-3); }
 
         select {
             background: var(--bg-surface);
             border: 1px solid var(--border);
             color: var(--text-1);
-            padding: 0.55rem 0.9rem;
+            padding: 0.5rem 0.85rem;
             border-radius: 8px;
-            font-size: 0.875rem;
+            font-size: 0.84rem;
             outline: none;
             cursor: pointer;
+            transition: border-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
         }
 
         /* ── NARRATIVE BOX ── */
@@ -286,11 +306,16 @@
             border-radius: 14px;
             padding: 1.25rem;
             backdrop-filter: blur(12px);
-            transition: border-color 0.2s;
+            transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out);
             position: relative;
         }
 
-        .kpi-card:hover { border-color: var(--border-accent); }
+        @media (hover: hover) and (pointer: fine) {
+            .kpi-card:hover {
+                border-color: var(--border-accent);
+                transform: translateY(-2px);
+            }
+        }
 
         .kpi-card::before {
             content: '';
@@ -306,10 +331,10 @@
         .kpi-card.c-predictivo::before { background: var(--purple); }
 
         .kpi-label {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-3);
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
@@ -385,7 +410,7 @@
             border-radius: 14px;
             padding: 1.25rem;
             backdrop-filter: blur(12px);
-            transition: border-color 0.2s;
+            transition: border-color 180ms var(--ease-out);
         }
 
         .card:hover { border-color: var(--border-accent); }
@@ -452,7 +477,7 @@
         }
 
         .anomaly-badge {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 700;
             background: rgba(244,63,94,0.2);
             color: var(--red);
@@ -500,17 +525,19 @@
         .table-actions {
             display: flex;
             gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .btn {
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
             color: var(--text-2);
-            padding: 0.4rem 0.9rem;
+            padding: 0.45rem 0.9rem;
             border-radius: 7px;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: all 0.18s;
+            transition: background-color 150ms var(--ease-out), border-color 150ms var(--ease-out), color 150ms var(--ease-out), transform 150ms var(--ease-out);
             font-family: 'Inter', sans-serif;
         }
 
@@ -520,9 +547,13 @@
             border-color: var(--border-accent);
         }
 
+        .btn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
         .btn-primary {
             background: var(--accent);
-            color: #000;
+            color: #050810;
             border-color: var(--accent);
             font-weight: 600;
         }
@@ -547,14 +578,34 @@
 
         thead th {
             background: rgba(255,255,255,0.025);
-            color: var(--text-3);
-            font-size: 0.7rem;
+            color: var(--text-2);
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
             padding: 0.9rem 1rem;
             border-bottom: 1px solid var(--border);
             white-space: nowrap;
+        }
+
+        thead th.sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: color 150ms var(--ease-out), background-color 150ms var(--ease-out);
+        }
+        thead th.sortable:hover {
+            color: var(--accent);
+            background: rgba(6, 182, 212, 0.06);
+        }
+        thead th.sort-asc::after {
+            content: " ↑";
+            color: var(--accent);
+            font-weight: 700;
+        }
+        thead th.sort-desc::after {
+            content: " ↓";
+            color: var(--accent);
+            font-weight: 700;
         }
 
         thead th:first-child { border-radius: 10px 0 0 0; }
@@ -569,10 +620,10 @@
 
         tbody tr:last-child td { border-bottom: none; }
 
-        tbody tr:hover td { background: rgba(6,182,212,0.03); }
+        tbody tr:hover td { background: rgba(6,182,212,0.04); }
 
         tbody tr:nth-child(even) td { background: rgba(255,255,255,0.008); }
-        tbody tr:nth-child(even):hover td { background: rgba(6,182,212,0.03); }
+        tbody tr:nth-child(even):hover td { background: rgba(6,182,212,0.04); }
 
         /* ── PILLS & BADGES ── */
         .pill {
@@ -581,7 +632,7 @@
             gap: 5px;
             padding: 0.25rem 0.6rem;
             border-radius: 99px;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -593,21 +644,21 @@
         .pill-contratos { background: rgba(52,211,153,0.12);  color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
         .pill-admin     { background: rgba(96,165,250,0.12);  color: #60a5fa; border: 1px solid rgba(96,165,250,0.2); }
         .pill-manto     { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
-        .pill-varios    { background: rgba(156,163,175,0.12); color: #9ca3af; border: 1px solid rgba(156,163,175,0.2); }
+        .pill-varios    { background: rgba(156,163,175,0.12); color: #cbd5e1; border: 1px solid rgba(156,163,175,0.2); }
 
         .badge {
             display: inline-block;
-            padding: 0.15rem 0.45rem;
+            padding: 0.18rem 0.48rem;
             border-radius: 5px;
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
         }
 
         .badge-fijo     { background: rgba(6,182,212,0.15);  color: #22d3ee; }
         .badge-variable { background: rgba(236,72,153,0.15); color: #f472b6; }
         .badge-anomalia { background: rgba(244,63,94,0.2);   color: #f43f5e; }
-        .badge-normal   { color: var(--text-3); font-size: 0.65rem; }
+        .badge-normal   { color: var(--text-3); font-size: 0.75rem; }
         .badge-pendiente { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
         .badge-pagado    { background: rgba(16,185,129,0.15); color: #34d399; }
         .badge-success   { background: rgba(16,185,129,0.15); color: #34d399; }
@@ -622,7 +673,7 @@
         .concepto-text {
             color: var(--text-1);
             cursor: pointer;
-            transition: color 0.15s;
+            transition: color 150ms var(--ease-out);
             line-height: 1.45;
             white-space: normal;
             word-break: break-word;
@@ -680,14 +731,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s;
+            transition: background-color 150ms var(--ease-out), border-color 150ms var(--ease-out), color 150ms var(--ease-out), transform 150ms var(--ease-out);
         }
 
         .pg-btn:hover, .pg-btn.active {
             background: var(--accent);
             border-color: var(--accent);
-            color: #000;
+            color: #050810;
             font-weight: 700;
+        }
+
+        .pg-btn:active:not(:disabled) {
+            transform: scale(0.95);
         }
 
         .pg-btn:disabled {
@@ -719,6 +774,20 @@
             max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: modalPopIn 180ms var(--ease-out);
+        }
+
+        @keyframes modalPopIn {
+            from { opacity: 0; transform: scale(0.96) translateY(6px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
 
         .modal-title {
@@ -755,7 +824,7 @@
         }
 
         .modal-stat-label {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-3);
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -769,7 +838,7 @@
         }
 
         .modal-history-label {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-3);
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -829,7 +898,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             color: var(--text-2);
         }
 
@@ -860,7 +929,7 @@
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #f1f5f9;
+            color: #f8fafc;
             padding: 0.5rem 0.75rem;
             border-radius: 8px;
             font-size: 0.75rem;
@@ -872,7 +941,7 @@
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
@@ -907,10 +976,10 @@
             background: rgba(15, 23, 42, 0.98);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #f1f5f9;
+            color: #f8fafc;
             padding: 0.5rem 0.75rem;
             border-radius: 8px;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 500;
             line-height: 1.35;
             white-space: normal;
@@ -918,7 +987,7 @@
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             text-align: left;
         }
@@ -942,10 +1011,10 @@
             background: rgba(15, 23, 42, 0.98);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #f1f5f9;
+            color: #f8fafc;
             padding: 0.5rem 0.75rem;
             border-radius: 8px;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 500;
             line-height: 1.35;
             white-space: normal;
@@ -953,7 +1022,7 @@
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             text-align: left;
         }
@@ -977,10 +1046,10 @@
             background: rgba(15, 23, 42, 0.98);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #f1f5f9;
+            color: #f8fafc;
             padding: 0.5rem 0.75rem;
             border-radius: 8px;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 500;
             line-height: 1.35;
             white-space: normal;
@@ -988,7 +1057,7 @@
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             text-align: left;
         }
@@ -1012,10 +1081,10 @@
             background: rgba(15, 23, 42, 0.98);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #f1f5f9;
+            color: #f8fafc;
             padding: 0.5rem 0.75rem;
             border-radius: 8px;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 500;
             line-height: 1.35;
             white-space: normal;
@@ -1023,7 +1092,7 @@
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             text-align: left;
         }
@@ -1059,8 +1128,23 @@
                 padding: 0.5rem 0.6rem;
                 font-size: 0.8rem;
             }
-            .sidebar-footer, #missingInvoicesSection {
-                display: none !important;
+            #missingInvoicesSection {
+                width: 100%;
+                margin: 0.75rem 0 0 0 !important;
+                padding-top: 0.75rem !important;
+            }
+            .sidebar-footer {
+                margin-top: 0.75rem;
+                padding-top: 0.75rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .btn-contact-sidebar {
+                width: auto;
+                margin-bottom: 0;
             }
             .main {
                 padding: 1.25rem 1rem;
@@ -1075,7 +1159,7 @@
                 width: 100%;
                 gap: 0.5rem;
             }
-            .toolbar select, .toolbar input {
+            .toolbar select, .toolbar input, .search-input {
                 width: 100%;
                 margin-left: 0 !important;
             }
@@ -1091,7 +1175,7 @@
                 overflow-x: auto;
             }
             table {
-                min-width: 1000px;
+                min-width: 920px;
             }
         }
 
@@ -1099,7 +1183,7 @@
         @media print {
             body {
                 background: #ffffff !important;
-                color: #000000 !important;
+                color: #111827 !important;
                 font-size: 11pt !important;
             }
             .sidebar, .toolbar, #chartTypeFilter, .table-toolbar, .pagination, #pageSizeSelect, .btn {
@@ -1112,21 +1196,21 @@
             }
             .card {
                 background: #ffffff !important;
-                border: 1px solid #e5e7eb !important;
+                border: 1px solid #d1d5db !important;
                 box-shadow: none !important;
-                color: #000000 !important;
+                color: #111827 !important;
                 page-break-inside: avoid;
                 margin-bottom: 20px;
             }
-            .card-title {
+            .card-title, .page-title {
                 color: #111827 !important;
             }
-            .card-subtitle {
-                color: #4b5563 !important;
+            .card-subtitle, .page-subtitle, .kpi-label, .kpi-delta {
+                color: #374151 !important;
             }
             .kpi-card {
                 background: #f9fafb !important;
-                border: 1px solid #e5e7eb !important;
+                border: 1px solid #d1d5db !important;
                 color: #111827 !important;
             }
             .kpi-val {
@@ -1138,7 +1222,7 @@
                 color: #111827 !important;
             }
             th, td {
-                border-bottom: 1px solid #e5e7eb !important;
+                border-bottom: 1px solid #d1d5db !important;
                 padding: 8px !important;
                 color: #111827 !important;
             }
@@ -1155,7 +1239,7 @@
 <aside class="sidebar">
     <div>
         <div class="brand">Sarmiento 151</div>
-        <div style="font-size:0.62rem; color:var(--text-3); display:flex; align-items:center; gap:4px; margin-top:4px; cursor:help; border-bottom: 1px dotted rgba(255,255,255,0.2); padding-bottom: 2px; width: max-content;" data-tooltip-down="Este panel es un desarrollo independiente de un copropietario. Los datos se extraen de las liquidaciones de expensas oficiales provistas por la administración.">
+        <div style="font-size:0.75rem; color:var(--text-3); display:flex; align-items:center; gap:4px; margin-top:4px; cursor:help; border-bottom: 1px dotted rgba(255,255,255,0.2); padding-bottom: 2px; width: max-content;" data-tooltip-down="Este panel es un desarrollo independiente de un copropietario. Los datos se extraen de las liquidaciones de expensas oficiales provistas por la administración.">
             ℹ️ Monitoreo de Copropietario
         </div>
     </div>
@@ -1191,15 +1275,15 @@
         </a>
 
         <div style="margin: 1.5rem 1rem 0 1rem; border-top: 1px solid var(--border); padding-top: 1.25rem;" id="missingInvoicesSection">
-            <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-3); letter-spacing: 1.5px; margin-bottom: 0.5rem; font-weight: 700;">🕵️ Control de Facturas</div>
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-3); letter-spacing: 1.2px; margin-bottom: 0.5rem; font-weight: 700;">🕵️ Control de Facturas</div>
             <div id="missingInvoicesAlerts" style="display: flex; flex-direction: column; gap: 0.5rem;">
                 Cargando auditoría...
             </div>
         </div>
 
         <div style="margin: 1.5rem 1rem 0 1rem; border-top: 1px solid var(--border); padding-top: 1.25rem;">
-            <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-3); letter-spacing: 1.5px; margin-bottom: 0.25rem; font-weight: 700;">💧 Estado de Servicios</div>
-            <div style="font-size: 0.65rem; color: var(--text-3); margin-bottom: 0.6rem; line-height: 1.4;">Consulta directa a las prestadoras</div>
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-3); letter-spacing: 1.2px; margin-bottom: 0.25rem; font-weight: 700;">💧 Estado de Servicios</div>
+            <div style="font-size: 0.75rem; color: var(--text-3); margin-bottom: 0.6rem; line-height: 1.4;">Consulta directa a las prestadoras</div>
             <div id="servicesStatusWidget" style="display: flex; flex-direction: column; gap: 0.5rem;">
                 Cargando estado...
             </div>
@@ -1453,38 +1537,38 @@
             <div class="employee-grid">
 
                 <!-- Encargado Permanente -->
-                <div style="background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.2);border-radius:12px;padding:1rem;border-top:2px solid #06b6d4;">
-                    <div style="font-size:0.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">🔵 Encargado Titular</div>
+                <div style="background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.28);border-radius:12px;padding:1rem;">
+                    <div style="font-size:0.75rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">🔵 Encargado Titular</div>
                     <div style="font-size:0.9rem;font-weight:700;color:var(--text-1);margin-bottom:6px;">Encargado Permanente</div>
                     <div style="font-size:1.4rem;font-weight:800;font-family:'Outfit',sans-serif;color:#06b6d4;" id="empIbrahimMonto">—</div>
-                    <div style="font-size:0.7rem;color:var(--text-3);margin-top:5px;" id="empIbrahimHist">—</div>
-                    <div style="font-size:0.7rem;color:var(--text-3);margin-top:2px;">Encargado permanente s/viv.</div>
+                    <div style="font-size:0.75rem;color:var(--text-3);margin-top:5px;" id="empIbrahimHist">—</div>
+                    <div style="font-size:0.75rem;color:var(--text-3);margin-top:2px;">Encargado permanente s/viv.</div>
                 </div>
 
                 <!-- Ayudante / Suplente -->
-                <div style="background:rgba(244,114,182,0.05);border:1px solid rgba(244,114,182,0.2);border-radius:12px;padding:1rem;border-top:2px solid #f472b6;">
-                    <div style="font-size:0.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">🩷 Encargada Adicional</div>
+                <div style="background:rgba(244,114,182,0.05);border:1px solid rgba(244,114,182,0.28);border-radius:12px;padding:1rem;">
+                    <div style="font-size:0.75rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">🩷 Encargada Adicional</div>
                     <div style="font-size:0.9rem;font-weight:700;color:var(--text-1);margin-bottom:6px;">Ayudante / Suplente</div>
                     <div style="font-size:1.4rem;font-weight:800;font-family:'Outfit',sans-serif;color:#f472b6;" id="empLourdesMonto">—</div>
-                    <div style="font-size:0.7rem;color:var(--text-3);margin-top:5px;" id="empLourdesHist">—</div>
-                    <div style="font-size:0.7rem;color:var(--text-3);margin-top:2px;">Encargada adicional s/viv.</div>
+                    <div style="font-size:0.75rem;color:var(--text-3);margin-top:5px;" id="empLourdesHist">—</div>
+                    <div style="font-size:0.75rem;color:var(--text-3);margin-top:2px;">Encargada adicional s/viv.</div>
                 </div>
 
                 <!-- Cargas Sociales -->
-                <div style="background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.2);border-radius:12px;padding:1rem;border-top:2px solid #fbbf24;">
-                    <div style="font-size:0.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">🟡 Cargas Sociales</div>
+                <div style="background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.28);border-radius:12px;padding:1rem;">
+                    <div style="font-size:0.75rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">🟡 Cargas Sociales</div>
                     <div style="font-size:0.9rem;font-weight:700;color:var(--text-1);margin-bottom:6px;">Cargas Soc. / Sindicato</div>
                     <div style="font-size:1.4rem;font-weight:800;font-family:'Outfit',sans-serif;color:#fbbf24;" id="empCargasMonto">—</div>
-                    <div style="font-size:0.7rem;color:var(--text-3);margin-top:5px;">ART · SUTERH · FATERYH · SERACARH</div>
+                    <div style="font-size:0.75rem;color:var(--text-3);margin-top:5px;">ART · SUTERH · FATERYH · SERACARH</div>
                 </div>
 
                 <!-- Yamil Reparaciones -->
-                <div style="background:rgba(167,139,250,0.05);border:1px solid rgba(167,139,250,0.2);border-radius:12px;padding:1rem;border-top:2px solid #a78bfa;">
-                    <div style="font-size:0.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">🔧 Contratista Externo</div>
+                <div style="background:rgba(167,139,250,0.05);border:1px solid rgba(167,139,250,0.28);border-radius:12px;padding:1rem;">
+                    <div style="font-size:0.75rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">🔧 Contratista Externo</div>
                     <div style="font-size:0.9rem;font-weight:700;color:var(--text-1);margin-bottom:6px;">Yamil Reparaciones</div>
                     <div style="font-size:1.4rem;font-weight:800;font-family:'Outfit',sans-serif;color:#a78bfa;" id="empYamilRepMonto">—</div>
-                    <div style="font-size:0.7rem;color:var(--text-3);margin-top:5px;">Eléctrica · Portón · Varios</div>
-                    <div style="font-size:0.7rem;color:rgba(167,139,250,0.6);margin-top:2px;font-style:italic;">≠ sueldo de encargado</div>
+                    <div style="font-size:0.75rem;color:var(--text-3);margin-top:5px;">Eléctrica · Portón · Varios</div>
+                    <div style="font-size:0.75rem;color:var(--purple);margin-top:2px;font-style:italic;">≠ sueldo de encargado</div>
                 </div>
             </div>
 
@@ -1508,14 +1592,31 @@
                 <div class="table-info" id="tableInfo">Cargando...</div>
             </div>
             <div class="table-actions">
-                <select id="pageSizeSelect" style="font-size:0.8rem;">
+                <input type="search" id="searchInput" class="search-input" placeholder="Buscar proveedor, factura, concepto..." aria-label="Buscar proveedor, factura o concepto">
+                <select id="categoryFilter" aria-label="Filtrar por categoría">
+                    <option value="todos">Todos los Rubros</option>
+                    <option value="Sueldos y Cargas Sociales">Sueldos y Cargas</option>
+                    <option value="Seguros">Seguros</option>
+                    <option value="Servicios Públicos">Servicios Públicos</option>
+                    <option value="Contratos y Abonos">Contratos y Abonos</option>
+                    <option value="Administración">Administración</option>
+                    <option value="Mantenimiento y Reparaciones">Mantenimiento y Rep.</option>
+                    <option value="Varios">Varios</option>
+                </select>
+                <select id="alertFilter" aria-label="Filtrar por tipo de alerta">
+                    <option value="todos">Todas las Filas</option>
+                    <option value="anomalia">🚨 Anomalías (&gt;50% o &gt;$500k)</option>
+                    <option value="aumento">📈 Aumentos (&gt;25%)</option>
+                    <option value="sincae">⚠️ Factura 00000001 / Sin CAE</option>
+                </select>
+                <select id="pageSizeSelect" style="font-size:0.8rem;" aria-label="Cantidad de filas por página">
                     <option value="20">20 por página</option>
                     <option value="50">50 por página</option>
                     <option value="100">100 por página</option>
                     <option value="9999">Todos</option>
                 </select>
                 <button class="btn" onclick="exportCSV()">⬇ Exportar CSV</button>
-                <button class="btn" onclick="exportPDF()" style="background:var(--purple); border-color:var(--purple); color:#fff; margin-left:0.5rem;">⬇ Exportar PDF</button>
+                <button class="btn" onclick="exportPDF()" style="background:var(--purple); border-color:var(--purple); color:#050810; font-weight:600;">⬇ Exportar PDF</button>
             </div>
         </div>
 
@@ -1523,15 +1624,15 @@
             <table id="expensesTable">
                 <thead>
                     <tr>
-                        <th>Período</th>
-                        <th>Categoría</th>
-                        <th>Tipo</th>
+                        <th class="sortable sort-desc" data-sort="periodo" onclick="toggleExpenseSort('periodo')">Período</th>
+                        <th class="sortable" data-sort="categoria" onclick="toggleExpenseSort('categoria')">Categoría</th>
+                        <th class="sortable" data-sort="tipo" onclick="toggleExpenseSort('tipo')">Tipo</th>
                         <th>Alerta</th>
-                        <th>Estado</th>
-                        <th>Concepto / Proveedor</th>
-                        <th style="text-align:right">Mes Anterior</th>
-                        <th style="text-align:right">Var. %</th>
-                        <th style="text-align:right">Monto Actual</th>
+                        <th class="sortable" data-sort="estado" onclick="toggleExpenseSort('estado')">Estado</th>
+                        <th class="sortable" data-sort="concepto" onclick="toggleExpenseSort('concepto')">Concepto / Proveedor</th>
+                        <th class="sortable" data-sort="prevMonto" onclick="toggleExpenseSort('prevMonto')" style="text-align:right">Mes Anterior</th>
+                        <th class="sortable" data-sort="varPct" onclick="toggleExpenseSort('varPct')" style="text-align:right">Var. %</th>
+                        <th class="sortable" data-sort="monto" onclick="toggleExpenseSort('monto')" style="text-align:right">Monto Actual</th>
                     </tr>
                 </thead>
                 <tbody id="expensesTableBody">
@@ -1552,26 +1653,27 @@
         <div class="card">
             <div class="card-header" style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
                 <div>
-                    <h3 class="card-title">🚨 Multas del Período vs. Reglamento Interno</h3>
-                    <p class="card-subtitle" id="finesSubtitle" style="font-size:0.8rem; color:var(--text-3);">Multas aplicadas en el período seleccionado contrastadas con el Reglamento Interno</p>
+                    <h2 class="card-title" style="font-size:1.1rem;">🚨 Multas del Período vs. Reglamento Interno y Expensa de 2 Ambientes</h2>
+                    <p class="card-subtitle" id="finesSubtitle" style="font-size:0.8rem; color:var(--text-3);">Multas aplicadas en el período seleccionado contrastadas con el Reglamento Interno y el valor real de 1 expensa de 2 ambientes</p>
                 </div>
             </div>
             <div style="background:rgba(244,63,94,0.05); border:1px solid rgba(244,63,94,0.2); border-radius:10px; padding:0.85rem 1rem; margin-bottom:1rem; font-size:0.78rem; color:var(--text-2); line-height:1.45;">
                 <strong style="color:#f43f5e;">⚖️ Parámetro Obligatorio del Reglamento Interno (Sarmiento 151):</strong>
                 En todos sus artículos sancionatorios (<strong>Arts. 1, 2, 3, 4, 5, 6, 11 y Cap. 4</strong>), el Reglamento Interno establece como única unidad de valuación <em>«una multa equivalente al último valor de una expensa de un departamento de dos ambientes»</em>, exigiendo denuncia escrita firmada con copia al Consejo (<strong>Cap. 1</strong>), 3 quejas de distintos propietarios para ruidos/reuniones (<strong>Art. 5</strong>) o asiento en Libro de Novedades para mascotas (<strong>Art. 11</strong>). Los descuidos o filtraciones accidentales <strong>no están tipificados como multa punitiva</strong> (el <strong>Cap. 4</strong> sólo pena el daño intencional <em>«adrede»</em>).
             </div>
-            <div class="table-wrapper" style="max-height: 320px; overflow-y: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+            <div class="table-wrapper" style="max-height: 360px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
                     <thead>
-                        <tr style="border-bottom: 1px solid var(--border); text-align: left; color: var(--text-3);">
-                            <th style="padding: 0.75rem 0.5rem; width: 110px;">UF</th>
-                            <th style="padding: 0.75rem 0.5rem;">Motivo Liquidado</th>
-                            <th style="padding: 0.75rem 0.5rem; width: 290px;">Contraste Reglamento Interno</th>
-                            <th style="padding: 0.75rem 0.5rem; text-align: right; width: 130px;">Monto</th>
+                        <tr style="border-bottom: 1px solid var(--border); text-align: left; color: var(--text-2);">
+                            <th style="padding: 0.75rem 0.6rem; width: 125px;">U.F. / Depto.</th>
+                            <th style="padding: 0.75rem 0.6rem;">Motivo Liquidado</th>
+                            <th style="padding: 0.75rem 0.6rem; width: 270px;">Contraste Reglamento Interno</th>
+                            <th style="padding: 0.75rem 0.6rem; text-align: right; width: 175px;" data-tooltip-left="Promedio real de expensa ordinaria (GA+GB+Fondo Operativo) de los departamentos de 2 ambientes (alícuota 0,71%–0,75%) en ese período según prorrateo.json.">Ref. 1 Exp. 2 Amb.</th>
+                            <th style="padding: 0.75rem 0.6rem; text-align: right; width: 125px;">Monto Cobrado</th>
                         </tr>
                     </thead>
                     <tbody id="finesTableBody">
-                        <tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:2rem;">Seleccioná un período para ver las multas.</td></tr>
+                        <tr><td colspan="5" style="text-align:center;color:var(--text-3);padding:2rem;">Seleccioná un período para ver las multas.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -1596,22 +1698,22 @@
 
         <!-- KPI SUMMARY AUDITORÍA -->
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-bottom:1.75rem;">
-            <div style="background:rgba(244,63,94,0.06); border:1px solid rgba(244,63,94,0.2); border-radius:12px; padding:1.1rem; border-left:3px solid #f43f5e;">
-                <div style="font-size:0.7rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Infracciones Críticas</div>
+            <div style="background:rgba(244,63,94,0.06); border:1px solid rgba(244,63,94,0.28); border-radius:12px; padding:1.1rem;">
+                <div style="font-size:0.75rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Infracciones Críticas</div>
                 <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#f43f5e; margin-top:4px;">8 Detectadas</div>
                 <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Ley 14.701 PBA, CCCN, ARCA y Reglamento Interno</div>
             </div>
 
-            <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:12px; padding:1.1rem; border-left:3px solid #f59e0b;">
-                <div style="font-size:0.7rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Faltas Administrativas</div>
+            <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.28); border-radius:12px; padding:1.1rem;">
+                <div style="font-size:0.75rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Faltas Administrativas</div>
                 <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#f59e0b; margin-top:4px;">7 Observadas</div>
                 <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Desvíos en multas, prorrateo, abonos y respaldos</div>
             </div>
 
-            <div style="background:rgba(6,182,212,0.06); border:1px solid rgba(6,182,212,0.2); border-radius:12px; padding:1.1rem; border-left:3px solid #06b6d4;">
-                <div style="font-size:0.7rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Normativa Aplicable</div>
-                <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#06b6d4; margin-top:4px;">Obligatoria</div>
-                <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Leyes nacionales/PBA y Reglamento Interno</div>
+            <div style="background:rgba(6,182,212,0.06); border:1px solid rgba(6,182,212,0.28); border-radius:12px; padding:1.1rem;">
+                <div style="font-size:0.75rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Cruce Forense Prorrateo ↔ Caja</div>
+                <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#06b6d4; margin-top:4px;">$2.108.606,73</div>
+                <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Cobros de U.F. retenidos en efectivo sin bancarizar</div>
             </div>
         </div>
 
@@ -1621,70 +1723,70 @@
             <!-- GRUPO 1: LEY 14.701 PBA (RPA) -->
             <div class="card" style="border: 1px solid rgba(244,63,94,0.25); background: linear-gradient(180deg, rgba(244,63,94,0.03) 0%, rgba(15,23,42,0.4) 100%);">
                 <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.75rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-                    <div style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px;">
-                        <span style="background:#f43f5e; color:#fff; font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:800;">LEY 14.701</span>
+                    <h3 style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px; margin:0;">
+                        <span style="background:#f43f5e; color:#050810; font-size:0.75rem; padding:2px 8px; border-radius:4px; font-weight:800;">LEY 14.701</span>
                         Registro Público de Administradores de Consorcios (Pcia. de Buenos Aires)
-                    </div>
-                    <span style="font-size:0.72rem; color:#f43f5e; font-weight:600; background:rgba(244,63,94,0.1); padding:3px 10px; border-radius:12px;">4 Infracciones Normativas</span>
+                    </h3>
+                    <span style="font-size:0.75rem; color:#f43f5e; font-weight:600; background:rgba(244,63,94,0.1); padding:3px 10px; border-radius:12px;">4 Infracciones Normativas</span>
                 </div>
 
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1rem;">
                     <!-- Item 1.1: RPA en blanco -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f43f5e;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(244,63,94,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Art. 9 Inc. E · Falta Grave</span>
-                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Liquidaciones</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Art. 9 Inc. E · Falta Grave</span>
+                            <span style="font-size:0.75rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Liquidaciones</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Omisión de Matrícula Oficial en el RPA</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             En el encabezado de todas las liquidaciones del consorcio figura el casillero <code>Nº RPA:</code> en blanco. La ley exige que todo administrador consigne su <strong>número de matrícula e inscripción vigente</strong> en toda liquidación y recibo de expensas.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Sanción legal (Art. 14): Multa de hasta 100 salarios, suspensión e inhabilitación.</em>
                         </div>
                     </div>
 
-                    <!-- Item 1.2: Retención de Efectivo sin Bancarizar -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f43f5e;">
+                    <!-- Item 1.2: Retención de Efectivo sin Bancarizar (Cruce Forense prorrateo.json vs balances) -->
+                    <div style="background:var(--bg-surface); border:1px solid rgba(244,63,94,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Art. 9 Inc. F · Falta Gravísima</span>
-                            <span style="font-size:0.65rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">$2.108.606,73</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Art. 9 Inc. F · Cruce Forense Prorrateo vs. Banco</span>
+                            <span style="font-size:0.75rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">$2.108.606,73</span>
                         </div>
-                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Retención de Fondos en Efectivo sin Bancarizar</h4>
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Retención de Cobros de Expensas en Efectivo sin Bancarizar</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
-                            La ley exige taxativamente que <strong>el 100% de los ingresos del consorcio se deposite en la cuenta bancaria oficial</strong>. Durante meses (mayo a agosto 2026) el saldo de caja física se mantuvo congelado artificialmente en <code>$1.013.893,20</code>, y en septiembre saltó a <code>$2.108.606,73</code> (+$1.094.713,53 recaudados en billetes físicos). Mantener sumas millonarias en mano viola el deber fiduciario y expone al consorcio a riesgos de robo o pérdida de valor.
+                            Al cruzar la suma de pagos de las 186 U.F. en el prorrateo (<code>prorrateo.json</code>) contra los ingresos bancarizados (<code>gastos.json</code>), se demuestra el origen exacto del efectivo retenido: en <strong>septiembre 2026</strong> los vecinos pagaron <code>$22.524.166,73</code> pero sólo ingresaron al banco <code>$21.429.453,20</code>; la diferencia exacta al centavo (<strong><code>$1.094.713,53</code></strong>) fue retenida en billetes físicos, elevando el <em>Saldo de Caja</em> de <code>$1.013.893,20</code> a <code>$2.108.606,73</code>. En 8 períodos auditados (<code>2024-07</code>, <code>2024-09</code>, <code>2024-12</code>, <code>2025-03</code>, <code>2025-05</code>, <code>2025-06</code>, <code>2025-09</code> y <code>2026-09</code>) se cobraron expensas en mano sin depositarlas en la cuenta bancaria oficial.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
-                            ⚖️ <em>Infracción: Bancarización obligatoria ineludible. CCCN Arts. 2065 y 2067.</em>
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
+                            ⚖️ <em>Infracción: Bancarización obligatoria del 100% de los fondos (Ley 14.701 Art. 9 inc. f y CCCN Arts. 2065/2067).</em>
                         </div>
                     </div>
 
                     <!-- Item 1.3: Acceso a Comprobantes -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f59e0b;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(245,158,11,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#f59e0b; text-transform:uppercase;">Art. 9 Inc. D · Transparencia</span>
-                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Comprobantes</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#f59e0b; text-transform:uppercase;">Art. 9 Inc. D · Transparencia</span>
+                            <span style="font-size:0.75rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Comprobantes</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Falta de Libre Acceso Digital a Facturas</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             El administrador tiene la obligación de conservar y <strong>digitalizar de manera abierta la totalidad de los comprobantes respaldatorios</strong> de cada gasto cobrado. No se habilitó un repositorio digital público e irrestricto para los copropietarios.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Obligación: Libre acceso sin necesidad de requerimientos particulares.</em>
                         </div>
                     </div>
 
                     <!-- Item 1.4: Cargas Sociales F.931 -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f59e0b;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(245,158,11,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#f59e0b; text-transform:uppercase;">Art. 9 Inc. G · Seguridad Social</span>
-                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">AFIP F.931</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#f59e0b; text-transform:uppercase;">Art. 9 Inc. G · Seguridad Social</span>
+                            <span style="font-size:0.75rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">AFIP F.931</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Omisión de Constancias de Aportes y Pólizas</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             Las liquidaciones mensuales no acompañan las copias de los tickets de pago bancario de seguridad social (F.931 AFIP y SUTERH), constancias de la póliza de seguro integral vigente ni detalle de la cobertura de siniestros.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Riesgo: Responsabilidad solidaria del consorcio ante contingencias laborales.</em>
                         </div>
                     </div>
@@ -1694,19 +1796,19 @@
             <!-- GRUPO 2: NORMATIVA TRIBUTARIA Y FISCAL (ARCA / AFIP) -->
             <div class="card" style="border: 1px solid rgba(6,182,212,0.25); background: linear-gradient(180deg, rgba(6,182,212,0.03) 0%, rgba(15,23,42,0.4) 100%);">
                 <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.75rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-                    <div style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px;">
-                        <span style="background:#06b6d4; color:#000; font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:800;">ARCA / AFIP</span>
+                    <h3 style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px; margin:0;">
+                        <span style="background:#06b6d4; color:#050810; font-size:0.75rem; padding:2px 8px; border-radius:4px; font-weight:800;">ARCA / AFIP</span>
                         Régimen de Emisión de Comprobantes (RG 1415/2003 y RG 4291)
-                    </div>
-                    <span style="font-size:0.72rem; color:#06b6d4; font-weight:600; background:rgba(6,182,212,0.1); padding:3px 10px; border-radius:12px;">2 Faltas Fiscales Críticas</span>
+                    </h3>
+                    <span style="font-size:0.75rem; color:#06b6d4; font-weight:600; background:rgba(6,182,212,0.1); padding:3px 10px; border-radius:12px;">2 Faltas Fiscales Críticas</span>
                 </div>
 
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1rem;">
                     <!-- Item 2.1: Facturas dummy 00000001 -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f43f5e;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(244,63,94,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">RG 1415/2003 · Validez Fiscal Nula</span>
-                            <span style="font-size:0.65rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">+ $16.000.000</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">RG 1415/2003 · Validez Fiscal Nula</span>
+                            <span style="font-size:0.75rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">+ $16.000.000</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Facturación Genérica / Dummy "00000001" sin CAE</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
@@ -1714,22 +1816,22 @@
                             <strong>Jaime Daniel</strong> (impermeabilización, +$8.5M), <strong>Seguridad Astier</strong> (+$2.2M), <strong>Cerrajería Ayram</strong> (+$1.7M), <strong>Carlos Paz</strong> (+$1.5M) y <strong>Espacios Verdes</strong> ($958k).
                             Los comprobantes sin CAE carecen de validez fiscal, no acreditan el gasto legalmente y son pasibles de impugnación directa.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Consecuencia: Inoponibilidad del gasto y contingencias impositivas para el consorcio.</em>
                         </div>
                     </div>
 
                     <!-- Item 2.2: Remitos informales -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #06b6d4;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(6,182,212,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#06b6d4; text-transform:uppercase;">Facturación Oficial Obligatoria</span>
-                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Insumos Piscina</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#06b6d4; text-transform:uppercase;">Facturación Oficial Obligatoria</span>
+                            <span style="font-size:0.75rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Insumos Piscina</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Gastos Respaldados con Remitos Informales</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             Se detectaron salidas de caja a proveedores (ej. <em>Casuso Productos Piletas</em>) justificadas únicamente con remitos de papel sin factura fiscal electrónica (Factura B o C a nombre del Consorcio CUIT 30-71743730-2 con número de CAE), lo cual impide la rendición impositiva legal y la deducibilidad contable.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(6,182,212,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(6,182,212,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Exigencia: Facturación fiscal oficial emitida ante ARCA en todas las compras de caja.</em>
                         </div>
                     </div>
@@ -1739,24 +1841,24 @@
             <!-- GRUPO 3: RÉGIMEN LABORAL Y PREVISIONAL (LCT / SUTERH) -->
             <div class="card" style="border: 1px solid rgba(236,72,153,0.25); background: linear-gradient(180deg, rgba(236,72,153,0.03) 0%, rgba(15,23,42,0.4) 100%);">
                 <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.75rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-                    <div style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px;">
-                        <span style="background:#ec4899; color:#fff; font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:800;">LCT / SUTERH</span>
+                    <h3 style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px; margin:0;">
+                        <span style="background:#ec4899; color:#050810; font-size:0.75rem; padding:2px 8px; border-radius:4px; font-weight:800;">LCT / SUTERH</span>
                         Régimen Laboral y Previsional (Ley 20.744, CCT SUTERH 589/10 y Art. 10 RI)
-                    </div>
-                    <span style="font-size:0.72rem; color:#ec4899; font-weight:600; background:rgba(236,72,153,0.1); padding:3px 10px; border-radius:12px;">1 Riesgo Laboral Crítico</span>
+                    </h3>
+                    <span style="font-size:0.75rem; color:#f472b6; font-weight:600; background:rgba(236,72,153,0.1); padding:3px 10px; border-radius:12px;">1 Riesgo Laboral Crítico</span>
                 </div>
 
-                <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #ec4899;">
+                <div style="background:var(--bg-surface); border:1px solid rgba(236,72,153,0.28); border-radius:10px; padding:1rem;">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                        <span style="font-size:0.68rem; font-weight:700; color:#ec4899; text-transform:uppercase;">Art. 14 LCT y Art. 10 Reglamento Interno · Simulación Laboral</span>
-                        <span style="font-size:0.65rem; color:#ec4899; background:rgba(236,72,153,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">CUIT 27-35117455-8</span>
+                        <span style="font-size:0.75rem; font-weight:700; color:#f472b6; text-transform:uppercase;">Art. 14 LCT y Art. 10 Reglamento Interno · Simulación Laboral</span>
+                        <span style="font-size:0.75rem; color:#f472b6; background:rgba(236,72,153,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">CUIT 27-35117455-8</span>
                     </div>
                     <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Facturación Paralela del Encargado como Contratista ("Yamil Reparaciones")</h4>
                     <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                         El encargado titular de planta permanente (<strong>Ibrahim Yamil</strong>, con sueldo en relación de dependencia superior a <code>$1.750.000/mes</code> bajo CCT SUTERH 589/10) emite en simultáneo facturas al consorcio como monotributista bajo la fantasía <em>"Yamil Reparaciones"</em> por tareas de mantenimiento ordinario (<code>$550.000</code> bombas pluviales, <code>$180.000</code> revoques SUM, <code>$120.000</code> cerradura sala de máquinas).
                         Además del <strong>Art. 14 LCT</strong>, el propio <strong>Art. 10 del Reglamento Interno del Edificio ("Funciones Especiales")</strong> establece que forma parte de las obligaciones ordinarias del Encargado el mantenimiento periódico de <em>bombas cloacales y pluviales, grupo electrógeno, portón, tanques e instalaciones comunes</em>, y el <strong>Cap. 1</strong> le prohíbe realizar trabajos particulares en su horario laboral.
                     </p>
-                    <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(236,72,153,0.06); padding:6px 8px; border-radius:6px;">
+                    <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(236,72,153,0.06); padding:6px 8px; border-radius:6px;">
                         ⚖️ <em>Riesgo patrimonial: Solidaridad pasiva de los copropietarios ante reclamos por empleo mal encuadrado y doble cobro de funciones reglamentarias.</em>
                     </div>
                 </div>
@@ -1765,70 +1867,70 @@
             <!-- GRUPO 4: CÓDIGO CIVIL Y COMERCIAL (LEY 26.994) -->
             <div class="card" style="border: 1px solid rgba(167,139,250,0.25); background: linear-gradient(180deg, rgba(167,139,250,0.03) 0%, rgba(15,23,42,0.4) 100%);">
                 <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.75rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-                    <div style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px;">
-                        <span style="background:#8b5cf6; color:#fff; font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:800;">CCCN</span>
+                    <h3 style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px; margin:0;">
+                        <span style="background:#a78bfa; color:#050810; font-size:0.75rem; padding:2px 8px; border-radius:4px; font-weight:800;">CCCN</span>
                         Código Civil y Comercial de la Nación (Ley 26.994)
-                    </div>
-                    <span style="font-size:0.72rem; color:#a78bfa; font-weight:600; background:rgba(167,139,250,0.1); padding:3px 10px; border-radius:12px;">4 Infracciones Patrimoniales</span>
+                    </h3>
+                    <span style="font-size:0.75rem; color:#a78bfa; font-weight:600; background:rgba(167,139,250,0.1); padding:3px 10px; border-radius:12px;">4 Infracciones Patrimoniales</span>
                 </div>
 
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1rem;">
                     <!-- Item 4.1: Honorarios unilaterales -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #8b5cf6;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(167,139,250,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#a78bfa; text-transform:uppercase;">Art. 2065 CCCN · Asamblea</span>
-                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Mayo 2026</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#a78bfa; text-transform:uppercase;">Art. 2065 CCCN · Asamblea</span>
+                            <span style="font-size:0.75rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Mayo 2026</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Aumento Unilateral de Honorarios (+51,6%)</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             Se liquidó un incremento del 51,6% en los honorarios de administración a partir de mayo 2026 sin exhibir ni adjuntar la copia del <strong>Acta de Asamblea General de Copropietarios</strong> que lo haya tratado y aprobado formalmente. Los honorarios son facultad privativa de la asamblea y no pueden auto-ajustarse.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(167,139,250,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(167,139,250,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Doctrina CCCN: Los honorarios son facultad exclusiva de la asamblea; no pueden auto-ajustarse.</em>
                         </div>
                     </div>
 
                     <!-- Item 4.2: Multas disciplinarias sumarias -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #8b5cf6;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(167,139,250,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#a78bfa; text-transform:uppercase;">Art. 2069 CCCN · Debido Proceso</span>
-                            <span style="font-size:0.65rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">$100.000 Flat</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#a78bfa; text-transform:uppercase;">Art. 2069 CCCN · Debido Proceso</span>
+                            <span style="font-size:0.75rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">$100.000 Flat</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Multas Disciplinarias Fijas sin Procedimiento Previo</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             Se liquidaron multas punitivas automáticas de <code>$100.000</code> idénticas (UF 142 por canilla abierta piso 27, UF 114 por puerta abierta, Local 3 por portón) de forma sumaria. El Art. 2069 del CCCN y el derecho de defensa exigen tipificación previa en el Reglamento de Copropiedad, intimación con plazo de descargo y graduación justificada. Las sanciones tarifadas unipersonalmente son nulas.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(167,139,250,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(167,139,250,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Vicio: Nulidad absoluta de multas sin descargo previo (Art. 18 CN y Art. 2069 CCCN).</em>
                         </div>
                     </div>
 
                     <!-- Item 4.3: Pagos Gemelos / Abonos acumulados -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #8b5cf6;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(167,139,250,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#a78bfa; text-transform:uppercase;">Art. 2067 Inc. A · Rendición</span>
-                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Abonos Fijos</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#a78bfa; text-transform:uppercase;">Art. 2067 Inc. A · Rendición</span>
+                            <span style="font-size:0.75rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Abonos Fijos</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Pagos Gemelos y Liquidación Acumulada</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             Se registraron pagos duplicados idénticos en un mismo período (dos pagos de <code>$875.000</code> a <em>A.J.R. Servicios</em> en enero 2026; dos de <code>$828.586</code> a <em>Sosa García</em> en junio 2025; cuatro cuotas de <code>$453.000</code> a <em>Atila</em> en febrero 2025). Esta acumulación desvirtúa el balance mensual y evidencia falta de orden temporal en la imputación fiduciaria.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(167,139,250,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(167,139,250,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Obligación: Imputación tempestiva mensual de abonos y rendición clara.</em>
                         </div>
                     </div>
 
                     <!-- Item 4.4: Coeficiente de prorrateo excedido -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f59e0b;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(245,158,11,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#f59e0b; text-transform:uppercase;">Arts. 2046 y 2056 CCCN</span>
-                            <span style="font-size:0.65rem; color:#f59e0b; background:rgba(245,158,11,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">100.0800%</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#f59e0b; text-transform:uppercase;">Arts. 2046 y 2056 CCCN</span>
+                            <span style="font-size:0.75rem; color:#f59e0b; background:rgba(245,158,11,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">100.0800%</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Exceso en la Suma de Coeficientes de Prorrateo</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             La suma de los coeficientes de expensas ordinarias (Columna A) de las 186 unidades funcionales totaliza <code>100.0800%</code> en lugar del 100.0000% exacto. Este desvío de <code>+0.08%</code> implica un sobredimensionamiento sistemático en el cálculo global distribuido a los consorcistas.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Exigencia: Rectificación del algoritmo de prorrateo para igualar el 100.0000% nominal.</em>
                         </div>
                     </div>
@@ -1838,77 +1940,77 @@
             <!-- GRUPO 5: CONTRASTE CON EL REGLAMENTO INTERNO DEL EDIFICIO (SARMIENTO 151) -->
             <div class="card" style="border: 1px solid rgba(245,158,11,0.3); background: linear-gradient(180deg, rgba(245,158,11,0.04) 0%, rgba(15,23,42,0.4) 100%);">
                 <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.75rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-                    <div style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px;">
-                        <span style="background:#f59e0b; color:#000; font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:800;">REGLAMENTO INTERNO</span>
+                    <h3 style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px; margin:0;">
+                        <span style="background:#f59e0b; color:#050810; font-size:0.75rem; padding:2px 8px; border-radius:4px; font-weight:800;">REGLAMENTO INTERNO</span>
                         Auditoría de las 58 Multas Aplicadas vs. Reglamento Interno (Sarmiento 151)
-                    </div>
-                    <span style="font-size:0.72rem; color:#fbbf24; font-weight:600; background:rgba(245,158,11,0.12); padding:3px 10px; border-radius:12px;">4 Contradicciones Reglamentarias</span>
+                    </h3>
+                    <span style="font-size:0.75rem; color:#fbbf24; font-weight:600; background:rgba(245,158,11,0.12); padding:3px 10px; border-radius:12px;">4 Contradicciones Reglamentarias</span>
                 </div>
 
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1rem;">
                     <!-- Item 5.1: Parámetro de valuación -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f43f5e;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(244,63,94,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Arts. 1, 2, 3, 4, 5, 6 y 11 RI · Valuación</span>
-                            <span style="font-size:0.65rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">58 Multas Auditadas</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Arts. 1, 2, 3, 4, 5, 6 y 11 RI · Cruce con Prorrateo</span>
+                            <span style="font-size:0.75rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">58 Multas Auditadas</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Violación de la Unidad Reglamentaria ("1 Expensa de Depto. 2 Ambientes")</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
-                            El Reglamento Interno fija en <strong>todos sus artículos sancionatorios</strong> un único parámetro objetivo: <em>«una multa equivalente al último valor de una expensa de un departamento de dos ambientes»</em> (y de 1 a 3 expensas de 3 ambientes para excesos en SUM o daños intencionales). En contradicción directa, la Administración aplicó importes nominales arbitrarios y redondos (<code>$24.000</code>, <code>$30.000</code>, <code>$50.000</code>, <code>$80.000</code>, <code>$100.000</code>, <code>$120.000</code> y hasta una sanción anómala de <code>$710.000</code> a la UF 103 en <code>2024-04</code>) divorciados del valor real de la expensa de 2 ambientes de cada mes.
+                            El Reglamento Interno fija en <strong>todos sus artículos sancionatorios</strong> un único parámetro objetivo: <em>«una multa equivalente al último valor de una expensa de un departamento de dos ambientes»</em> (alícuota GA <code>0,71%–0,75%</code>). Al cruzar las 58 multas con <code>prorrateo.json</code>, se comprueba que en <strong>ningún período</strong> coinciden: en <code>2026-08</code> la expensa promedio de 2 ambientes fue de <code>$113.600,67</code> pero se cobraron sumas fijas de <code>$100.000</code> (<code>-12,0%</code>), y en <code>2024-04</code> la expensa de 2 ambientes era de <code>$29.660,12</code> pero se aplicó una sanción de <code>$710.000</code> a la UF 103 (<strong><code>+2.293,8%</code></strong>, equivalente a 24 expensas).
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Vicio: El administrador carece de facultades para sustituir la unidad de medida reglamentaria por sumas fijas discrecionales.</em>
                         </div>
                     </div>
 
                     <!-- Item 5.2: Supuestos no tipificados (Canilla abierta / filtraciones) -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f43f5e;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(244,63,94,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Cap. 4 RI · Atipicidad de la Sanción</span>
-                            <span style="font-size:0.65rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">UF 142 · UF 135 · UF 145</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Cap. 4 RI · Atipicidad de la Sanción</span>
+                            <span style="font-size:0.75rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">UF 142 · UF 135 · UF 145</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Multas Punitivas por Supuestos NO Tipificados ("Canilla Abierta / Filtraciones")</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             Se cobraron multas punitivas por <em>«dejar canilla abierta y generar filtraciones»</em> (UF 142 en <code>2026-08</code>, UF 135 y UF 145 en <code>2023-02/03</code>). El <strong>Cap. 4 del Reglamento Interno ("Daños a las instalaciones")</strong> sólo tipifica como Falta Grave el <em>«daño adrede que se efectúe intencionalmente»</em>. Los accidentes o filtraciones involuntarias sólo habilitan el recupero del costo real de reparación con factura respaldatoria (Arts. 2 y 3), nunca una multa punitiva tarifada.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Principio de legalidad: No existe sanción disciplinaria válida sin tipificación expresa previa en el Reglamento.</em>
                         </div>
                     </div>
 
                     <!-- Item 5.3: Requisitos de 3 quejas firmadas y Libro de Novedades -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f59e0b;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(245,158,11,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#fbbf24; text-transform:uppercase;">Cap. 1, Art. 5 y Art. 11 RI · Procedimiento</span>
-                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">45 Multas sin Motivo</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#fbbf24; text-transform:uppercase;">Cap. 1, Art. 5 y Art. 11 RI · Procedimiento</span>
+                            <span style="font-size:0.75rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">45 Multas sin Motivo</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Omisión de las "3 Quejas Firmadas", Libro de Novedades y Expresión de Causa</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             El <strong>Cap. 1</strong> exige denuncia por escrito y firmada con copia al Consejo de Propietarios; el <strong>Art. 5 (Reuniones y Ruidos)</strong> exige que deriven <em>«tres o más quejas de distintos propietarios»</em> para habilitar la multa; y el <strong>Art. 11 (Mascotas)</strong> exige asiento previo del Encargado en el <em>Libro de Novedades</em>. Pese a ello, <strong>45 de las 58 multas históricas</strong> se liquidaron con la leyenda genérica <code>"Multa aplicada"</code> sin consignar motivo, fecha ni artículo infringido.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Exigencia: Constancia documental de las 3 denuncias firmadas o asiento en Libro de Novedades con intervención del Consejo.</em>
                         </div>
                     </div>
 
                     <!-- Item 5.4: Funciones ordinarias del Encargado según Art. 10 RI -->
-                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f59e0b;">
+                    <div style="background:var(--bg-surface); border:1px solid rgba(245,158,11,0.28); border-radius:10px; padding:1rem;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                            <span style="font-size:0.68rem; font-weight:700; color:#fbbf24; text-transform:uppercase;">Cap. 1 y Art. 10 RI · Obligaciones del Personal</span>
-                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Funciones Incluidas</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:#fbbf24; text-transform:uppercase;">Cap. 1 y Art. 10 RI · Obligaciones del Personal</span>
+                            <span style="font-size:0.75rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Funciones Incluidas</span>
                         </div>
                         <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Tareas de Mantenimiento Incluidas en el Cargo de Encargado (Art. 10 RI)</h4>
                         <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                             El <strong>Art. 10 del Reglamento Interno ("Funciones Especiales")</strong> dispone expresamente que el Encargado debe realizar el mantenimiento periódico de <em>«bombas cloacales, pluviales, grupos electrógenos, mecanismo eléctrico del portón de ingreso, ascensores, tanques de agua, tanques de bombeo»</em> y conservación de partes comunes, prohibiendo el <strong>Cap. 1</strong> realizar tareas particulares en horario laboral. Esto contradice el pago de facturas adicionales a <em>"Yamil Reparaciones"</em> por dichas tareas.
                         </p>
-                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
+                        <div style="margin-top:0.6rem; font-size:0.75rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
                             ⚖️ <em>Norma interna: Las funciones del Art. 10 integran el salario ordinario y son indelegables.</em>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- VISOR DE RECLAMO FORMAL -->
+            <!-- VISOR Y PERSONALIZADOR DE RECLAMO FORMAL -->
             <div class="card" style="background:rgba(255,255,255,0.02); border:1px solid var(--border-accent);">
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
                     <div>
@@ -1916,16 +2018,33 @@
                             <span>📬</span> Modelo de Solicitud de Informes y Comprobantes Respaldatorios
                         </h3>
                         <p class="card-subtitle" style="font-size:0.8rem; color:var(--text-3); margin-top:2px;">
-                            Plantilla formal exhaustiva para que cualquier copropietario pueda exigir aclaraciones, constancias impositivas y respaldos a la administración.
+                            Personalizá tu Unidad Funcional y Nombre para generar la nota lista para enviar por correo o imprimir.
                         </p>
                     </div>
-                    <div style="display:flex; gap:0.5rem;">
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
                         <button type="button" onclick="toggleClaimText()" class="btn" style="padding:0.45rem 0.85rem; font-size:0.8rem;" id="btnToggleClaim">
                             👁️ Ver Modelo Completo
                         </button>
                         <button type="button" onclick="copyClaimText()" class="btn btn-primary" style="padding:0.45rem 0.85rem; font-size:0.8rem;">
-                            📋 Copiar Modelo de Reclamo
+                            📋 Copiar Reclamo Personalizado
                         </button>
+                        <button type="button" onclick="printClaimText()" class="btn" style="padding:0.45rem 0.85rem; font-size:0.8rem;">
+                            🖨️ Imprimir Nota
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PERSONALIZADOR DE UNIDAD Y PROPIETARIO -->
+                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; background:rgba(6,182,212,0.05); border:1px solid rgba(6,182,212,0.2); border-radius:10px; padding:0.75rem 1rem; margin-bottom:1rem;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; flex:1 1 220px;">
+                        <label for="claimUfSelect" style="font-size:0.78rem; font-weight:600; color:var(--text-2); white-space:nowrap;">Tu U.F. / Depto:</label>
+                        <select id="claimUfSelect" onchange="updateClaimSignature()" style="flex:1; font-size:0.8rem;">
+                            <option value="">Seleccionar U.F. (Opcional)...</option>
+                        </select>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem; flex:1 1 260px;">
+                        <label for="claimOwnerInput" style="font-size:0.78rem; font-weight:600; color:var(--text-2); white-space:nowrap;">Nombre y Apellido:</label>
+                        <input type="text" id="claimOwnerInput" class="search-input" oninput="updateClaimSignature()" placeholder="Ej: Juan Pérez" style="flex:1; width:auto; font-size:0.8rem; padding:0.45rem 0.75rem;">
                     </div>
                 </div>
 
@@ -1933,15 +2052,14 @@
                     ✓ ¡Modelo de reclamo copiado al portapapeles!
                 </div>
 
-                <div id="claimTextContainer" style="display:none; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:1.25rem; font-family:'Courier New', monospace; font-size:0.78rem; color:var(--text-2); line-height:1.6; max-height:420px; overflow-y:auto; white-space:pre-wrap;">
-Asunto: Solicitud formal de aclaraciones, acreditación bancaria y documentación respaldatoria de expensas
+                <div id="claimTextContainer" style="display:none; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:1.25rem; font-family:'Courier New', monospace; font-size:0.78rem; color:var(--text-2); line-height:1.6; max-height:420px; overflow-y:auto; white-space:pre-wrap;">Asunto: Solicitud formal de aclaraciones, acreditación bancaria y documentación respaldatoria de expensas
 
 Estimado Administrador:
 
 Por medio de la presente, en mi carácter de copropietario del Consorcio Sarmiento 151, me dirijo a usted con el objeto de solicitar tenga a bien brindar respuesta puntual y remitir la documentación respaldatoria correspondiente a los siguientes ítems auditados en las liquidaciones de expensas del edificio:
 
 1. Regularización y Bancarización Inmediata del Saldo de Caja ($2.108.606,73):
-* Se observa en el estado patrimonial y financiero de la liquidación de Septiembre de 2026 una existencia de $2.108.606,73 en concepto de "Saldo de Caja" en efectivo, habiendo ingresado en billetes físicos más de $1.094.000 en el último período luego de mantenerse congelado durante meses en $1.013.893,20.
+* Se observa en el estado patrimonial y financiero de la liquidación de Septiembre de 2026 una existencia de $2.108.606,73 en concepto de "Saldo de Caja" en efectivo. Al cruzar la planilla de prorrateo (donde las 186 U.F. abonaron $22.524.166,73) con los ingresos bancarizados ($21.429.453,20), se verifica que la diferencia exacta de $1.094.713,53 fue percibida y retenida en efectivo sin depositarse en banco, sumándose a los $1.013.893,20 previamente retenidos.
 * De conformidad con el Art. 9 inc. f de la Ley 14.701 de la Provincia de Buenos Aires, el administrador tiene la obligación legal ineludible de depositar la totalidad de los fondos percibidos en la cuenta bancaria del consorcio. Se solicita informar la fecha y comprobante de depósito bancario de dichos fondos en la cuenta corriente oficial a fin de garantizar su resguardo y trazabilidad.
 
 2. Acreditación de Facturas Electrónicas y CAE de Contratistas con Facturación Genérica "00000001" (+$16.000.000):
@@ -1974,9 +2092,8 @@ Por medio de la presente, en mi carácter de copropietario del Consorcio Sarmien
 Agradeceré la respuesta pormenorizada y la remisión de la documentación solicitada a la brevedad.
 
 Atentamente,
-[Nombre y Apellido del Propietario]
-Propietario/a U.F. [Nº Unidad] — Consorcio Sarmiento 151
-                </div>
+<span id="claimSignName">[Nombre y Apellido del Propietario]</span>
+<span id="claimSignUf">Propietario/a U.F. [Nº Unidad] — Consorcio Sarmiento 151</span></div>
             </div>
 
         </div>
@@ -1984,7 +2101,7 @@ Propietario/a U.F. [Nº Unidad] — Consorcio Sarmiento 151
 </main>
 
 <!-- MODAL PROVEEDOR -->
-<div class="modal-overlay" id="providerModal">
+<div class="modal-overlay" id="providerModal" role="dialog" aria-modal="true" aria-labelledby="providerModalName">
     <div class="modal" style="position:relative;">
         <div class="modal-title" id="providerModalName">Proveedor</div>
         <div class="modal-subtitle">Historial completo de contrataciones</div>
@@ -2015,11 +2132,11 @@ Propietario/a U.F. [Nº Unidad] — Consorcio Sarmiento 151
 </div>
 
 <!-- MODAL CORTE DE AGUA AYSA -->
-<div class="modal-overlay" id="aysaAlertModal">
-    <div class="modal" style="position:relative; max-width: 520px; width: 92%; border-top: 3px solid #06b6d4; background: var(--bg-surface);">
+<div class="modal-overlay" id="aysaAlertModal" role="dialog" aria-modal="true">
+    <div class="modal" style="position:relative; max-width: 520px; width: 92%; border: 1px solid rgba(6,182,212,0.35); background: var(--bg-surface);">
         <button class="btn" style="position:absolute;top:1.25rem;right:1.25rem;padding:4px 10px;" onclick="closeAysaModal()">✕ Cerrar</button>
         
-        <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.3); padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; color:#06b6d4; margin-bottom:0.5rem;">
+        <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.3); padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:700; color:#06b6d4; margin-bottom:0.5rem;">
             💧 AYSA · CORTE PROGRAMADO
         </div>
         <div class="modal-title" style="font-size:1.35rem; line-height:1.2;">Interrupción del Servicio de Agua</div>
@@ -2030,11 +2147,11 @@ Propietario/a U.F. [Nº Unidad] — Consorcio Sarmiento 151
             <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:0.9rem 1rem;">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem; border-bottom:1px dashed rgba(255,255,255,0.08); padding-bottom:0.6rem; margin-bottom:0.6rem;">
                     <div>
-                        <div style="font-size:0.68rem; color:var(--text-3); text-transform:uppercase; font-weight:700;">🕒 Inicio del Corte</div>
+                        <div style="font-size:0.75rem; color:var(--text-3); text-transform:uppercase; font-weight:700;">🕒 Inicio del Corte</div>
                         <div style="font-size:0.88rem; font-weight:700; color:#f43f5e; margin-top:2px;">Jueves 27/08 · 22:00 hs</div>
                     </div>
                     <div>
-                        <div style="font-size:0.68rem; color:var(--text-3); text-transform:uppercase; font-weight:700;">🏁 Fin Estimado</div>
+                        <div style="font-size:0.75rem; color:var(--text-3); text-transform:uppercase; font-weight:700;">🏁 Fin Estimado</div>
                         <div style="font-size:0.88rem; font-weight:700; color:#10b981; margin-top:2px;">Viernes 28/08 · 15:00 hs</div>
                     </div>
                 </div>
@@ -2065,7 +2182,7 @@ Propietario/a U.F. [Nº Unidad] — Consorcio Sarmiento 151
 </div>
 
 <!-- MODAL CONTACTO -->
-<div class="modal-overlay" id="contactModal">
+<div class="modal-overlay" id="contactModal" role="dialog" aria-modal="true">
     <div class="modal" style="position:relative; max-width: 480px; width: 92%;">
         <div class="modal-title">✉️ Contactar al Desarrollador</div>
         <div class="modal-subtitle">Proyecto Sarmiento 151 — Alexis Martyniuk</div>
@@ -2132,7 +2249,22 @@ function toggleClaimText() {
         }
     }
 }
+function updateClaimSignature() {
+    const ufSel = document.getElementById('claimUfSelect');
+    const ownerInp = document.getElementById('claimOwnerInput');
+    const signName = document.getElementById('claimSignName');
+    const signUf = document.getElementById('claimSignUf');
+    if (signName) {
+        const nameVal = ownerInp && ownerInp.value.trim() ? ownerInp.value.trim() : '[Nombre y Apellido del Propietario]';
+        signName.textContent = nameVal;
+    }
+    if (signUf) {
+        const ufVal = ufSel && ufSel.value ? ufSel.value : 'U.F. [Nº Unidad]';
+        signUf.textContent = `Propietario/a ${ufVal} — Consorcio Sarmiento 151`;
+    }
+}
 function copyClaimText() {
+    updateClaimSignature();
     const el = document.getElementById('claimTextContainer');
     if (el) {
         navigator.clipboard.writeText(el.innerText).then(() => {
@@ -2143,6 +2275,17 @@ function copyClaimText() {
             }
         });
     }
+}
+function printClaimText() {
+    updateClaimSignature();
+    const el = document.getElementById('claimTextContainer');
+    if (!el) return;
+    const w = window.open('', '_blank', 'width=800,height=900');
+    if (!w) return;
+    w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Solicitud Formal de Informes — Consorcio Sarmiento 151</title><style>body{font-family:Georgia,serif;color:#111827;line-height:1.65;padding:40px 50px;max-width:800px;margin:0 auto;white-space:pre-wrap;font-size:11.5pt;}</style></head><body>${el.innerText.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</body></html>`);
+    w.document.close();
+    w.focus();
+    setTimeout(() => { w.print(); }, 250);
 }
 
 // ── AYSA ALERT CONTROLLER ──
@@ -2183,6 +2326,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === aysaModal) closeAysaModal();
         });
     }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (typeof closeModal === 'function') closeModal();
+            closeContactModal();
+            closeAysaModal();
+        }
+    });
 });
 </script>
 

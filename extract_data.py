@@ -1,3 +1,6 @@
+import sys
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 import os
 import re
 import json
@@ -472,6 +475,87 @@ def get_period_from_filename(filename):
         return f"{match_date_rev.group(2)}-{match_date_rev.group(1)}"
     return None
 
+def enrich_with_prorrateo(all_balances, all_multas, prorrateo_path="prorrateo.json"):
+    """
+    Cruza los balances y multas de gastos.json con la base de prorrateo por U.F. (prorrateo.json):
+    1) Calcula el valor promedio de 1 expensa ordinaria de un departamento de 2 ambientes (alícuota 0.70%-0.76%)
+       por período para contrastar la unidad sancionatoria obligatoria del Reglamento Interno.
+    2) Concilia la suma de pagos declarados en la planilla de prorrateo de las 186 U.F. contra los ingresos
+       bancarizados del balance para detectar cobros en efectivo retenidos en Saldo de Caja.
+    """
+    from extract_prorrateo import CANONICAL_UF_MAP
+
+    unidades_padron = [{"uf": k, "dpto": v} for k, v in sorted(CANONICAL_UF_MAP.items())]
+    referencia_2amb = {}
+
+    if not os.path.exists(prorrateo_path):
+        return all_balances, all_multas, referencia_2amb, unidades_padron
+
+    try:
+        with open(prorrateo_path, "r", encoding="utf-8") as f:
+            prorrateo_data = json.load(f).get("prorrateo", [])
+    except Exception:
+        return all_balances, all_multas, referencia_2amb, unidades_padron
+
+    by_period = {}
+    for row in prorrateo_data:
+        per = row.get("periodo")
+        if per:
+            by_period.setdefault(per, []).append(row)
+
+    sorted_periods = sorted(by_period.keys())
+    for per in sorted_periods:
+        rows = by_period[per]
+        u2_fees = [
+            (r.get("ga_monto", 0.0) + r.get("gb_monto", 0.0) + r.get("fondo_operativo_monto", 0.0))
+            for r in rows
+            if 0.70 <= (r.get("ga_pct", 0.0) or 0.0) <= 0.76
+            and (r.get("ga_monto", 0.0) + r.get("gb_monto", 0.0)) > 0
+        ]
+        if u2_fees:
+            referencia_2amb[per] = round(sum(u2_fees) / len(u2_fees), 2)
+
+    valid_ref_periods = [p for p in sorted_periods if referencia_2amb.get(p, 0.0) > 0]
+
+    for m in all_multas:
+        uf_raw = str(m.get("uf", "")).strip()
+        uf_int = int(uf_raw) if uf_raw.isdigit() else 0
+        m["dpto"] = CANONICAL_UF_MAP.get(uf_int, "")
+        per = m.get("periodo", "")
+
+        # El Reglamento Interno exige "el último valor de una expensa de un departamento de dos ambientes" (M-1 o M)
+        prior_candidates = [p for p in valid_ref_periods if p < per]
+        ref_per = prior_candidates[-1] if prior_candidates else (per if per in referencia_2amb else (valid_ref_periods[-1] if valid_ref_periods else ""))
+        ref_val = referencia_2amb.get(ref_per, 0.0)
+
+        m["ref_2amb_periodo"] = ref_per
+        m["ref_2amb_monto"] = ref_val
+        if ref_val > 0:
+            m["desvio_2amb_monto"] = round(m.get("monto", 0.0) - ref_val, 2)
+            m["desvio_2amb_pct"] = round(((m.get("monto", 0.0) - ref_val) / ref_val) * 100.0, 1)
+        else:
+            m["desvio_2amb_monto"] = 0.0
+            m["desvio_2amb_pct"] = 0.0
+
+    for b in all_balances:
+        per = b.get("periodo", "")
+        rows = by_period.get(per, [])
+        pagos_pr = round(sum(r.get("pagos", 0.0) for r in rows), 2)
+        multas_pr = round(sum(r.get("multa", 0.0) for r in rows), 2)
+        interes_pr = round(sum(r.get("interes", 0.0) for r in rows), 2)
+        ing = b.get("ingresos", 0.0) or 0.0
+        disp = b.get("saldo_disponibilidades", 0.0) or 0.0
+        banco = b.get("saldo_banco", 0.0) or 0.0
+
+        b["pagos_prorrateo"] = pagos_pr
+        b["multas_prorrateo"] = multas_pr
+        b["intereses_prorrateo"] = interes_pr
+        b["saldo_caja_efectivo"] = round(max(0.0, disp - banco), 2)
+        b["recaudado_efectivo_mes"] = round(max(0.0, pagos_pr - ing), 2) if (pagos_pr > 0 and ing > 0 and (pagos_pr - ing) > 1.0) else 0.0
+
+    return all_balances, all_multas, referencia_2amb, unidades_padron
+
+
 def main():
     print("Iniciando análisis y extracción granular de gastos...")
     all_expenses = []
@@ -511,11 +595,14 @@ def main():
             print(f"      [Error] al procesar {os.path.basename(filepath)}: {e}")
 
     all_expenses = detect_anomalies(all_expenses)
+    all_balances, all_multas, referencia_2amb, unidades_padron = enrich_with_prorrateo(all_balances, all_multas)
 
     output_data = {
         "gastos": all_expenses,
         "balances": all_balances,
-        "multas": all_multas
+        "multas": all_multas,
+        "referencia_2amb": referencia_2amb,
+        "unidades_padron": unidades_padron
     }
 
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:

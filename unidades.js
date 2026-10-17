@@ -3,6 +3,8 @@
 
 let rawProrrateo = [];
 let filteredProrrateo = [];
+let ufSortField = 'uf';
+let ufSortDir = 'asc';
 
 // Chart instances
 let chartMorosity = null;
@@ -39,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(err => {
             console.error("Error loading prorrateo.json:", err);
             document.getElementById("prorrateoTableBody").innerHTML =
-                `<tr><td colspan="11" style="text-align:center;color:#f87171;padding:2rem;">
+                `<tr><td colspan="10" style="text-align:center;color:#f87171;padding:2rem;">
                     Error al cargar los datos de prorrateo.
                 </td></tr>`;
         });
@@ -49,8 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
 const populatePeriodFilter = () => {
     const sel = document.getElementById("periodFilter");
     const periods = [...new Set(rawProrrateo.map(e => e.periodo))].sort().reverse();
-    
-
 
     periods.forEach(p => {
         const opt = document.createElement("option");
@@ -81,9 +81,11 @@ const populatePeriodFilter = () => {
 const setupEventListeners = () => {
     const periodSel = document.getElementById("periodFilter");
     const searchInp = document.getElementById("searchInput");
+    const statusSel = document.getElementById("ufStatusFilter");
 
     periodSel.addEventListener("change", applyFilter);
     searchInp.addEventListener("input", applyFilter);
+    if (statusSel) statusSel.addEventListener("change", applyFilter);
 
     // Close modal on overlay click
     document.getElementById("ufModal").addEventListener("click", (e) => {
@@ -95,17 +97,24 @@ const setupEventListeners = () => {
 const applyFilter = () => {
     const period = document.getElementById("periodFilter").value;
     const search = document.getElementById("searchInput").value.toLowerCase().trim();
+    const statusSel = document.getElementById("ufStatusFilter");
+    const status = statusSel ? statusSel.value : "ALL";
 
     filteredProrrateo = rawProrrateo.filter(item => {
         const okPeriod = item.periodo === period;
+        const ufPadded = String(item.uf).padStart(3, '0');
         const okSearch = !search || 
-            item.propietario.toLowerCase().includes(search) || 
+            (item.propietario && item.propietario.toLowerCase().includes(search)) || 
             item.dpto.toLowerCase().includes(search) ||
-            String(item.uf).includes(search);
-        return okPeriod && okSearch;
+            String(item.uf).includes(search) ||
+            ufPadded.includes(search);
+        let okStatus = true;
+        if (status === "DEBT") okStatus = (item.deuda || 0) > 0;
+        else if (status === "INTEREST") okStatus = (item.interes || 0) > 0;
+        else if (status === "OK") okStatus = (item.deuda || 0) <= 0;
+        return okPeriod && okSearch && okStatus;
     });
 
-    currentPage = 1;
     updateDashboard(period);
 };
 
@@ -283,20 +292,53 @@ const renderCajaChart = (period) => {
     chartCaja.render();
 };
 
-// ── TABLE RENDERER ───────────────────────────────────────────────
+// ── TABLE SORT & RENDERER ────────────────────────────────────────
+const toggleUfSort = (field) => {
+    if (ufSortField === field) {
+        ufSortDir = ufSortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+        ufSortField = field;
+        ufSortDir = (field === 'uf' || field === 'dpto') ? 'asc' : 'desc';
+    }
+    document.querySelectorAll('#prorrateoTable th.sortable').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.dataset.sort === ufSortField) {
+            th.classList.add(ufSortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+        }
+    });
+    renderTable();
+};
+
 const renderTable = () => {
     const tbody = document.getElementById("prorrateoTableBody");
-    const sorted = [...filteredProrrateo].sort((a, b) => a.uf - b.uf);
+    const countInfo = document.getElementById("ufCountInfo");
+    const sorted = [...filteredProrrateo].sort((a, b) => {
+        let va = a[ufSortField];
+        let vb = b[ufSortField];
+        if (ufSortField === 'dpto') {
+            return ufSortDir === 'asc'
+                ? String(va).localeCompare(String(vb), 'es', { numeric: true })
+                : String(vb).localeCompare(String(va), 'es', { numeric: true });
+        }
+        va = Number(va) || 0;
+        vb = Number(vb) || 0;
+        return ufSortDir === 'asc' ? va - vb : vb - va;
+    });
+
+    if (countInfo) {
+        const subTotal = sorted.reduce((s, e) => s + (e.total || 0), 0);
+        const subDeuda = sorted.reduce((s, e) => s + (e.deuda || 0), 0);
+        countInfo.innerHTML = `Mostrando <strong>${sorted.length}</strong> unidades · Subtotal Expensas: <strong>${fmt(subTotal)}</strong> · Subtotal Deuda: <strong style="color:var(--red);">${fmt(subDeuda)}</strong>`;
+    }
 
     if (sorted.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--text-3);padding:2rem;">No se encontraron registros de prorrateo.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--text-3);padding:2rem;">No se encontraron registros de prorrateo para el criterio seleccionado.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = sorted.map(item => {
-        const isDeudor = item.deuda > 0;
         return `
-        <tr class="uf-row" onclick="openModal(${item.uf})">
+        <tr class="uf-row" tabindex="0" role="button" onclick="openModal(${item.uf})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal(${item.uf});}">
             <td style="font-weight:600;">${String(item.uf).padStart(3, '0')}</td>
             <td>${item.dpto}</td>
             <td style="text-align:right;color:var(--text-3);">${fmt(item.saldo_anterior)}</td>
@@ -532,7 +574,7 @@ const loadServicesStatus = () => {
 
             const getMessageHtml = (srv) => {
                 if (srv.status === "Alerta" && srv.message) {
-                    return `<div style="font-size: 0.65rem; color: var(--text-3); margin-top: 1px; margin-bottom: 0.4rem; padding-left: 12px; border-left: 1.5px dashed rgba(251,191,36,0.4); line-height: 1.25;">${srv.message}</div>`;
+                    return `<div style="font-size: 0.75rem; color: var(--text-3); margin-top: 1px; margin-bottom: 0.4rem; padding-left: 12px; border-left: 1.5px dashed rgba(251,191,36,0.4); line-height: 1.3;">${srv.message}</div>`;
                 }
                 return '';
             };
@@ -565,7 +607,7 @@ const loadServicesStatus = () => {
                     ${getMessageHtml(metrogas)}
                 </div>
 
-                <div style="font-size: 0.6rem; color: var(--text-3); text-align: right; margin-top: 6px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 4px; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.1); width: max-content; margin-left: auto;" data-tooltip-top-right="El estado se actualiza automáticamente 4 veces al día (06:00, 12:00, 18:00 y 21:00 hs) consultando los servidores oficiales de las prestadoras.">Act: ${data.actualizado || 'N/D'}</div>
+                <div style="font-size: 0.75rem; color: var(--text-3); text-align: right; margin-top: 6px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 4px; cursor: help; border-bottom: 1px dotted rgba(255,255,255,0.1); width: max-content; margin-left: auto;" data-tooltip-top-right="El estado se actualiza automáticamente 4 veces al día (06:00, 12:00, 18:00 y 21:00 hs) consultando los servidores oficiales de las prestadoras.">Act: ${data.actualizado || 'N/D'}</div>
             `;
         })
         .catch(err => {
