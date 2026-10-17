@@ -309,8 +309,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 99
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2023-05",
@@ -657,8 +657,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 43
         },
         {
             "periodo": "2023-06",
@@ -682,7 +682,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 43778
+            "desviacion_pct": 105
         },
         {
             "periodo": "2023-06",
@@ -801,8 +801,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 100
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2023-07",
@@ -813,8 +813,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 96
         },
         {
             "periodo": "2023-07",
@@ -885,8 +885,8 @@
             "servicio": "Edesur",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 44
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2023-07",
@@ -1174,7 +1174,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 356
+            "desviacion_pct": 84
         },
         {
             "periodo": "2023-08",
@@ -1497,8 +1497,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 88
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2023-09",
@@ -1761,8 +1761,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 90
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2023-10",
@@ -1797,8 +1797,8 @@
             "servicio": null,
             "empleado": "Ibrahim Yamil",
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 66
         },
         {
             "periodo": "2023-10",
@@ -1869,8 +1869,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 230
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2023-10",
@@ -1977,8 +1977,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 49
         },
         {
             "periodo": "2023-10",
@@ -2049,8 +2049,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 55
         },
         {
             "periodo": "2023-10",
@@ -2073,8 +2073,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 43
         },
         {
             "periodo": "2023-10",
@@ -2265,8 +2265,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 210
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2023-11",
@@ -2277,8 +2277,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 66
         },
         {
             "periodo": "2023-11",
@@ -2817,8 +2817,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 53
         },
         {
             "periodo": "2023-12",
@@ -2877,8 +2877,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 70
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-01",
@@ -3237,8 +3237,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 171
         },
         {
             "periodo": "2024-01",
@@ -3333,8 +3333,8 @@
             "servicio": null,
             "empleado": "Ibrahim Yamil",
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 64
         },
         {
             "periodo": "2024-02",
@@ -3382,7 +3382,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 102
+            "desviacion_pct": 74
         },
         {
             "periodo": "2024-02",
@@ -3441,8 +3441,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 77
         },
         {
             "periodo": "2024-02",
@@ -3477,8 +3477,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 47
         },
         {
             "periodo": "2024-02",
@@ -3561,8 +3561,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 78
         },
         {
             "periodo": "2024-02",
@@ -3597,8 +3597,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 49
         },
         {
             "periodo": "2024-02",
@@ -3705,8 +3705,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 45
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-03",
@@ -3777,8 +3777,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 43
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-03",
@@ -3837,8 +3837,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 52
         },
         {
             "periodo": "2024-03",
@@ -3849,8 +3849,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 48
         },
         {
             "periodo": "2024-03",
@@ -4138,7 +4138,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 95
+            "desviacion_pct": 41
         },
         {
             "periodo": "2024-04",
@@ -4437,8 +4437,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 48
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-05",
@@ -4509,8 +4509,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 41
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-05",
@@ -4641,8 +4641,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 66
         },
         {
             "periodo": "2024-05",
@@ -4677,8 +4677,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 139
         },
         {
             "periodo": "2024-05",
@@ -4893,8 +4893,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 73
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-06",
@@ -5109,8 +5109,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 53
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-07",
@@ -5146,7 +5146,7 @@
             "empleado": "Ibrahim Yamil",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 94
+            "desviacion_pct": 44
         },
         {
             "periodo": "2024-07",
@@ -5241,8 +5241,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 96
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-07",
@@ -5277,8 +5277,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 45
         },
         {
             "periodo": "2024-07",
@@ -5937,8 +5937,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 110
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-09",
@@ -5949,8 +5949,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 49
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-09",
@@ -5985,8 +5985,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 42
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-09",
@@ -6153,8 +6153,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 104
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-09",
@@ -6381,8 +6381,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 40
         },
         {
             "periodo": "2024-10",
@@ -6537,8 +6537,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 57
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-10",
@@ -6825,8 +6825,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 66
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-11",
@@ -6993,8 +6993,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 139
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-11",
@@ -7294,7 +7294,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 1643
+            "desviacion_pct": 784
         },
         {
             "periodo": "2024-12",
@@ -7569,8 +7569,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 104
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2024-12",
@@ -7677,8 +7677,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 65
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-01",
@@ -7833,8 +7833,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 156
         },
         {
             "periodo": "2025-01",
@@ -7978,7 +7978,7 @@
             "empleado": null,
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 142
+            "desviacion_pct": 77
         },
         {
             "periodo": "2025-01",
@@ -9621,8 +9621,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 90
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-04",
@@ -10485,8 +10485,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 135
         },
         {
             "periodo": "2025-06",
@@ -10929,8 +10929,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 127
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-07",
@@ -11265,8 +11265,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 259
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-08",
@@ -11853,8 +11853,8 @@
             "servicio": "Metrogas",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 40
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-09",
@@ -12657,8 +12657,8 @@
             "servicio": null,
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 43
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-10",
@@ -12669,8 +12669,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 292
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-10",
@@ -12765,8 +12765,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 44
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2025-11",
@@ -13821,8 +13821,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 127
         },
         {
             "periodo": "2026-01",
@@ -14409,8 +14409,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 94
         },
         {
             "periodo": "2026-02",
@@ -14421,8 +14421,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 110
         },
         {
             "periodo": "2026-02",
@@ -14757,8 +14757,8 @@
             "servicio": null,
             "empleado": "Lourdes Zaracho",
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 63
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2026-03",
@@ -15501,8 +15501,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 40
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2026-04",
@@ -15982,7 +15982,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 75
+            "desviacion_pct": 56
         },
         {
             "periodo": "2026-05",
@@ -16269,8 +16269,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 52
         },
         {
             "periodo": "2026-06",
@@ -16437,8 +16437,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": false,
-            "desviacion_pct": 0
+            "anomalia": true,
+            "desviacion_pct": 261
         },
         {
             "periodo": "2026-06",
@@ -16581,8 +16581,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 101
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2026-07",
@@ -16941,8 +16941,8 @@
             "servicio": null,
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 57
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2026-07",
@@ -17398,7 +17398,7 @@
             "empleado": "Cargas Sociales / Sindicato",
             "estado": "Pagado",
             "anomalia": true,
-            "desviacion_pct": 71
+            "desviacion_pct": 51
         },
         {
             "periodo": "2026-08",
@@ -17577,8 +17577,8 @@
             "servicio": "AySA",
             "empleado": null,
             "estado": "Pagado",
-            "anomalia": true,
-            "desviacion_pct": 41
+            "anomalia": false,
+            "desviacion_pct": 0
         },
         {
             "periodo": "2026-09",

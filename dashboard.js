@@ -96,79 +96,343 @@ const prevPeriod = (p) => {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 };
 
-// ── Match concepts intelligently ───────────────────────────────
-const matchConcept = (c1, c2) => {
-    const raw1 = c1.toLowerCase();
-    const raw2 = c2.toLowerCase();
-    
-    // AySA: si tienen números de cuenta (1411XX) diferentes, no deben emparejarse
-    const getAySA = (s) => { const m = s.match(/1411\d+/); return m ? m[0] : null; };
-    const a1 = getAySA(raw1), a2 = getAySA(raw2);
-    if ((a1 || a2) && a1 !== a2) return false;
+// ── Semantic Concept Fingerprinting & Month-to-Month Engine ────
+const MONTH_MAP = {
+    enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6,
+    julio: 7, agosto: 8, septiembre: 9, setiembre: 9, octubre: 10, noviembre: 11, diciembre: 12
+};
 
-    // Edesur: si tienen números de cliente (8050XX) diferentes, no deben emparejarse
-    const getEdesur = (s) => { const m = s.match(/8050\d+/); return m ? m[0] : null; };
-    const e1 = getEdesur(raw1), e2 = getEdesur(raw2);
-    if ((e1 || e2) && e1 !== e2) return false;
+const parseConceptMeta = (concepto, rubro = "", periodo = "") => {
+    const raw = (concepto || "").toLowerCase();
+    const r = (rubro || "").toLowerCase();
 
-    // Metrogas: distinguir cuenta principal (caldera/calefacción) de cuenta secundaria (anafe/cocina)
-    const getMetrogas = (s) => {
-        if (!s.includes('metrogas') && !s.includes('gas servicio') && !s.includes('gas')) return null;
-        if (s.includes('519800') || s.includes('20456519800')) return 'mg_secundaria';
-        if (s.includes('278517') || s.includes('14278517') || s.includes('30014278517') || s.includes('300014278517')) return 'mg_principal';
-        return 'mg_general';
-    };
-    const mg1 = getMetrogas(raw1), mg2 = getMetrogas(raw2);
-    if ((mg1 || mg2) && mg1 !== mg2) return false;
+    const mAysa = raw.match(/1411\d+/);
+    const aysaAcc = mAysa ? mAysa[0] : (raw.includes('aysa') ? 'aysa_gen' : null);
 
-    // Si refieren a departamentos distintos (o uno a un depto y otro a áreas comunes)
-    const getDepto = (s) => { const m = s.match(/depto\.?\s*([0-9]+[a-z]?)/i); return m ? m[1].toLowerCase() : null; };
-    const d1 = getDepto(raw1), d2 = getDepto(raw2);
-    if ((d1 || d2) && d1 !== d2) return false;
+    const mEdesur = raw.match(/8050\d+/);
+    const edesurAcc = mEdesur ? mEdesur[0] : (raw.includes('edesur') ? 'edesur_gen' : null);
 
-    // Si refieren a etapas de obra distintas (ej. Etapa 1 vs Etapa 2)
-    const getEtapa = (s) => { const m = s.match(/etapa\s*(\d+)/i); return m ? m[1] : null; };
-    const et1 = getEtapa(raw1), et2 = getEtapa(raw2);
-    if ((et1 || et2) && et1 !== et2) return false;
-
-    // Mano de obra vs Materiales (no comparar insumos físicos contra trabajo de mano de obra)
-    const isManoObra1 = raw1.includes('mano de obra') || raw1.includes('mano obra');
-    const isManoObra2 = raw2.includes('mano de obra') || raw2.includes('mano obra');
-    const isMaterial1 = raw1.includes('material') || raw1.includes('materiales');
-    const isMaterial2 = raw2.includes('material') || raw2.includes('materiales');
-    if (isManoObra1 && isMaterial2) return false;
-    if (isMaterial1 && isManoObra2) return false;
-
-    // Si uno es 'A cuenta' / 'Anticipo' y el otro es 'Saldo'
-    const isAcuenta1 = raw1.includes('a cuenta') || raw1.includes('anticipo');
-    const isAcuenta2 = raw2.includes('a cuenta') || raw2.includes('anticipo');
-    const isSaldo1 = raw1.includes('saldo');
-    const isSaldo2 = raw2.includes('saldo');
-    if ((isAcuenta1 || isAcuenta2) && isAcuenta1 !== isAcuenta2) return false;
-    if ((isSaldo1 || isSaldo2) && isSaldo1 !== isSaldo2) return false;
-
-    // Si refieren a cuotas distintas (ej. Cuota 1/2 vs Cuota 2/2)
-    const getCuota = (s) => { const m = s.match(/cuota\s*(\d+)\s*\/\s*(\d+)/i); return m ? `${m[1]}/${m[2]}` : null; };
-    const c1_cuota = getCuota(raw1), c2_cuota = getCuota(raw2);
-    if ((c1_cuota || c2_cuota) && c1_cuota !== c2_cuota) return false;
-
-    // Limpieza de fechas, meses y sufijos para comparar la raíz del concepto
-    const cleanRoot = (s) => s
-        .replace(/\b(0\d|1[0-2])\/\d{4}\b/g, '')
-        .replace(/\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b/gi, '')
-        .replace(/\b\d{4}\b/g, '')
-        .replace(/cuota\s*\d+\s*\/\s*\d+/gi, '')
-        .replace(/etapa\s*\d+/gi, '')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-    const cr1 = cleanRoot(raw1);
-    const cr2 = cleanRoot(raw2);
-
-    if (cr1.length >= 25 && cr2.length >= 25) {
-        return cr1.slice(0, 35) === cr2.slice(0, 35);
+    let metrogasAcc = null;
+    if (raw.includes('metrogas') || raw.includes('gas servicio')) {
+        if (raw.includes('519800') || raw.includes('20456519800')) metrogasAcc = 'mg_sec';
+        else if (raw.includes('278517') || raw.includes('14278517') || raw.includes('30014278517') || raw.includes('300014278517')) metrogasAcc = 'mg_prin';
+        else metrogasAcc = 'mg_gen';
     }
-    return raw1.slice(0, 30) === raw2.slice(0, 30);
+
+    const mDepto = raw.match(/(?:depto\.?|departamento|uf|u\.f\.?)\s*([0-9]{1,2}\s*[°º]?\s*[a-f]?)/i);
+    const depto = mDepto ? mDepto[1].replace(/\s+/g, '').toLowerCase() : null;
+
+    const mEtapa = raw.match(/etapa\s*(\d+)/i);
+    const etapa = mEtapa ? mEtapa[1] : null;
+
+    const mCuota = raw.match(/cuota\s*(\d+)\s*\/\s*(\d+)/i);
+    const cuotaNum = mCuota ? parseInt(mCuota[1], 10) : null;
+    const cuotaTotal = mCuota ? parseInt(mCuota[2], 10) : null;
+
+    const isAcuenta = raw.includes('a cuenta') || raw.includes('anticipo') || raw.includes('adelanto');
+    const isSaldo = raw.includes('saldo') && !raw.includes('total');
+
+    const isManoObra = raw.includes('mano de obra') || raw.includes('mano obra');
+    const isMaterial = raw.includes('material') || raw.includes('materiales');
+
+    let serviceMonth = null;
+    const mSlash = raw.match(/\b(0[1-9]|1[0-2])\/(20\d{2})\b/);
+    if (mSlash) {
+        serviceMonth = `${mSlash[2]}-${mSlash[1]}`;
+    } else if (periodo) {
+        const [py, pm] = periodo.split('-').map(Number);
+        for (const [mName, mIdx] of Object.entries(MONTH_MAP)) {
+            const re = new RegExp(`\\b${mName}\\b`, 'i');
+            if (re.test(raw)) {
+                const sy = mIdx > pm ? py - 1 : py;
+                serviceMonth = `${sy}-${String(mIdx).padStart(2, '0')}`;
+                break;
+            }
+        }
+    }
+
+    const mBidones = raw.match(/(\d+)\s*bidones?\s*(?:de\s*)?agua\s*ivess/i);
+    const bidonesQty = mBidones ? parseInt(mBidones[1], 10) : null;
+
+    let baseKey = null;
+    if (aysaAcc) baseKey = `srv:aysa:${aysaAcc}`;
+    else if (edesurAcc) baseKey = `srv:edesur:${edesurAcc}`;
+    else if (metrogasAcc) baseKey = `srv:metrogas:${metrogasAcc}`;
+    else if (raw.includes('allianz') || (r === 'seguros' && raw.includes('seguro'))) baseKey = 'seg:allianz';
+    else if (raw.includes('afip') && (raw.includes('cargas') || raw.includes('931'))) baseKey = 'sue:afip_cargas';
+    else if (raw.includes('seracarh') || (raw.includes('suterh') && !raw.includes('fateryh'))) baseKey = 'sue:seracarh_suterh';
+    else if (raw.includes('fateryh')) baseKey = 'sue:fateryh';
+    else if (raw.includes('altamirano javier')) baseKey = 'sue:altamirano_javier';
+    else if (raw.includes('ibrahim yamil') && !raw.includes('yamil reparaciones')) baseKey = 'sue:ibrahim_yamil';
+    else if (raw.includes('lourdes zaracho') || raw.includes('zaracho')) baseKey = 'sue:lourdes_zaracho';
+    else if (raw.includes('guillemi') && (raw.includes('abono') || raw.includes('mantenimiento de 2 ascensores') || raw.includes('mantenimiento 2 ascensores'))) baseKey = 'abo:guillemi';
+    else if (raw.includes('lomas lift') && (raw.includes('abono') || raw.includes('mantenimiento port'))) baseKey = 'abo:lomas_lift';
+    else if (raw.includes('atila') && (raw.includes('mantenimiento mensual') || raw.includes('abono'))) baseKey = 'abo:atila';
+    else if (raw.includes('fb saneamiento') && raw.includes('abono')) baseKey = 'abo:fb_saneamiento';
+    else if (raw.includes('control de plagas') || raw.includes('desinsectación') || raw.includes('fumigación')) baseKey = 'abo:fumigacion';
+    else if (raw.includes('servicio mensual de internet para cámaras') || (raw.includes('cámaras') && raw.includes('internet'))) baseKey = 'abo:internet_camaras';
+    else if (raw.includes('maruada marcelo') || raw.includes('aromatizador')) baseKey = 'abo:maruada_aromatizador';
+    else if (raw.includes('italo americana') && raw.includes('abono')) baseKey = 'abo:italo_americana';
+    else if (raw.includes('telecentro')) baseKey = 'abo:telecentro_sum';
+    else if (raw.includes('administración magariños') || raw.includes('honorarios administración')) baseKey = 'adm:honorarios_magarinos';
+    else if (raw.includes('sistema de gestión') && raw.includes('global')) baseKey = 'adm:sistema_global';
+    else if (raw.includes('pago mi expensa')) baseKey = 'var:pago_mi_expensa';
+    else if (raw.includes('gastos e impuestos bancarios') || (raw.includes('banco') && raw.includes('mantenimiento'))) baseKey = 'var:gastos_bancarios';
+    else if (raw.includes('confección aportes')) baseKey = 'var:confeccion_sueldos';
+    else if (raw.includes('qs artículos limpieza')) baseKey = 'var:qs_limpieza';
+    else if (raw.includes('agua ivess') || raw.includes('bidones agua') || raw.includes('bidones de agua')) baseKey = 'var:agua_ivess';
+    else {
+        let clean = raw
+            .replace(/fc-[a-zx]-\d{4}-\s*\d+/gi, '')
+            .replace(/xx-x-\d{4}-\s*\d+/gi, '')
+            .replace(/cuit:?\s*\d+/gi, '')
+            .replace(/\b(0\d|1[0-2])\/\d{4}\b/g, '')
+            .replace(/\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)\b/gi, '')
+            .replace(/\b20\d{2}\b/g, '')
+            .replace(/saldo\s*cuota\s*\d+\s*\/\s*\d+/gi, '')
+            .replace(/cuota\s*\d+\s*\/\s*\d+\s*(?:saldo)?/gi, '')
+            .replace(/(?:adelanto|anticipo)\s*\d+%\s*(?:del\s*total)?/gi, '')
+            .replace(/\ba\s*cuenta\b/gi, '')
+            .replace(/\bsaldo\b/gi, '')
+            .replace(/\d+\s*visitas\.?/gi, '')
+            .replace(/[.,;()]+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+        baseKey = `gen:${clean.slice(0, 75)}`;
+    }
+
+    const isRecurring = baseKey.startsWith('srv:') || baseKey.startsWith('seg:') || baseKey.startsWith('sue:') || baseKey.startsWith('abo:') || baseKey.startsWith('adm:') || baseKey.startsWith('var:');
+
+    return {
+        baseKey, depto, etapa, cuotaNum, cuotaTotal,
+        isAcuenta, isSaldo, isManoObra, isMaterial,
+        serviceMonth, bidonesQty, isRecurring
+    };
+};
+
+// Agrupación para el Modal de Historial (incluye todas las cuotas/anticipos de una misma obra o servicio)
+const matchConceptGroup = (c1, c2, r1 = "", r2 = "") => {
+    const m1 = parseConceptMeta(c1, r1);
+    const m2 = parseConceptMeta(c2, r2);
+    if ((m1.depto || m2.depto) && m1.depto !== m2.depto) return false;
+    if ((m1.etapa || m2.etapa) && m1.etapa !== m2.etapa) return false;
+    if (m1.isManoObra && m2.isMaterial && !m1.isMaterial) return false;
+    if (m1.isMaterial && m2.isManoObra && !m1.isManoObra) return false;
+    return m1.baseKey === m2.baseKey;
+};
+
+// Compatibilidad directa para funciones que consultan matchConcept
+const matchConcept = (c1, c2) => {
+    const m1 = parseConceptMeta(c1);
+    const m2 = parseConceptMeta(c2);
+    if (!matchConceptGroup(c1, c2)) return false;
+    if ((m1.isAcuenta || m2.isAcuenta) && m1.isAcuenta !== m2.isAcuenta) return false;
+    if ((m1.isSaldo || m2.isSaldo) && m1.isSaldo !== m2.isSaldo) return false;
+    if ((m1.cuotaNum || m2.cuotaNum) && (m1.cuotaNum !== m2.cuotaNum || m1.cuotaTotal !== m2.cuotaTotal)) return false;
+    return true;
+};
+
+// Motor inteligente de resolución y trazabilidad del "Mes Anterior" para la tabla
+const resolvePrevComparison = (item, allExpenses) => {
+    const cleanPool = allExpenses
+        .filter(x => x.estado !== "Pendiente")
+        .sort((a, b) => b.periodo.localeCompare(a.periodo));
+    const isSAC = /sac\b|aguinaldo/i.test(item.concepto);
+    const pp = prevPeriod(item.periodo);
+    const pp2 = prevPeriod(pp);
+    const meta = parseConceptMeta(item.concepto, item.rubro, item.periodo);
+
+    const isPerson = item.empleado &&
+        !item.empleado.includes("Cargas Sociales") &&
+        !item.empleado.includes("Sindicato") &&
+        !item.empleado.includes("Contratista") &&
+        !item.empleado.includes("Yamil Reparaciones");
+
+    // 1. Sueldos de empleados individuales (Encargado Permanente y Ayudante)
+    if (isPerson) {
+        if (isSAC) return { prevMonto: 0 };
+        const targetPeriod = meta.serviceMonth || item.periodo;
+        const isDelayedSaldo = targetPeriod < item.periodo;
+
+        if (isDelayedSaldo) {
+            const acuentaItems = cleanPool.filter(x => {
+                if (x.empleado !== item.empleado || /sac\b|aguinaldo/i.test(x.concepto)) return false;
+                const xm = parseConceptMeta(x.concepto, x.rubro, x.periodo);
+                return (xm.serviceMonth || x.periodo) === targetPeriod && xm.isAcuenta;
+            });
+            const acuentaSum = acuentaItems.reduce((a, x) => a + x.monto, 0);
+            if (acuentaSum > 0) {
+                const totalDev = acuentaSum + item.monto;
+                return {
+                    prevMonto: acuentaSum,
+                    prevTag: "Anticipo",
+                    prevTooltip: `Anticipo "A cuenta" del haber ${targetPeriod} pagado en ${acuentaItems[0].periodo} (${fmt(acuentaSum)}). Total haber devengado ${targetPeriod}: ${fmt(totalDev)}`,
+                    customVarHtml: `<span class="var-null" data-tooltip-right="Saldo complementario del haber ${targetPeriod} (Total devengado mes: ${fmt(totalDev)})">Saldo ${targetPeriod.slice(5)}/${targetPeriod.slice(2,4)}</span>`,
+                    suppressIncreaseAlert: true
+                };
+            }
+            return { prevMonto: 0 };
+        }
+
+        if (meta.isAcuenta) {
+            return {
+                prevMonto: 0,
+                customVarHtml: `<span class="var-null" data-tooltip-right="Adelanto parcial a cuenta del haber mensual">A cuenta</span>`,
+                suppressIncreaseAlert: true
+            };
+        }
+
+        // Sueldo mensual regular: comparar contra el haber TOTAL DEVENGADO de pp (sumando A cuenta + Saldo correspondientes a pp)
+        const prevDevengadoItems = cleanPool.filter(x => {
+            if (x.empleado !== item.empleado || /sac\b|aguinaldo/i.test(x.concepto)) return false;
+            const xm = parseConceptMeta(x.concepto, x.rubro, x.periodo);
+            const xTarget = xm.serviceMonth || x.periodo;
+            return xTarget === pp;
+        });
+        const prevDevengadoTotal = prevDevengadoItems.reduce((a, x) => a + x.monto, 0);
+        if (prevDevengadoTotal > 0) {
+            const detail = prevDevengadoItems.length > 1
+                ? `Haber total devengado ${pp}: ${fmt(prevDevengadoTotal)} (${prevDevengadoItems.map(x => fmt(x.monto)).join(' + ')})`
+                : `Haber mensual devengado ${pp}: ${fmt(prevDevengadoTotal)}`;
+            return {
+                prevMonto: prevDevengadoTotal,
+                prevTooltip: detail
+            };
+        }
+        return { prevMonto: 0 };
+    }
+
+    if (isSAC) return { prevMonto: 0 };
+
+    // 2. Seguimiento de Obras en Cuotas o con Anticipo / Saldo
+    if (meta.cuotaNum !== null || meta.isSaldo || meta.isAcuenta) {
+        if (meta.isAcuenta && !meta.cuotaNum) {
+            return {
+                prevMonto: 0,
+                customVarHtml: `<span class="var-null" data-tooltip-right="Pago inicial / anticipo a cuenta de obra">Anticipo</span>`,
+                suppressIncreaseAlert: true
+            };
+        }
+        if (meta.cuotaNum && meta.cuotaNum > 1) {
+            const prevCuotaItem = cleanPool.find(x => {
+                if (x.periodo >= item.periodo) return false;
+                const xm = parseConceptMeta(x.concepto, x.rubro, x.periodo);
+                return matchConceptGroup(x.concepto, item.concepto, x.rubro, item.rubro) &&
+                       xm.cuotaNum === meta.cuotaNum - 1 &&
+                       xm.cuotaTotal === meta.cuotaTotal;
+            });
+            if (prevCuotaItem) {
+                return {
+                    prevMonto: prevCuotaItem.monto,
+                    prevTag: `Cuota ${meta.cuotaNum - 1}/${meta.cuotaTotal}`,
+                    prevTooltip: `Comparado contra Cuota ${meta.cuotaNum - 1}/${meta.cuotaTotal} en ${prevCuotaItem.periodo} (${fmt(prevCuotaItem.monto)})`,
+                    suppressIncreaseAlert: true
+                };
+            }
+        }
+        const prevAnticipo = cleanPool.find(x => {
+            if (x.periodo > item.periodo || x === item) return false;
+            if (x.periodo === item.periodo && !x.concepto.toLowerCase().includes('a cuenta')) return false;
+            const xm = parseConceptMeta(x.concepto, x.rubro, x.periodo);
+            return matchConceptGroup(x.concepto, item.concepto, x.rubro, item.rubro) && xm.isAcuenta;
+        });
+        if (prevAnticipo) {
+            return {
+                prevMonto: prevAnticipo.monto,
+                prevTag: "Anticipo",
+                prevTooltip: `Anticipo previo de esta misma obra en ${prevAnticipo.periodo}: ${fmt(prevAnticipo.monto)}`,
+                customVarHtml: `<span class="var-null" data-tooltip-right="Cancelación / cuota sobre anticipo de ${fmt(prevAnticipo.monto)} (${prevAnticipo.periodo})">${meta.cuotaNum ? `Cuota ${meta.cuotaNum}/${meta.cuotaTotal}` : 'Saldo obra'}</span>`,
+                suppressIncreaseAlert: true
+            };
+        }
+    }
+
+    // 3. Abonos, contratos y suministros recurrentes
+    if (meta.isRecurring) {
+        // Si en el mismo período hay otra factura principal (>1.5x) del mismo suministro sin mes distinto, es factura complementaria
+        if (!meta.serviceMonth) {
+            const largerSamePeriod = cleanPool.find(x => {
+                if (x.periodo !== item.periodo || x === item) return false;
+                const xm = parseConceptMeta(x.concepto, x.rubro, x.periodo);
+                return xm.baseKey === meta.baseKey && !xm.serviceMonth && x.monto > item.monto * 1.5;
+            });
+            if (largerSamePeriod) {
+                return {
+                    prevMonto: 0,
+                    customVarHtml: `<span class="var-null" data-tooltip-right="Factura complementaria dentro del mismo período">2ª fact. mes</span>`,
+                    suppressIncreaseAlert: true
+                };
+            }
+        }
+
+        // Caso 3a: En el mismo resumen se pagaron dos meses consecutivos del mismo abono (ej. Julio y Agosto en 2026-09)
+        if (meta.serviceMonth) {
+            const prevSrvMonth = prevPeriod(meta.serviceMonth);
+            const samePeriodPrevInvoice = cleanPool.find(x => {
+                if (x.periodo !== item.periodo || x === item) return false;
+                const xm = parseConceptMeta(x.concepto, x.rubro, x.periodo);
+                return xm.baseKey === meta.baseKey && xm.serviceMonth === prevSrvMonth;
+            });
+            if (samePeriodPrevInvoice) {
+                return {
+                    prevMonto: samePeriodPrevInvoice.monto,
+                    prevTag: `Abono ${prevSrvMonth.slice(5)}/${prevSrvMonth.slice(2,4)}`,
+                    prevTooltip: `Comparado contra el abono de ${prevSrvMonth} (${fmt(samePeriodPrevInvoice.monto)}) liquidado junto en este mismo resumen`
+                };
+            }
+        }
+
+        // Caso 3b: Buscar en el período inmediato anterior (pp), o si se salteó el pago en pp, buscar en pp2 (M-2)
+        for (const [targetP, isLookback] of [[pp, false], [pp2, true]]) {
+            const matches = cleanPool.filter(x => {
+                if (x.periodo !== targetP) return false;
+                const xm = parseConceptMeta(x.concepto, x.rubro, x.periodo);
+                return xm.baseKey === meta.baseKey && !xm.isAcuenta && !xm.isSaldo;
+            });
+            if (matches.length > 0) {
+                if (meta.baseKey === 'var:qs_limpieza' && matches.length > 1) {
+                    const sum = matches.reduce((a, x) => a + x.monto, 0);
+                    return {
+                        prevMonto: sum,
+                        prevTag: isLookback ? `en ${targetP}` : `${matches.length} fact.`,
+                        prevTooltip: `Consolidado ${matches.length} facturas en ${targetP} (${matches.map(m => fmt(m.monto)).join(' + ')})`
+                    };
+                }
+                const sortedMatches = [...matches].sort((a, b) => {
+                    const ma = parseConceptMeta(a.concepto, a.rubro, a.periodo).serviceMonth || "";
+                    const mb = parseConceptMeta(b.concepto, b.rubro, b.periodo).serviceMonth || "";
+                    if (ma !== mb) return mb.localeCompare(ma);
+                    return b.monto - a.monto;
+                });
+                const chosen = sortedMatches[0];
+                const chosenMeta = parseConceptMeta(chosen.concepto, chosen.rubro, chosen.periodo);
+
+                if (meta.baseKey === 'var:agua_ivess' && meta.bidonesQty && chosenMeta.bidonesQty) {
+                    const unitCurr = Math.round(item.monto / meta.bidonesQty);
+                    const unitPrev = Math.round(chosen.monto / chosenMeta.bidonesQty);
+                    const unitDiff = unitPrev > 0 ? ((unitCurr - unitPrev) / unitPrev) * 100 : 0;
+                    const unitNote = Math.abs(unitDiff) < 0.5 ? `mismo precio unitario ${fmt(unitCurr)}/u` : `var. unitaria ${unitDiff >= 0 ? '+' : ''}${unitDiff.toFixed(1)}%`;
+                    return {
+                        prevMonto: chosen.monto,
+                        prevTag: `${chosenMeta.bidonesQty} bid.`,
+                        prevTooltip: `${targetP}: ${chosenMeta.bidonesQty} bidones (${fmt(unitPrev)}/u) vs. ${meta.bidonesQty} bidones actuales (${fmt(unitCurr)}/u — ${unitNote})`,
+                        unitNote: Math.abs(unitDiff) < 0.5 ? `0% unit.` : null,
+                        suppressIncreaseAlert: Math.abs(unitDiff) <= 25
+                    };
+                }
+
+                return {
+                    prevMonto: chosen.monto,
+                    prevTag: isLookback ? `en ${targetP}` : (chosenMeta.serviceMonth ? `Abono ${chosenMeta.serviceMonth.slice(5)}/${chosenMeta.serviceMonth.slice(2,4)}` : null),
+                    prevTooltip: isLookback
+                        ? `Sin pago imputado en ${pp}. Comparado contra última factura en ${targetP}: ${chosen.concepto.slice(0, 75)}`
+                        : `Comparado contra ${targetP}: ${chosen.concepto.slice(0, 75)}`
+                };
+            }
+        }
+    }
+
+    return { prevMonto: 0 };
 };
 
 // ── BOOTSTRAP ──────────────────────────────────────────────────
@@ -517,6 +781,9 @@ const renderAnomalySection = (period) => {
         }
         if (c.includes("confección") || c.includes("aportes, cargas")) {
             return "📋 Aumento en honorarios por liquidación de haberes";
+        }
+        if (c.includes("honorarios administración") || c.includes("administración magariños")) {
+            return "🏛️ Ajuste de honorarios de administración (+51,6%)";
         }
         if (c.includes("telecentro")) {
             return "📡 Ajuste tarifario en abono de conectividad SUM";
@@ -1042,10 +1309,10 @@ const renderEmployeeKPIs = (period) => {
 
     const getEmpDetails = (matcher) => {
         if (period === 'todos') {
-            const total = rawExpenses.filter(e => matcher(e)).reduce((a, e) => a + e.monto, 0);
-            return { main: total, arrears: 0, total };
+            const total = rawExpenses.filter(e => e.estado !== 'Pendiente' && matcher(e)).reduce((a, e) => a + e.monto, 0);
+            return { main: total, arrears: 0, devengadoMes: total, isAcuentaOnly: false, total };
         }
-        const empItems = rawExpenses.filter(e => e.periodo === period && matcher(e));
+        const empItems = rawExpenses.filter(e => e.periodo === period && e.estado !== 'Pendiente' && matcher(e));
         const regularItems = empItems.filter(e => {
             const m = e.concepto.match(/\b(0[1-9]|1[0-2])\/(\d{4})\b/);
             const devPeriod = m ? `${m[2]}-${m[1]}` : e.periodo;
@@ -1056,12 +1323,22 @@ const renderEmployeeKPIs = (period) => {
             const devPeriod = m ? `${m[2]}-${m[1]}` : e.periodo;
             return devPeriod < period;
         });
+        const devengadoItems = rawExpenses.filter(e => {
+            if (e.estado === 'Pendiente' || !matcher(e) || /sac\b|aguinaldo/i.test(e.concepto)) return false;
+            const m = e.concepto.match(/\b(0[1-9]|1[0-2])\/(\d{4})\b/);
+            const devPeriod = m ? `${m[2]}-${m[1]}` : e.periodo;
+            return devPeriod === period;
+        });
         const regularTotal = regularItems.reduce((a, e) => a + e.monto, 0);
         const arrearsTotal = arrearsItems.reduce((a, e) => a + e.monto, 0);
+        const devengadoMes = devengadoItems.reduce((a, e) => a + e.monto, 0);
         const total = empItems.reduce((a, e) => a + e.monto, 0);
+        const isAcuentaOnly = regularItems.length > 0 && regularItems.every(e => /a cuenta|anticipo/i.test(e.concepto)) && devengadoMes > regularTotal;
         return {
             main: regularTotal > 0 ? regularTotal : total,
             arrears: arrearsTotal,
+            devengadoMes,
+            isAcuentaOnly,
             total
         };
     };
@@ -1069,41 +1346,36 @@ const renderEmployeeKPIs = (period) => {
     const ibInfo = getEmpDetails(isEmployeeMatch.ibrahim);
     const loInfo = getEmpDetails(isEmployeeMatch.lourdes);
     const crTotal = period === 'todos'
-        ? rawExpenses.filter(e => isEmployeeMatch.cargas(e)).reduce((a, e) => a + e.monto, 0)
-        : rawExpenses.filter(e => e.periodo === period && isEmployeeMatch.cargas(e)).reduce((a, e) => a + e.monto, 0);
+        ? rawExpenses.filter(e => e.estado !== 'Pendiente' && isEmployeeMatch.cargas(e)).reduce((a, e) => a + e.monto, 0)
+        : rawExpenses.filter(e => e.periodo === period && e.estado !== 'Pendiente' && isEmployeeMatch.cargas(e)).reduce((a, e) => a + e.monto, 0);
     const yrTotal = period === 'todos'
-        ? rawExpenses.filter(e => isEmployeeMatch.yamil(e)).reduce((a, e) => a + e.monto, 0)
-        : rawExpenses.filter(e => e.periodo === period && isEmployeeMatch.yamil(e)).reduce((a, e) => a + e.monto, 0);
+        ? rawExpenses.filter(e => e.estado !== 'Pendiente' && isEmployeeMatch.yamil(e)).reduce((a, e) => a + e.monto, 0)
+        : rawExpenses.filter(e => e.periodo === period && e.estado !== 'Pendiente' && isEmployeeMatch.yamil(e)).reduce((a, e) => a + e.monto, 0);
 
-    const ibHist = rawExpenses.filter(isEmployeeMatch.ibrahim).reduce((a,e) => a+e.monto, 0);
-    const loHist = rawExpenses.filter(isEmployeeMatch.lourdes).reduce((a,e) => a+e.monto, 0);
+    const ibHist = rawExpenses.filter(e => e.estado !== 'Pendiente' && isEmployeeMatch.ibrahim(e)).reduce((a,e) => a+e.monto, 0);
+    const loHist = rawExpenses.filter(e => e.estado !== 'Pendiente' && isEmployeeMatch.lourdes(e)).reduce((a,e) => a+e.monto, 0);
 
-    const ibEl = document.getElementById('empIbrahimMonto');
-    if (ibInfo.main > 0) {
-        if (ibInfo.arrears > 0) {
-            ibEl.innerHTML = `${fmt(ibInfo.main)} <span style="display:block; font-size:0.68rem; font-weight:500; color:#fbbf24; margin-top:3px;" title="Saldo pendiente de meses anteriores cancelado en este período">+ ${fmt(ibInfo.arrears)} saldo mes anterior</span>`;
-        } else {
-            ibEl.textContent = fmt(ibInfo.main);
+    const renderEmpMainMonto = (el, info) => {
+        if (info.main <= 0) {
+            el.textContent = '—';
+            return;
         }
-    } else {
-        ibEl.textContent = '—';
-    }
-
-    const loEl = document.getElementById('empLourdesMonto');
-    if (loInfo.main > 0) {
-        if (loInfo.arrears > 0) {
-            loEl.innerHTML = `${fmt(loInfo.main)} <span style="display:block; font-size:0.68rem; font-weight:500; color:#fbbf24; margin-top:3px;" title="Saldo pendiente de meses anteriores cancelado en este período">+ ${fmt(loInfo.arrears)} saldo mes anterior</span>`;
+        if (info.arrears > 0) {
+            el.innerHTML = `${fmt(info.main)} <span style="display:block; font-size:0.68rem; font-weight:500; color:#fbbf24; margin-top:3px;" title="Saldo pendiente de meses anteriores cancelado en este período">+ ${fmt(info.arrears)} saldo mes anterior</span>`;
+        } else if (info.isAcuentaOnly) {
+            el.innerHTML = `${fmt(info.main)} <span style="display:block; font-size:0.68rem; font-weight:500; color:#38bdf8; margin-top:3px;" title="En este período sólo se abonó un anticipo a cuenta; el saldo se canceló en el mes siguiente.">Anticipo a cuenta (Haber mes: ${fmt(info.devengadoMes)})</span>`;
         } else {
-            loEl.textContent = fmt(loInfo.main);
+            el.textContent = fmt(info.main);
         }
-    } else {
-        loEl.textContent = '—';
-    }
+    };
+
+    renderEmpMainMonto(document.getElementById('empIbrahimMonto'), ibInfo);
+    renderEmpMainMonto(document.getElementById('empLourdesMonto'), loInfo);
 
     document.getElementById('empCargasMonto').textContent   = crTotal > 0 ? fmt(crTotal)  : '—';
     document.getElementById('empYamilRepMonto').textContent = yrTotal > 0 ? fmt(yrTotal)  : '—';
-    document.getElementById('empIbrahimHist').textContent   = period === 'todos' ? 'Acum. histórico: ' + fmt(ibHist) : (ibInfo.arrears > 0 ? `Total liquidado: ${fmt(ibInfo.total)} | Acum.: ${fmt(ibHist)}` : 'Acum. histórico: ' + fmt(ibHist));
-    document.getElementById('empLourdesHist').textContent   = period === 'todos' ? 'Acum. histórico: ' + fmt(loHist) : (loInfo.arrears > 0 ? `Total liquidado: ${fmt(loInfo.total)} | Acum.: ${fmt(loHist)}` : 'Acum. histórico: ' + fmt(loHist));
+    document.getElementById('empIbrahimHist').textContent   = period === 'todos' ? 'Acum. histórico: ' + fmt(ibHist) : (ibInfo.arrears > 0 ? `Total liquidado en caja: ${fmt(ibInfo.total)} | Acum.: ${fmt(ibHist)}` : 'Acum. histórico: ' + fmt(ibHist));
+    document.getElementById('empLourdesHist').textContent   = period === 'todos' ? 'Acum. histórico: ' + fmt(loHist) : (loInfo.arrears > 0 ? `Total liquidado en caja: ${fmt(loInfo.total)} | Acum.: ${fmt(loHist)}` : 'Acum. histórico: ' + fmt(loHist));
 };
 
 // ── TABLE ────────────────────────────────────────────────────────
@@ -1135,85 +1407,58 @@ const renderTable = () => {
         return;
     }
     tbody.innerHTML = pageItems.map(item => {
-        const isSAC = item.concepto.toLowerCase().includes("sac") || item.concepto.toLowerCase().includes("aguinaldo");
-        const pp = prevPeriod(item.periodo);
         const isPartial = item.concepto.toLowerCase().includes("a cuenta") || 
                           (item.concepto.toLowerCase().includes("saldo") && !item.concepto.toLowerCase().includes("total"));
-        const isPerson = item.empleado && 
-                         !item.empleado.includes("Cargas Sociales") && 
-                         !item.empleado.includes("Sindicato") && 
-                         !item.empleado.includes("Contratista") &&
-                         !item.empleado.includes("Yamil Reparaciones");
+        const comp = item.estado === "Pendiente" ? { prevMonto: 0 } : resolvePrevComparison(item, rawExpenses);
+        const prevMonto = comp.prevMonto || 0;
 
-        let prevMonto = 0, varHtml = `<span class="var-null">—</span>`, diff = 0;
+        let varHtml = `<span class="var-null">—</span>`;
+        let diff = 0;
 
-        if (isPerson && !isSAC) {
-            // Sueldos de empleados individuales:
-            const m = item.concepto.match(/\b(0[1-9]|1[0-2])\/(\d{4})\b/);
-            const targetPeriod = m ? `${m[2]}-${m[1]}` : item.periodo;
-            const isDelayedSaldo = targetPeriod < item.periodo;
-            const isAcuenta = item.concepto.toLowerCase().includes("a cuenta") || item.concepto.toLowerCase().includes("anticipo");
-
-            if (isDelayedSaldo || isAcuenta) {
-                // Pagos de saldos diferidos de meses anteriores o adelantos: no comparar individualmente contra el total mensual
-                prevMonto = 0;
-            } else {
-                // Sueldo mensual completo: comparar contra la remuneración total devengada del período anterior (pp)
-                const prevEmpItems = rawExpenses.filter(x => 
-                    x.periodo === pp && 
-                    x.empleado === item.empleado && 
-                    !x.concepto.toLowerCase().includes("sac") && 
-                    !x.concepto.toLowerCase().includes("aguinaldo")
-                );
-                prevMonto = prevEmpItems.reduce((acc, x) => acc + x.monto, 0);
-            }
-        } else if (!isSAC) {
-            // En Mantenimiento y Reparaciones u obras, evitar emparejar compras o trabajos puntuales no recurrentes
-            const isOneOff = (item.rubro === 'Mantenimiento y Reparaciones' || (item.rubro === 'Varios' && !item.concepto.toLowerCase().includes('telecentro') && !item.concepto.toLowerCase().includes('banc') && !item.concepto.toLowerCase().includes('confección'))) &&
-                             !item.concepto.toLowerCase().includes('abono') &&
-                             !item.concepto.toLowerCase().includes('servicio mensual');
-
-            if (!isOneOff) {
-                const prevItem = rawExpenses.find(x =>
-                    x.periodo === pp &&
-                    matchConcept(x.concepto, item.concepto)
-                );
-                if (prevItem) {
-                    const prevIsPartial = prevItem.concepto.toLowerCase().includes("a cuenta") || prevItem.concepto.toLowerCase().includes("saldo");
-                    if (isPartial === prevIsPartial) {
-                        prevMonto = prevItem.monto;
-                    }
-                }
-            }
-        }
-
-        if (prevMonto > 0) {
+        if (comp.customVarHtml) {
+            varHtml = comp.customVarHtml;
+        } else if (prevMonto > 0) {
             diff = ((item.monto - prevMonto) / prevMonto) * 100;
-            if (diff > 0.5)       varHtml = `<span class="var-up">+${diff.toFixed(1)}% ▲</span>`;
-            else if (diff < -0.5) varHtml = `<span class="var-down">${diff.toFixed(1)}% ▼</span>`;
-            else                  varHtml = `<span class="var-null">≈ 0%</span>`;
+            const unitSub = comp.unitNote
+                ? `<span style="display:block;font-size:0.63rem;color:var(--text-3);font-weight:500;">(${comp.unitNote})</span>`
+                : '';
+            if (diff > 0.5)       varHtml = `<span class="var-up">+${diff.toFixed(1)}% ▲${unitSub}</span>`;
+            else if (diff < -0.5) varHtml = `<span class="var-down">${diff.toFixed(1)}% ▼${unitSub}</span>`;
+            else                  varHtml = `<span class="var-null">≈ 0%${unitSub}</span>`;
         }
 
-        const tipoBadge     = item.tipo === "Fijo"
+        const prevTagHtml = comp.prevTag
+            ? `<span style="display:block;font-size:0.63rem;color:var(--text-3);font-weight:500;margin-top:1px;">${comp.prevTag}</span>`
+            : '';
+        const prevTooltipAttr = comp.prevTooltip
+            ? `data-tooltip-right="${comp.prevTooltip.replace(/"/g, '&quot;')}" style="cursor:help; border-bottom:1px dotted rgba(255,255,255,0.2);"`
+            : '';
+        const prevCellHtml = prevMonto > 0
+            ? `<span ${prevTooltipAttr}>${fmt(prevMonto)}</span>${prevTagHtml}`
+            : '—';
+
+        const meta = parseConceptMeta(item.concepto, item.rubro, item.periodo);
+        const effectiveTipo = (item.tipo === "Fijo" || meta.baseKey.startsWith("abo:")) ? "Fijo" : "Variable";
+        const tipoBadge = effectiveTipo === "Fijo"
             ? `<span class="badge badge-fijo">Fijo</span>`
             : `<span class="badge badge-variable">Variable</span>`;
 
         let badges = [];
         if (item.anomalia) {
-            badges.push(`<span class="badge badge-anomalia" title="Desviación +${item.desviacion_pct}% del promedio móvil de los últimos 3 meses">⚠ Anomalía</span>`);
+            badges.push(`<span class="badge badge-anomalia" title="Desviación +${item.desviacion_pct}% respecto al promedio móvil de los últimos 3 períodos">⚠ Anomalía</span>`);
         }
-        
-        // Aplica únicamente a abonos fijos o servicios públicos recurrentes que suban >25% mes a mes
-        const isOneOffOrPartial = isPartial || 
-            item.concepto.toLowerCase().includes("depto") || 
-            item.concepto.toLowerCase().includes("cuota") || 
+
+        const isOneOffOrPartial = isPartial ||
+            comp.suppressIncreaseAlert ||
+            item.concepto.toLowerCase().includes("depto") ||
+            item.concepto.toLowerCase().includes("cuota") ||
             item.concepto.toLowerCase().includes("reparación") ||
             item.concepto.toLowerCase().includes("trabajo de");
 
-        const esRecurrente = (item.tipo === "Fijo" || ["servicios públicos", "contratos y abonos"].includes(item.rubro.toLowerCase())) && !isOneOffOrPartial;
+        const esRecurrente = (effectiveTipo === "Fijo" || ["servicios públicos", "contratos y abonos"].includes(item.rubro.toLowerCase())) && !isOneOffOrPartial;
 
-        if (esRecurrente && diff > 25 && prevMonto > 0) {
-            badges.push(`<span class="badge badge-anomalia" style="background:rgba(251,146,60,0.1); border-color:#fb923c; color:#fb923c;" title="Aumento mayor al 25% respecto al mes anterior">⚠️ Aumento >25%</span>`);
+        if (esRecurrente && diff > 25 && prevMonto > 0 && !comp.customVarHtml) {
+            badges.push(`<span class="badge badge-anomalia" style="background:rgba(251,146,60,0.1); border-color:#fb923c; color:#fb923c;" title="Aumento mayor al 25% respecto al período anterior comparable">⚠️ Aumento >25%</span>`);
         }
 
         const alertaBadge = badges.length > 0 
@@ -1234,9 +1479,9 @@ const renderTable = () => {
             <td>${alertaBadge}</td>
             <td>${estadoBadge}</td>
             <td class="concepto-cell">
-                <span class="concepto-text" onclick="openModal('${conceptSafe}')">${item.concepto}</span>
+                <span class="concepto-text" onclick="openModal('${conceptSafe}')" title="Click para ver el historial completo de este concepto, obra o proveedor">${item.concepto}</span>
             </td>
-            <td class="amount-col amount-prev">${prevMonto > 0 ? fmt(prevMonto) : '—'}</td>
+            <td class="amount-col amount-prev">${prevCellHtml}</td>
             <td style="text-align:right;white-space:nowrap;">${varHtml}</td>
             <td class="amount-col amount-current">${fmt(item.monto)}</td>
         </tr>`;
@@ -1283,24 +1528,26 @@ const goToPage = (p) => {
     document.getElementById("tabla").scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
-// ── MODAL PROVEEDOR ─────────────────────────────────────────────
+// ── MODAL PROVEEDOR / OBRA ───────────────────────────────────────
 const openModal = (conceptoRaw) => {
     const concepto = conceptoRaw.replace(/\\'/g, "'").replace(/&quot;/g, '"');
+    const refItem = rawExpenses.find(e => e.concepto === concepto);
+    const refRubro = refItem ? refItem.rubro : "";
     const provExpenses = rawExpenses
-        .filter(e => matchConcept(e.concepto, concepto))
+        .filter(e => e.estado !== "Pendiente" && matchConceptGroup(e.concepto, concepto, e.rubro, refRubro))
         .sort((a, b) => b.periodo.localeCompare(a.periodo));
 
     if (provExpenses.length === 0) return;
 
     const total   = provExpenses.reduce((a, e) => a + e.monto, 0);
-    const totalObras = rawExpenses.filter(e => e.rubro === "Obras y Reparaciones")
+    const totalManto = rawExpenses.filter(e => e.estado !== "Pendiente" && (e.rubro === "Mantenimiento y Reparaciones" || e.rubro === "Obras y Reparaciones"))
         .reduce((a, e) => a + e.monto, 0) || 1;
-    const obrasMonto = provExpenses.filter(e => e.rubro === "Obras y Reparaciones")
+    const obrasMonto = provExpenses.filter(e => e.rubro === "Mantenimiento y Reparaciones" || e.rubro === "Obras y Reparaciones")
         .reduce((a, e) => a + e.monto, 0);
-    const porcentaje  = (obrasMonto / totalObras) * 100;
+    const porcentaje  = (obrasMonto / totalManto) * 100;
     const avg = total / provExpenses.length;
 
-    document.getElementById("providerModalName").textContent = concepto.slice(0, 60) + (concepto.length > 60 ? '…' : '');
+    document.getElementById("providerModalName").textContent = concepto.slice(0, 68) + (concepto.length > 68 ? '…' : '');
     document.getElementById("providerTotal").textContent = fmt(total);
     document.getElementById("providerPct").textContent   = porcentaje > 0 ? porcentaje.toFixed(1) + "%" : "—";
     document.getElementById("providerCount").textContent = provExpenses.length;
@@ -1372,31 +1619,58 @@ const exportPDF = () => {
     }, 250);
 };
 
-// ── FINES AND APPORTIONMENTS RENDERERS ─────────────────────────
+// ── FINES AND REGLAMENTO INTERNO CONTRAST RENDERER ─────────────
+const getReglamentoFineAudit = (m) => {
+    const mot = (m.motivo || "").toLowerCase();
+    if (mot.includes("canilla") || mot.includes("filtracion")) {
+        return `<span class="badge badge-danger" data-tooltip-right="Cap. 4 Reglamento Interno: Sólo tipifica como Falta Grave el daño intencional ('adrede'). Los descuidos accidentales sólo habilitan recuperar el gasto real con factura, no aplicar multas punitivas fijas.">🚫 No tipificada como multa (Cap. 4 RI)</span>`;
+    }
+    if (mot.includes("ruido") || mot.includes("reuni")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Art. 5 Reglamento Interno: Exige 3 o más quejas firmadas de distintos propietarios dirigidas a Administración y Consejo, y valuación igual a 1 expensa de depto. 2 ambientes.">⚠️ Exige 3 quejas firmadas + Valor 2 amb. (Art. 5 RI)</span>`;
+    }
+    if (mot.includes("perro") || mot.includes("mascota")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Art. 11 Reglamento Interno: Exige registro previo del Encargado en el Libro de Novedades, notificación al Consejo y valuación igual a 1 expensa de 2 ambientes.">⚠️ Exige Libro Novedades + Valor 2 amb. (Art. 11 RI)</span>`;
+    }
+    if (mot.includes("portón") || mot.includes("porton") || mot.includes("puerta")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Art. 1 Reglamento Interno: Fija como única unidad sancionatoria 'el último valor de una expensa de un departamento de dos ambientes', no un monto nominal arbitrario.">⚖️ Monto fijo vs. Expensa 2 amb. (Art. 1 RI)</span>`;
+    }
+    if (mot.includes("mudanza") || mot.includes("muebles")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Art. 2 Reglamento Interno: Fija horarios L-V 8-12/14-18 y Sáb 8-13 hs y multa equivalente al último valor de una expensa de 2 ambientes.">⚖️ Monto fijo vs. Expensa 2 amb. (Art. 2 RI)</span>`;
+    }
+    if (mot.includes("cochera") || mot.includes("estaciona") || mot.includes("vehículo") || mot.includes("auto")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Art. 3 Reglamento Interno: La multa debe equivaler exactamente al último valor de una expensa de un departamento de 2 ambientes.">⚖️ Monto fijo vs. Expensa 2 amb. (Art. 3 RI)</span>`;
+    }
+    if (mot.includes("basura") || mot.includes("residuo") || mot.includes("caja")) {
+        return `<span class="badge badge-warning" data-tooltip-right="Art. 10 / Cap. 1 Reglamento Interno: Requiere denuncia escrita firmada con copia al Consejo y valuación reglamentaria de 1 expensa de 2 ambientes.">⚖️ Monto fijo vs. Expensa 2 amb. (RI)</span>`;
+    }
+    return `<span class="badge badge-danger" data-tooltip-right="Cap. 1 Reglamento Interno y Art. 2069 CCCN: Toda multa exige denuncia escrita firmada con copia al Consejo, identificación expresa de la causal e importe igual a 1 expensa de 2 ambientes.">🚫 Sin causal expresa ni art. (Cap. 1 RI)</span>`;
+};
+
 const renderFines = (period) => {
     const tbody = document.getElementById("finesTableBody");
     const subtitle = document.getElementById("finesSubtitle");
 
     if (period === "todos") {
-        subtitle.textContent = "Mostrando multas acumuladas históricas";
+        subtitle.textContent = "Mostrando las 58 multas acumuladas históricas contrastadas con el Reglamento Interno";
     } else {
-        subtitle.textContent = `Multas aplicadas en la expensa de ${period}`;
+        subtitle.textContent = `Multas aplicadas en la expensa de ${period} contrastadas con el Reglamento Interno`;
     }
 
     const filteredFines = period === "todos"
-        ? rawMultas
+        ? [...rawMultas].sort((a, b) => b.periodo.localeCompare(a.periodo))
         : rawMultas.filter(m => m.periodo === period);
 
     if (filteredFines.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--text-3);padding:1.5rem;">No se registraron multas en este período.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:1.5rem;">No se registraron multas en este período.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = filteredFines.map(m => `
         <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="padding: 0.75rem 0.5rem; font-weight: 500; color: var(--text-2);">${m.uf}</td>
-            <td style="padding: 0.75rem 0.5rem; color: var(--text-3); font-style: italic;">${m.motivo}</td>
-            <td style="padding: 0.75rem 0.5rem; text-align: right; font-weight: 600; color: #f43f5e;">${fmt(m.monto)}</td>
+            <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--text-2); white-space: nowrap;">UF ${m.uf}${period === "todos" ? ` <span style="font-size:0.7rem;color:var(--text-3);font-weight:400;">(${m.periodo})</span>` : ''}</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-2); font-style: italic;">${m.motivo}</td>
+            <td style="padding: 0.75rem 0.5rem;">${getReglamentoFineAudit(m)}</td>
+            <td style="padding: 0.75rem 0.5rem; text-align: right; font-weight: 700; color: #f43f5e; white-space: nowrap;">${fmt(m.monto)}</td>
         </tr>
     `).join('');
 };
@@ -1485,32 +1759,45 @@ const auditProviders = (period) => {
     }
 
     const [y, m] = period.split("-").map(Number);
-    const prevPeriod = `${y - 1}-${String(m).padStart(2, '0')}`;
+    const prevYearPeriod = `${y - 1}-${String(m).padStart(2, '0')}`;
 
-    // Proveedores y sus palabras clave
     const targetProviders = [
-        { name: "💼 Honorarios Administración", key: "honorarios", rubro: "Honorarios Admin" },
-        { name: "🛗 Guillemi (Ascensores)", key: "guillemi", rubro: "Abono Ascensores" },
-        { name: "🏊 FB Saneamiento (Piscina)", key: "saneamiento", rubro: "Abono Piscina" },
-        { name: "🐜 Control de Plagas (Fumigación)", key: "fumigación", rubro: "Abono Desinsectación" },
-        { name: "⚡ Atila (Grupo Electrógeno)", key: "atila", rubro: "Mantenimiento GE" },
-        { name: "🌐 Telecentro (Internet)", key: "telecentro", rubro: "Servicio Conectividad" },
-        { name: "🛡️ Allianz (Seguros)", key: "allianz", rubro: "Seguro Consorcio" }
+        { name: "💼 Honorarios Administración", baseKey: "adm:honorarios_magarinos", rubro: "Honorarios Admin" },
+        { name: "🛗 Guillemi (Ascensores)", baseKey: "abo:guillemi", rubro: "Abono Ascensores" },
+        { name: "🚪 Lomas Lift (Portones)", baseKey: "abo:lomas_lift", rubro: "Abono Portones" },
+        { name: "🏊 FB Saneamiento (Piscina)", baseKey: "abo:fb_saneamiento", rubro: "Abono Piscina" },
+        { name: "🐜 Control de Plagas (Fumigación)", baseKey: "abo:fumigacion", rubro: "Abono Desinsectación" },
+        { name: "⚡ Atila (Grupo Electrógeno)", baseKey: "abo:atila", rubro: "Mantenimiento GE" },
+        { name: "💻 Sistema Global (Liquidación)", baseKey: "adm:sistema_global", rubro: "Software Gestión" },
+        { name: "🌐 Telecentro (Internet SUM)", baseKey: "abo:telecentro_sum", rubro: "Servicio Conectividad" },
+        { name: "🛡️ Allianz (Seguros)", baseKey: "seg:allianz", rubro: "Seguro Consorcio" }
     ];
 
     let rowsHtml = "";
     
-    // Obtener inflación acumulada oficial INDEC
     const ipcActual = ipcData[period]?.valor;
-    const ipcPrev = ipcData[prevPeriod]?.valor;
+    const ipcPrev = ipcData[prevYearPeriod]?.valor;
     const ipcAcum = (ipcActual && ipcPrev) ? ((ipcActual - ipcPrev) / ipcPrev) * 100 : null;
     const ipcText = ipcAcum !== null ? `${ipcAcum.toFixed(1)}%` : "N/D";
 
+    const findProviderAbono = (pTarget, baseKey) => {
+        const matches = rawExpenses.filter(e =>
+            e.periodo === pTarget &&
+            e.estado !== "Pendiente" &&
+            parseConceptMeta(e.concepto, e.rubro, e.periodo).baseKey === baseKey
+        );
+        if (matches.length === 0) return null;
+        return matches.sort((a, b) => {
+            const ma = parseConceptMeta(a.concepto, a.rubro, a.periodo).serviceMonth || "";
+            const mb = parseConceptMeta(b.concepto, b.rubro, b.periodo).serviceMonth || "";
+            if (ma !== mb) return mb.localeCompare(ma);
+            return b.monto - a.monto;
+        })[0];
+    };
+
     targetProviders.forEach(p => {
-        // Buscar el gasto del mes actual
-        const actualExpense = rawExpenses.find(e => e.periodo === period && e.concepto.toLowerCase().includes(p.key));
-        // Buscar el gasto del año anterior
-        const prevExpense = rawExpenses.find(e => e.periodo === prevPeriod && e.concepto.toLowerCase().includes(p.key));
+        const actualExpense = findProviderAbono(period, p.baseKey);
+        const prevExpense = findProviderAbono(prevYearPeriod, p.baseKey);
 
         if (actualExpense && prevExpense) {
             const varPct = ((actualExpense.monto - prevExpense.monto) / prevExpense.monto) * 100;
@@ -1524,13 +1811,12 @@ const auditProviders = (period) => {
                 }
             }
 
-            // Calcular el desvío en pesos
             let diffHtml = `<td style="padding: 0.75rem 0.5rem; text-align: right; color: var(--text-3); font-size: 0.85rem;">N/D</td>`;
             if (ipcAcum !== null) {
                 const expected = prevExpense.monto * (1 + (ipcAcum / 100));
                 const diffValue = actualExpense.monto - expected;
                 const diffFmt = fmt(Math.abs(diffValue));
-                if (diffValue > 50) { // Tolerancia para diferencias mínimas de redondeo
+                if (diffValue > 50) {
                     diffHtml = `<td style="padding: 0.75rem 0.5rem; text-align: right; color: #f43f5e; font-weight: 700; font-size: 0.85rem;">+${diffFmt}</td>`;
                 } else if (diffValue < -50) {
                     diffHtml = `<td style="padding: 0.75rem 0.5rem; text-align: right; color: #10b981; font-weight: 700; font-size: 0.85rem;">-${diffFmt}</td>`;

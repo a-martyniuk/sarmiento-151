@@ -353,52 +353,115 @@ def parse_pdf_expenses(filepath):
 
     return expenses, balance_data, unique_multas
 
-def detect_anomalies(expenses):
-    def normalize_concept(c):
-        c_norm = c.lower()
-        c_norm = re.sub(r'\b(0\d|1[0-2])/\d{4}\b', '', c_norm)
-        c_norm = re.sub(r'\b(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b', '', c_norm)
-        return " ".join(c_norm.split())
+def get_canonical_anomaly_key(exp):
+    c = exp.get("concepto", "").lower()
+    r = exp.get("rubro", "").lower()
+    # Excluir reparaciones puntuales u obras por departamento de la serie temporal de anomalías
+    if any(k in c for k in ["depto", "reparación", "trabajo en", "trabajo de", "urgencia"]):
+        return None
+    if r == "mantenimiento y reparaciones" and not ("mantenimiento mensual" in c or "abono" in c):
+        return None
+    if r == "varios" and not any(k in c for k in ["telecentro", "banc", "pago mi expensa", "confección", "qs artículos", "ivess"]):
+        return None
 
-    # Ordenar cronológicamente para que la ventana móvil compare contra períodos anteriores reales
+    if "aysa" in c:
+        m = re.search(r"1411\d+", c)
+        return f"srv:aysa:{m.group(0) if m else 'gen'}"
+    if "edesur" in c:
+        m = re.search(r"8050\d+", c)
+        return f"srv:edesur:{m.group(0) if m else 'gen'}"
+    if "metrogas" in c or "gas servicio" in c:
+        if "519800" in c:
+            return "srv:metrogas:sec"
+        if "278517" in c or "14278517" in c:
+            return "srv:metrogas:prin"
+        return "srv:metrogas:gen"
+    if "allianz" in c or (r == "seguros" and "seguro" in c):
+        return "seg:allianz"
+    if "afip" in c and ("cargas" in c or "931" in c):
+        return "sue:afip"
+    if "seracarh" in c or ("suterh" in c and "fateryh" not in c):
+        return "sue:seracarh_suterh"
+    if "fateryh" in c:
+        return "sue:fateryh"
+    if "ibrahim yamil" in c and "yamil reparaciones" not in c:
+        return "sue:ibrahim_yamil"
+    if "lourdes zaracho" in c or "zaracho" in c:
+        return "sue:lourdes_zaracho"
+    if "guillemi" in c and ("abono" in c or "mantenimiento de 2 ascensores" in c):
+        return "abo:guillemi"
+    if "lomas lift" in c and ("abono" in c or "mantenimiento port" in c):
+        return "abo:lomas_lift"
+    if "atila" in c and ("mantenimiento mensual" in c or "abono" in c):
+        return "abo:atila"
+    if "fb saneamiento" in c and "abono" in c:
+        return "abo:fb_saneamiento"
+    if "control de plagas" in c or "desinsectación" in c or "fumigación" in c:
+        return "abo:fumigacion"
+    if "internet para cámaras" in c or ("cámaras" in c and "internet" in c):
+        return "abo:internet_camaras"
+    if "telecentro" in c:
+        return "abo:telecentro"
+    if "administración magariños" in c or "honorarios administración" in c:
+        return "adm:honorarios"
+    if "sistema de gestión" in c and "global" in c:
+        return "adm:global"
+    if "pago mi expensa" in c:
+        return "var:pago_mi_expensa"
+    if "gastos e impuestos bancarios" in c or ("banco" in c and "mantenimiento" in c):
+        return "var:banco"
+    if "confección aportes" in c:
+        return "var:confeccion_sueldos"
+    if "qs artículos limpieza" in c:
+        return "var:qs_limpieza"
+    return None
+
+def detect_anomalies(expenses):
     sorted_expenses = sorted(expenses, key=lambda x: x.get("periodo", ""))
-    concept_history = {}
+    
+    # Consolidar montos por (key, periodo) excluyendo pendientes y pagos parciales
+    period_totals = {}
+    for exp in sorted_expenses:
+        if exp.get("estado") == "Pendiente":
+            continue
+        key = get_canonical_anomaly_key(exp)
+        c_lower = exp.get("concepto", "").lower()
+        is_partial = any(k in c_lower for k in ["a cuenta", "saldo", "cuota", "anticipo", "adelanto", "sac", "aguinaldo"])
+        if not key or is_partial:
+            continue
+        p = exp.get("periodo", "")
+        period_totals.setdefault(key, {})
+        if key == "var:qs_limpieza":
+            period_totals[key][p] = period_totals[key].get(p, 0.0) + exp["monto"]
+        else:
+            period_totals[key][p] = max(period_totals[key].get(p, 0.0), exp["monto"])
 
     for exp in sorted_expenses:
-        norm = normalize_concept(exp["concepto"])
+        exp["anomalia"] = False
+        exp["desviacion_pct"] = 0
+        if exp.get("estado") == "Pendiente":
+            continue
+        key = get_canonical_anomaly_key(exp)
+        c_lower = exp.get("concepto", "").lower()
+        is_partial = any(k in c_lower for k in ["a cuenta", "saldo", "cuota", "anticipo", "adelanto", "sac", "aguinaldo"])
+        if not key or is_partial:
+            continue
+
+        p = exp.get("periodo", "")
         monto = exp["monto"]
-        concepto_lower = exp["concepto"].lower()
-        
-        # Pagos parciales o cuotas de obras no deben considerarse baseline mensual completo
-        is_partial = "a cuenta" in concepto_lower or "saldo" in concepto_lower or "cuota" in concepto_lower
-        
-        past = concept_history.get(norm, [])
-        # Ventana móvil de los últimos 3 meses no parciales
-        recent_past = [x for x in past if not x["is_partial"]][-3:]
-        if len(recent_past) < 2 and len(past) >= 2:
-            recent_past = past[-3:]
+        past_periods = sorted([kp for kp in period_totals.get(key, {}).keys() if kp < p])[-3:]
 
-        is_anom = False
-        desv_pct = 0
-        if len(recent_past) >= 2 and not is_partial and monto > 20000:
-            recent_avg = sum(x["monto"] for x in recent_past) / len(recent_past)
-            # Salto anómalo si supera en más del 40% el promedio móvil reciente de 3 períodos
-            if recent_avg > 0 and monto > (recent_avg * 1.40):
-                is_anom = True
-                desv_pct = round(((monto - recent_avg) / recent_avg) * 100)
-
-        exp["anomalia"] = is_anom
-        exp["desviacion_pct"] = desv_pct
-
-        if norm not in concept_history:
-            concept_history[norm] = []
-        concept_history[norm].append({
-            "periodo": exp.get("periodo", ""),
-            "monto": monto,
-            "is_partial": is_partial
-        })
+        if len(past_periods) >= 2 and monto > 20000:
+            past_vals = [period_totals[key][kp] for kp in past_periods]
+            recent_avg = sum(past_vals) / len(past_vals)
+            last_val = past_vals[-1]
+            # Debe superar en >40% el promedio móvil de 3 meses Y haber subido >15% frente al período inmediato anterior
+            if recent_avg > 0 and monto > (recent_avg * 1.40) and monto > (last_val * 1.15):
+                exp["anomalia"] = True
+                exp["desviacion_pct"] = round(((monto - recent_avg) / recent_avg) * 100)
 
     return sorted_expenses
+
 
 def get_period_from_filename(filename):
     match_date = re.search(r"(\d{4})-(\d{2})", filename)

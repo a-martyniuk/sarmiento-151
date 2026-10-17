@@ -1552,21 +1552,26 @@
         <div class="card">
             <div class="card-header" style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
                 <div>
-                    <h3 class="card-title">🚨 Multas del Período</h3>
-                    <p class="card-subtitle" id="finesSubtitle" style="font-size:0.8rem; color:var(--text-3);">Multas aplicadas en el período seleccionado</p>
+                    <h3 class="card-title">🚨 Multas del Período vs. Reglamento Interno</h3>
+                    <p class="card-subtitle" id="finesSubtitle" style="font-size:0.8rem; color:var(--text-3);">Multas aplicadas en el período seleccionado contrastadas con el Reglamento Interno</p>
                 </div>
             </div>
-            <div class="table-wrapper" style="max-height: 280px; overflow-y: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <div style="background:rgba(244,63,94,0.05); border:1px solid rgba(244,63,94,0.2); border-radius:10px; padding:0.85rem 1rem; margin-bottom:1rem; font-size:0.78rem; color:var(--text-2); line-height:1.45;">
+                <strong style="color:#f43f5e;">⚖️ Parámetro Obligatorio del Reglamento Interno (Sarmiento 151):</strong>
+                En todos sus artículos sancionatorios (<strong>Arts. 1, 2, 3, 4, 5, 6, 11 y Cap. 4</strong>), el Reglamento Interno establece como única unidad de valuación <em>«una multa equivalente al último valor de una expensa de un departamento de dos ambientes»</em>, exigiendo denuncia escrita firmada con copia al Consejo (<strong>Cap. 1</strong>), 3 quejas de distintos propietarios para ruidos/reuniones (<strong>Art. 5</strong>) o asiento en Libro de Novedades para mascotas (<strong>Art. 11</strong>). Los descuidos o filtraciones accidentales <strong>no están tipificados como multa punitiva</strong> (el <strong>Cap. 4</strong> sólo pena el daño intencional <em>«adrede»</em>).
+            </div>
+            <div class="table-wrapper" style="max-height: 320px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
                     <thead>
                         <tr style="border-bottom: 1px solid var(--border); text-align: left; color: var(--text-3);">
-                            <th style="padding: 0.75rem 0.5rem; width: 80px;">UF</th>
-                            <th style="padding: 0.75rem 0.5rem;">Motivo</th>
-                            <th style="padding: 0.75rem 0.5rem; text-align: right; width: 140px;">Monto</th>
+                            <th style="padding: 0.75rem 0.5rem; width: 110px;">UF</th>
+                            <th style="padding: 0.75rem 0.5rem;">Motivo Liquidado</th>
+                            <th style="padding: 0.75rem 0.5rem; width: 290px;">Contraste Reglamento Interno</th>
+                            <th style="padding: 0.75rem 0.5rem; text-align: right; width: 130px;">Monto</th>
                         </tr>
                     </thead>
                     <tbody id="finesTableBody">
-                        <tr><td colspan="3" style="text-align:center;color:var(--text-3);padding:2rem;">Seleccioná un período para ver las multas.</td></tr>
+                        <tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:2rem;">Seleccioná un período para ver las multas.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -1584,7 +1589,7 @@
                 </div>
                 <h2 class="card-title" style="font-size:1.6rem; color:var(--text-1); letter-spacing:-0.5px;">Auditoría Legal, Forense y Faltas Normativas</h2>
                 <p class="card-subtitle" style="font-size:0.88rem; color:var(--text-3); margin-top:0.25rem;">
-                    Monitoreo integral de cumplimiento de la <strong>Ley Provincial 14.701 (PBA)</strong>, el <strong>Código Civil y Comercial de la Nación (CCCN)</strong>, la <strong>Ley de Contrato de Trabajo (LCT) / CCT SUTERH</strong> y el régimen de facturación de <strong>ARCA / AFIP</strong> en el Consorcio Sarmiento 151.
+                    Monitoreo integral de cumplimiento de la <strong>Ley Provincial 14.701 (PBA)</strong>, el <strong>Código Civil y Comercial de la Nación (CCCN)</strong>, el <strong>Reglamento Interno del Edificio</strong>, la <strong>Ley de Contrato de Trabajo (LCT) / CCT SUTERH</strong> y el régimen de facturación de <strong>ARCA / AFIP</strong> en el Consorcio Sarmiento 151.
                 </p>
             </div>
         </div>
@@ -1593,20 +1598,20 @@
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-bottom:1.75rem;">
             <div style="background:rgba(244,63,94,0.06); border:1px solid rgba(244,63,94,0.2); border-radius:12px; padding:1.1rem; border-left:3px solid #f43f5e;">
                 <div style="font-size:0.7rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Infracciones Críticas</div>
-                <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#f43f5e; margin-top:4px;">6 Detectadas</div>
-                <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Leyes 14.701 PBA, CCCN y RG ARCA/AFIP</div>
+                <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#f43f5e; margin-top:4px;">8 Detectadas</div>
+                <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Ley 14.701 PBA, CCCN, ARCA y Reglamento Interno</div>
             </div>
 
             <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:12px; padding:1.1rem; border-left:3px solid #f59e0b;">
                 <div style="font-size:0.7rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Faltas Administrativas</div>
-                <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#f59e0b; margin-top:4px;">4 Observadas</div>
-                <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Desvíos en prorrateo, abonos y respaldos</div>
+                <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#f59e0b; margin-top:4px;">7 Observadas</div>
+                <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Desvíos en multas, prorrateo, abonos y respaldos</div>
             </div>
 
             <div style="background:rgba(6,182,212,0.06); border:1px solid rgba(6,182,212,0.2); border-radius:12px; padding:1.1rem; border-left:3px solid #06b6d4;">
                 <div style="font-size:0.7rem; color:var(--text-3); text-transform:uppercase; letter-spacing:1px; font-weight:600;">Normativa Aplicable</div>
                 <div style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; color:#06b6d4; margin-top:4px;">Obligatoria</div>
-                <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Derechos vigentes de los consorcistas</div>
+                <div style="font-size:0.75rem; color:var(--text-2); margin-top:4px;">Leyes nacionales/PBA y Reglamento Interno</div>
             </div>
         </div>
 
@@ -1736,23 +1741,23 @@
                 <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.75rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
                     <div style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px;">
                         <span style="background:#ec4899; color:#fff; font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:800;">LCT / SUTERH</span>
-                        Régimen Laboral y Previsional (Ley 20.744 y CCT SUTERH 589/10)
+                        Régimen Laboral y Previsional (Ley 20.744, CCT SUTERH 589/10 y Art. 10 RI)
                     </div>
                     <span style="font-size:0.72rem; color:#ec4899; font-weight:600; background:rgba(236,72,153,0.1); padding:3px 10px; border-radius:12px;">1 Riesgo Laboral Crítico</span>
                 </div>
 
                 <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #ec4899;">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
-                        <span style="font-size:0.68rem; font-weight:700; color:#ec4899; text-transform:uppercase;">Art. 14 LCT · Simulación Laboral</span>
+                        <span style="font-size:0.68rem; font-weight:700; color:#ec4899; text-transform:uppercase;">Art. 14 LCT y Art. 10 Reglamento Interno · Simulación Laboral</span>
                         <span style="font-size:0.65rem; color:#ec4899; background:rgba(236,72,153,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">CUIT 27-35117455-8</span>
                     </div>
                     <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Facturación Paralela del Encargado como Contratista ("Yamil Reparaciones")</h4>
                     <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
                         El encargado titular de planta permanente (<strong>Ibrahim Yamil</strong>, con sueldo en relación de dependencia superior a <code>$1.750.000/mes</code> bajo CCT SUTERH 589/10) emite en simultáneo facturas al consorcio como monotributista bajo la fantasía <em>"Yamil Reparaciones"</em> por tareas de mantenimiento ordinario (<code>$550.000</code> bombas pluviales, <code>$180.000</code> revoques SUM, <code>$120.000</code> cerradura sala de máquinas).
-                        Esta doble vía configura presunción de <strong>fraude laboral (Art. 14 LCT)</strong>: si las tareas las ejecuta el dependiente, corresponden a horas extras remuneradas bajo recibo con cargas del F.931; si son de terceros, no pueden ser facturadas por el empleado del consorcio. Esto genera un riesgo contingente de demandas laborales solidarias y multas sindicales.
+                        Además del <strong>Art. 14 LCT</strong>, el propio <strong>Art. 10 del Reglamento Interno del Edificio ("Funciones Especiales")</strong> establece que forma parte de las obligaciones ordinarias del Encargado el mantenimiento periódico de <em>bombas cloacales y pluviales, grupo electrógeno, portón, tanques e instalaciones comunes</em>, y el <strong>Cap. 1</strong> le prohíbe realizar trabajos particulares en su horario laboral.
                     </p>
                     <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(236,72,153,0.06); padding:6px 8px; border-radius:6px;">
-                        ⚖️ <em>Riesgo patrimonial: Solidaridad pasiva de los copropietarios ante reclamos por empleo clandestino/mal encuadrado.</em>
+                        ⚖️ <em>Riesgo patrimonial: Solidaridad pasiva de los copropietarios ante reclamos por empleo mal encuadrado y doble cobro de funciones reglamentarias.</em>
                     </div>
                 </div>
             </div>
@@ -1830,6 +1835,79 @@
                 </div>
             </div>
 
+            <!-- GRUPO 5: CONTRASTE CON EL REGLAMENTO INTERNO DEL EDIFICIO (SARMIENTO 151) -->
+            <div class="card" style="border: 1px solid rgba(245,158,11,0.3); background: linear-gradient(180deg, rgba(245,158,11,0.04) 0%, rgba(15,23,42,0.4) 100%);">
+                <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:0.75rem; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                    <div style="font-size:1.05rem; font-weight:700; color:var(--text-1); display:flex; align-items:center; gap:8px;">
+                        <span style="background:#f59e0b; color:#000; font-size:0.7rem; padding:2px 8px; border-radius:4px; font-weight:800;">REGLAMENTO INTERNO</span>
+                        Auditoría de las 58 Multas Aplicadas vs. Reglamento Interno (Sarmiento 151)
+                    </div>
+                    <span style="font-size:0.72rem; color:#fbbf24; font-weight:600; background:rgba(245,158,11,0.12); padding:3px 10px; border-radius:12px;">4 Contradicciones Reglamentarias</span>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1rem;">
+                    <!-- Item 5.1: Parámetro de valuación -->
+                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f43f5e;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
+                            <span style="font-size:0.68rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Arts. 1, 2, 3, 4, 5, 6 y 11 RI · Valuación</span>
+                            <span style="font-size:0.65rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">58 Multas Auditadas</span>
+                        </div>
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Violación de la Unidad Reglamentaria ("1 Expensa de Depto. 2 Ambientes")</h4>
+                        <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
+                            El Reglamento Interno fija en <strong>todos sus artículos sancionatorios</strong> un único parámetro objetivo: <em>«una multa equivalente al último valor de una expensa de un departamento de dos ambientes»</em> (y de 1 a 3 expensas de 3 ambientes para excesos en SUM o daños intencionales). En contradicción directa, la Administración aplicó importes nominales arbitrarios y redondos (<code>$24.000</code>, <code>$30.000</code>, <code>$50.000</code>, <code>$80.000</code>, <code>$100.000</code>, <code>$120.000</code> y hasta una sanción anómala de <code>$710.000</code> a la UF 103 en <code>2024-04</code>) divorciados del valor real de la expensa de 2 ambientes de cada mes.
+                        </p>
+                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
+                            ⚖️ <em>Vicio: El administrador carece de facultades para sustituir la unidad de medida reglamentaria por sumas fijas discrecionales.</em>
+                        </div>
+                    </div>
+
+                    <!-- Item 5.2: Supuestos no tipificados (Canilla abierta / filtraciones) -->
+                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f43f5e;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
+                            <span style="font-size:0.68rem; font-weight:700; color:#f43f5e; text-transform:uppercase;">Cap. 4 RI · Atipicidad de la Sanción</span>
+                            <span style="font-size:0.65rem; color:#f43f5e; background:rgba(244,63,94,0.1); padding:2px 6px; border-radius:4px; font-weight:700;">UF 142 · UF 135 · UF 145</span>
+                        </div>
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Multas Punitivas por Supuestos NO Tipificados ("Canilla Abierta / Filtraciones")</h4>
+                        <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
+                            Se cobraron multas punitivas por <em>«dejar canilla abierta y generar filtraciones»</em> (UF 142 en <code>2026-08</code>, UF 135 y UF 145 en <code>2023-02/03</code>). El <strong>Cap. 4 del Reglamento Interno ("Daños a las instalaciones")</strong> sólo tipifica como Falta Grave el <em>«daño adrede que se efectúe intencionalmente»</em>. Los accidentes o filtraciones involuntarias sólo habilitan el recupero del costo real de reparación con factura respaldatoria (Arts. 2 y 3), nunca una multa punitiva tarifada.
+                        </p>
+                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(244,63,94,0.06); padding:6px 8px; border-radius:6px;">
+                            ⚖️ <em>Principio de legalidad: No existe sanción disciplinaria válida sin tipificación expresa previa en el Reglamento.</em>
+                        </div>
+                    </div>
+
+                    <!-- Item 5.3: Requisitos de 3 quejas firmadas y Libro de Novedades -->
+                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f59e0b;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
+                            <span style="font-size:0.68rem; font-weight:700; color:#fbbf24; text-transform:uppercase;">Cap. 1, Art. 5 y Art. 11 RI · Procedimiento</span>
+                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">45 Multas sin Motivo</span>
+                        </div>
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Omisión de las "3 Quejas Firmadas", Libro de Novedades y Expresión de Causa</h4>
+                        <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
+                            El <strong>Cap. 1</strong> exige denuncia por escrito y firmada con copia al Consejo de Propietarios; el <strong>Art. 5 (Reuniones y Ruidos)</strong> exige que deriven <em>«tres o más quejas de distintos propietarios»</em> para habilitar la multa; y el <strong>Art. 11 (Mascotas)</strong> exige asiento previo del Encargado en el <em>Libro de Novedades</em>. Pese a ello, <strong>45 de las 58 multas históricas</strong> se liquidaron con la leyenda genérica <code>"Multa aplicada"</code> sin consignar motivo, fecha ni artículo infringido.
+                        </p>
+                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
+                            ⚖️ <em>Exigencia: Constancia documental de las 3 denuncias firmadas o asiento en Libro de Novedades con intervención del Consejo.</em>
+                        </div>
+                    </div>
+
+                    <!-- Item 5.4: Funciones ordinarias del Encargado según Art. 10 RI -->
+                    <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:10px; padding:1rem; border-left:3px solid #f59e0b;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
+                            <span style="font-size:0.68rem; font-weight:700; color:#fbbf24; text-transform:uppercase;">Cap. 1 y Art. 10 RI · Obligaciones del Personal</span>
+                            <span style="font-size:0.65rem; color:var(--text-3); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px;">Funciones Incluidas</span>
+                        </div>
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--text-1); margin-bottom:0.4rem;">Tareas de Mantenimiento Incluidas en el Cargo de Encargado (Art. 10 RI)</h4>
+                        <p style="font-size:0.8rem; color:var(--text-2); line-height:1.45;">
+                            El <strong>Art. 10 del Reglamento Interno ("Funciones Especiales")</strong> dispone expresamente que el Encargado debe realizar el mantenimiento periódico de <em>«bombas cloacales, pluviales, grupos electrógenos, mecanismo eléctrico del portón de ingreso, ascensores, tanques de agua, tanques de bombeo»</em> y conservación de partes comunes, prohibiendo el <strong>Cap. 1</strong> realizar tareas particulares en horario laboral. Esto contradice el pago de facturas adicionales a <em>"Yamil Reparaciones"</em> por dichas tareas.
+                        </p>
+                        <div style="margin-top:0.6rem; font-size:0.72rem; color:var(--text-3); background:rgba(245,158,11,0.06); padding:6px 8px; border-radius:6px;">
+                            ⚖️ <em>Norma interna: Las funciones del Art. 10 integran el salario ordinario y son indelegables.</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- VISOR DE RECLAMO FORMAL -->
             <div class="card" style="background:rgba(255,255,255,0.02); border:1px solid var(--border-accent);">
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
@@ -1870,13 +1948,13 @@ Por medio de la presente, en mi carácter de copropietario del Consorcio Sarmien
 * Del análisis de gastos liquidados se detecta la imputación recurrente de comprobantes con numeraciones genéricas "0000-00000001" sin punto de venta habilitado ni Código de Autorización Electrónico (CAE) emitido por ARCA (ex-AFIP), en proveedores principales de obra y mantenimiento (entre ellos Jaime Daniel por impermeabilización por más de $8.500.000, Seguridad Astier por más de $2.200.000, Cerrajería Ayram por más de $1.700.000, Carlos Paz por más de $1.500.000 y Espacios Verdes por $958.000).
 * Conforme la RG 1415/2003 y concordantes, los comprobantes no oficiales carecen de eficacia fiscal e impiden el cómputo del gasto. Se solicita remitir copia digital de las facturas electrónicas oficiales con su respectivo CAE fiscal debidamente emitidas a nombre del Consorcio (CUIT 30-71743730-2).
 
-3. Encuadre Laboral y Previsional por Facturación Paralela del Encargado ("Yamil Reparaciones"):
+3. Encuadre Laboral, Previsional y Reglamentario por Facturación Paralela del Encargado ("Yamil Reparaciones"):
 * Se advierte que el encargado de planta permanente Ibrahim Yamil, cuyos haberes mensuales bajo CCT SUTERH 589/10 son liquidados en el rubro Sueldos, emite simultáneamente facturas como monotributista bajo la denominación comercial "Yamil Reparaciones" (CUIT 27-35117455-8) por tareas de mantenimiento ejecutadas en el inmueble ($550.000 por armado de bombas pluviales, $180.000 por revoques SUM, $120.000 por cerraduras).
-* Teniendo en cuenta la prohibición de simulación laboral (Art. 14 LCT) y las disposiciones del CCT 589/10 que regulan las tareas del personal y el pago de horas extras con sus correspondientes cargas sociales (F.931), se solicita brindar aclaración formal sobre el encuadre de estas erogaciones y garantizar que el consorcio no se encuentre expuesto a contingencias ni reclamos indemnizatorios solidarios por tareas dependientes indebidamente facturadas como locación de servicios.
+* Teniendo en cuenta la prohibición de simulación laboral (Art. 14 LCT), las disposiciones del CCT 589/10 y el Art. 10 del Reglamento Interno del Edificio (que incluye dentro de las funciones ordinarias e indelegables del Encargado el mantenimiento periódico de bombas cloacales y pluviales, grupo electrógeno, portón, tanques e instalaciones comunes, prohibiendo el Cap. 1 realizar trabajos particulares en horario laboral), se solicita brindar aclaración formal sobre el encuadre de estas erogaciones.
 
-4. Nulidad de Multas Disciplinarias Aplicadas de Forma Sumaria ($100.000 Flat):
-* Se observa la aplicación unilateral de multas fijas idénticas de $100.000 a diversas unidades funcionales sin que conste intimación previa fehaciente ni procedimiento de descargo que garantice el derecho de defensa adjetivo.
-* De acuerdo con el Art. 2069 del Código Civil y Comercial y la garantía constitucional de debido proceso, se solicita remitir la cláusula reglamentaria que tipifica las conductas sancionadas, la escala aplicable y las constancias de descargo sustanciadas, solicitando en su defecto la anulación de toda penalidad fijada discrecionalmente.
+4. Nulidad de Multas Disciplinarias por Apartamiento del Reglamento Interno y del Art. 2069 CCCN:
+* Del contraste entre las 58 multas liquidadas y el Reglamento Interno del Edificio (Sarmiento 151) se verifican tres incumplimientos normativos: (a) violación de la unidad de medida reglamentaria (Arts. 1 a 6, 11 y Cap. 4), que fija toda multa en "el último valor de una expensa de un departamento de dos ambientes", habiéndose aplicado en su lugar montos fijos discrecionales ($24.000 a $120.000 y hasta $710.000); (b) aplicación de multas punitivas por "canilla abierta y filtraciones" (UF 142, UF 135, UF 145) cuando el Cap. 4 sólo tipifica como falta el daño intencional ("adrede"); y (c) omisión de los requisitos formales del Cap. 1 (denuncia escrita firmada con copia al Consejo), Art. 5 (mínimo de tres quejas firmadas de distintos propietarios por ruidos/reuniones) y Art. 11 (registro previo en Libro de Novedades).
+* Se solicita remitir las actas, denuncias firmadas y asientos en el Libro de Novedades que respalden cada sanción, procediendo en su defecto a la anulación de toda multa impuesta en infracción al Reglamento Interno y al Art. 2069 del CCCN.
 
 5. Justificación de Pagos Duplicados en un Mismo Período:
 * Se solicita justificar documentalmente los pagos duplicados en un mismo mes a empresas con abono mensual fijo (tales como dos órdenes de $875.000 a A.J.R. Servicios en enero 2026, dos de $828.586 a Sosa García en junio 2025, o cuatro pagos de $453.000 a Atila en febrero 2025), adjuntando los partes de recepción o certificados de avance que acrediten la causa de la doble erogación.
