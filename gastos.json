@@ -18968,9 +18968,24 @@
             "deuda_acumulada": 30409358.03,
             "patrimonio_neto": 41071627.0,
             "saldo_disponibilidades": 10662268.97,
-            "pagos_prorrateo": 167148.06,
+            "pagos_prorrateo": 21469752.45,
             "multas_prorrateo": 0.0,
-            "intereses_prorrateo": 0.0,
+            "intereses_prorrateo": 446582.41,
+            "saldo_caja_efectivo": 2108606.73,
+            "recaudado_efectivo_mes": 0.0
+        },
+        {
+            "periodo": "2026-11",
+            "ingresos": 351697.38,
+            "egresos": 0.0,
+            "saldo_banco": 8905359.62,
+            "recaudado_termino": 0.0,
+            "deuda_acumulada": 30057660.53,
+            "patrimonio_neto": 41071626.88,
+            "saldo_disponibilidades": 11013966.35,
+            "pagos_prorrateo": 0,
+            "multas_prorrateo": 0,
+            "intereses_prorrateo": 0,
             "saldo_caja_efectivo": 2108606.73,
             "recaudado_efectivo_mes": 0.0
         },
@@ -19718,7 +19733,8 @@
         "2026-06": 118567.86,
         "2026-07": 114713.24,
         "2026-08": 113600.67,
-        "2026-09": 142309.57
+        "2026-09": 142309.57,
+        "2026-10": 123549.75
     },
     "unidades_padron": [
         {
