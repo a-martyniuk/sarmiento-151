@@ -18983,9 +18983,9 @@
             "deuda_acumulada": 30057660.53,
             "patrimonio_neto": 41071626.88,
             "saldo_disponibilidades": 11013966.35,
-            "pagos_prorrateo": 0,
-            "multas_prorrateo": 0,
-            "intereses_prorrateo": 0,
+            "pagos_prorrateo": 351697.38,
+            "multas_prorrateo": 0.0,
+            "intereses_prorrateo": 0.0,
             "saldo_caja_efectivo": 2108606.73,
             "recaudado_efectivo_mes": 0.0
         },
